@@ -1,0 +1,6 @@
+echo "🚀 Running pre-commit hooks..."
+
+# run staged checks
+pnpm check:staged
+
+echo "✅ Pre-commit hooks completed!"
