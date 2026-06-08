@@ -17,7 +17,7 @@
   "login_error_generic": "Die Anmeldung ist fehlgeschlagen. Bitte versuchen Sie es erneut.",
   "logout_button": "Abmelden",
   "logout_button_loading": "Abmeldung läuft...",
-  "header_brand": "React Base",
+  "header_brand": "CV Scanner",
   "header_dashboard": "Dashboard",
   "header_profile": "Profil",
   "header_admin": "Admin",
@@ -65,5 +65,12 @@
   "error_learn_more": "Mehr erfahren",
   "network_error": "Netzwerkfehler aufgetreten",
   "missing_refresh_token": "Refresh-Token fehlt",
-  "common_error_generic": "Ein Fehler ist aufgetreten"
+  "common_error_generic": "Ein Fehler ist aufgetreten",
+  "cv_management": "CV-Verwaltung",
+  "cv_talent_workspace": "Talent Workspace",
+  "cv_filters": "Filter:",
+  "cv_add_filter": "Filter hinzufügen",
+  "cv_try_label": "Versuchen:",
+  "cv_no_match": "Keine CVs passen zur aktuellen Suche.",
+  "cv_showing": "Zeige 1-15 von {count} Kandidaten"
 }

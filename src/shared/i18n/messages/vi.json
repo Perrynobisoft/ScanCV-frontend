@@ -1,0 +1,13 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "example_message": "Xin chào {username}",
+  "language": "Ngôn ngữ",
+  "language_label": "Ngôn ngữ",
+  "cv_management": "Quản lý CV",
+  "cv_talent_workspace": "Kho nhân tài",
+  "cv_filters": "Bộ lọc:",
+  "cv_add_filter": "Thêm bộ lọc",
+  "cv_try_label": "Thử:",
+  "cv_no_match": "Không có CV phù hợp với tìm kiếm hiện tại.",
+  "cv_showing": "Hiển thị 1-15 trong tổng {count} ứng viên"
+}

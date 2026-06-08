@@ -21,4 +21,12 @@ export const Endpoints = {
     GET_ALL: `${Prefix}/users/getAll`,
     GET: `${Prefix}/users/get`,
   },
+  Cv: {
+    SEARCH: `${Prefix}/cvs/search`,
+    GET_ALL: `${Prefix}/cvs/getAll`,
+    GET: `${Prefix}/cvs/get`,
+    CREATE: `${Prefix}/cvs/create`,
+    UPDATE: `${Prefix}/cvs/update`,
+    DELETE: `${Prefix}/cvs/delete`,
+  },
 }

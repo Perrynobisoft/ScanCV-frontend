@@ -14,9 +14,10 @@ import {
   useAuth,
 } from './presentation/provider/auth/auth-provider.tsx'
 import { env } from './env'
-import { Toaster } from 'sonner'
+import { Toaster } from 'react-hot-toast'
 import { overwriteGetLocale } from './paraglide/runtime.js'
 import { resolvePreferredLocale } from './shared/locale'
+import { LocaleProvider } from './presentation/provider/locale/locale-provider.tsx'
 
 overwriteGetLocale(resolvePreferredLocale)
 
@@ -102,8 +103,10 @@ enableMocking().then(() => {
         <RepositoryProvider>
           <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
             <AuthProvider>
-              <InnerApp />
-              <Toaster position="top-right" richColors />
+              <LocaleProvider>
+                <InnerApp />
+                <Toaster position="top-right" />
+              </LocaleProvider>
             </AuthProvider>
           </TanStackQueryProvider.Provider>
         </RepositoryProvider>

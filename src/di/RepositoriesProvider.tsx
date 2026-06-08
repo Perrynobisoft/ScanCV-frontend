@@ -1,11 +1,13 @@
 import { AuthRepositoryImpl } from '@/infrastructure/repositories/AuthRepositoryImpl'
 import { type ReactNode, createContext, useContext, useMemo } from 'react'
 import { UsersRepositoryImpl } from '@/infrastructure/repositories/UsersRepositoryImpl'
+import { CvRepositoryImpl } from '@/infrastructure/repositories/CvRepositoryImpl'
 
 // 1. Define interface for repositories
 export interface RepositoryContainer {
   authRepository: ReturnType<typeof AuthRepositoryImpl>
   usersRepository: ReturnType<typeof UsersRepositoryImpl>
+  cvRepository: ReturnType<typeof CvRepositoryImpl>
 }
 
 // 2. Create context with explicit type
@@ -24,6 +26,7 @@ export const RepositoryProvider = ({ children }: RepositoryProviderProps) => {
     () => ({
       authRepository: AuthRepositoryImpl(),
       usersRepository: UsersRepositoryImpl(),
+      cvRepository: CvRepositoryImpl(),
     }),
     [],
   )

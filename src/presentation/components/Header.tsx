@@ -1,16 +1,40 @@
 import { useLogout } from '@/presentation/hooks/auth/useLogout'
 import { useAuth } from '@/presentation/provider/auth/auth-provider'
 import { m } from '@/paraglide/messages'
-import { getLocale, locales, setLocale } from '@/paraglide/runtime.js'
+import { useLocale } from '@/presentation/provider/locale/locale-provider'
+import { useState } from 'react'
 import { Roles } from '@/shared/enums/Roles'
 import { Link, useRouter } from '@tanstack/react-router'
+import { GB, DE, VN } from 'country-flag-icons/react/3x2'
+
+const LOCALE_CONFIG = {
+  en: { flag: GB, name: 'English' },
+  de: { flag: DE, name: 'Deutsch' },
+  vi: { flag: VN, name: 'Tiếng Việt' },
+} as const
+
+const getLocaleInfo = (locale: string) => {
+  return (
+    (LOCALE_CONFIG as Record<string, any>)[locale] || {
+      flag: '🌐',
+      name: locale,
+    }
+  )
+}
 
 export default function Header() {
   const router = useRouter()
   const { user } = useAuth()
   const { logout, isPending } = useLogout()
-  const currentLocale = getLocale()
+  const {
+    locale: currentLocale,
+    setLocale: changeLocale,
+    locales: availableLocales,
+  } = useLocale()
   const canAccessAdmin = user?.role?.id === Roles.ADMIN
+  const [open, setOpen] = useState(false)
+
+  const CurrentFlag = getLocaleInfo(currentLocale).flag
 
   const handleLogout = () => {
     logout(() => {
@@ -19,12 +43,6 @@ export default function Header() {
         replace: true,
       })
     })
-  }
-
-  const handleLanguageChange = (locale: (typeof locales)[number]) => {
-    if (locale !== currentLocale) {
-      void setLocale(locale)
-    }
   }
 
   return (
@@ -40,6 +58,9 @@ export default function Header() {
           <Link className="text-sm font-medium text-slate-600" to="/dashboard">
             {m.header_dashboard()}
           </Link>
+          <Link className="text-sm font-medium text-slate-600" to="/cv">
+            {m.cv_management()}
+          </Link>
           <Link className="text-sm font-medium text-slate-600" to="/profile">
             {m.header_profile()}
           </Link>
@@ -51,24 +72,59 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <div className="hidden items-center gap-2 md:flex">
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-              {m.language_label()}
-            </span>
-            {locales.map((locale) => (
-              <button
-                key={locale}
-                className={`rounded-xl px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] transition ${
-                  currentLocale === locale
-                    ? 'bg-slate-950 text-white'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
-                onClick={() => handleLanguageChange(locale)}
-                type="button"
-              >
-                {locale}
-              </button>
-            ))}
+          {/* Language Selector */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setOpen((s) => !s)}
+              className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm hover:bg-slate-50 transition"
+            >
+              {typeof CurrentFlag === 'function' ? (
+                <CurrentFlag className="h-4 w-6" aria-hidden />
+              ) : (
+                <span className="text-lg">{CurrentFlag}</span>
+              )}
+              <span className="font-medium text-slate-700">
+                {currentLocale.toUpperCase()}
+              </span>
+            </button>
+
+            {open && (
+              <div className="absolute right-0 mt-2 w-48 rounded-lg bg-white shadow-lg border border-slate-200 z-50">
+                {availableLocales.map((loc) => {
+                  const Flag = getLocaleInfo(loc).flag
+                  return (
+                    <button
+                      key={loc}
+                      onClick={() => {
+                        setOpen(false)
+                        if (loc !== currentLocale) {
+                          void changeLocale(loc)
+                        }
+                      }}
+                      className={`w-full flex items-center gap-3 px-4 py-3 text-sm transition ${
+                        currentLocale === loc
+                          ? 'bg-slate-100 font-semibold text-slate-900'
+                          : 'text-slate-700 hover:bg-slate-50'
+                      }`}
+                      type="button"
+                    >
+                      {typeof Flag === 'function' ? (
+                        <Flag className="h-4 w-6" aria-hidden />
+                      ) : (
+                        <span className="text-xl">{Flag}</span>
+                      )}
+                      <div className="flex flex-col items-start">
+                        <span className="font-medium">
+                          {getLocaleInfo(loc).name}
+                        </span>
+                        <span className="text-xs text-slate-500">{loc}</span>
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
+            )}
           </div>
 
           <div className="hidden text-right sm:block">

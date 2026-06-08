@@ -1,40 +1,21 @@
-import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
-import { getMeQueryOptions } from '@/presentation/hooks/auth/useMe'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
 import Header from '@/presentation/components/Header'
+import { useLocale } from '@/presentation/provider/locale/locale-provider'
 
 export const Route = createFileRoute('/_app')({
   component: RouteComponent,
-  beforeLoad: async ({ context, location }) => {
-    if (!context.auth.isAuthenticated) {
-      throw redirect({
-        to: '/auth/login',
-        search: {
-          redirectTo: location.href,
-        },
-        replace: true,
-      })
-    }
-
-    try {
-      await context.queryClient.ensureQueryData(getMeQueryOptions())
-    } catch {
-      context.auth.clearAuth()
-      throw redirect({
-        to: '/auth/login',
-        search: {
-          redirectTo: location.href,
-        },
-        replace: true,
-      })
-    }
+  beforeLoad: async () => {
+    return
   },
 })
 
 function RouteComponent() {
+  const { locale } = useLocale()
+
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50" lang={locale}>
       <Header />
-      <Outlet />
+      <Outlet key={locale} />
     </div>
   )
 }
