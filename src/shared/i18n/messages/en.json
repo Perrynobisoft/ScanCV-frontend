@@ -17,12 +17,12 @@
   "login_error_generic": "We couldn't sign you in. Please try again.",
   "logout_button": "Logout",
   "logout_button_loading": "Logging out...",
-  "header_brand": "React Base",
+  "header_brand": "CV Scanner",
   "header_dashboard": "Dashboard",
   "header_profile": "Profile",
   "header_admin": "Admin",
   "header_authenticated_user": "Authenticated user",
-  "auth_layout_brand": "React Base",
+  "auth_layout_brand": "CV Scanner",
   "auth_layout_title": "A cleaner authentication flow for the projects built on this base.",
   "auth_layout_description": "This starter now ships with a real login form, route-aware redirection, query-backed auth state, and a testable feature boundary instead of a one-click demo button.",
   "dashboard_page": "Dashboard",
@@ -65,5 +65,12 @@
   "error_learn_more": "Learn more",
   "network_error": "Network error occurred",
   "missing_refresh_token": "Missing refresh token",
-  "common_error_generic": "An error occurred"
+  "common_error_generic": "An error occurred",
+  "cv_management": "CV Management",
+  "cv_talent_workspace": "Talent Workspace",
+  "cv_filters": "Filters:",
+  "cv_add_filter": "Add Filter",
+  "cv_try_label": "Try:",
+  "cv_no_match": "No CVs match the current search.",
+  "cv_showing": "Showing 1-15 of {count} candidates"
 }

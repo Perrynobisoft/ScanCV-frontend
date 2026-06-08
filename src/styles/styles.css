@@ -13,3 +13,305 @@ code {
   font-family:
     source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+/* Design tokens for CV redesign (from provided mock) */
+:root {
+  --cv-primary: #0f172a;
+  --cv-secondary: #2563eb;
+  --cv-tertiary: #64748b;
+  --cv-neutral: #f8fafc;
+  --cv-radius-lg: 18px;
+  --cv-radius-xl: 24px;
+}
+
+/* Page layout */
+.cv-page-root {
+  max-width: 1200px;
+  margin: 32px auto;
+  padding: 24px;
+  box-sizing: border-box;
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial;
+  color: var(--cv-primary);
+}
+
+.cv-hero {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  background: linear-gradient(
+    180deg,
+    rgba(248, 250, 252, 1) 0%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  border-radius: var(--cv-radius-xl);
+  padding: 22px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+}
+
+.cv-hero-left {
+  flex: 1 1 0;
+}
+.cv-label {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--cv-tertiary);
+  font-size: 12px;
+  font-weight: 700;
+}
+.cv-title {
+  margin: 6px 0 4px 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+.cv-subtitle {
+  color: #475569;
+  margin: 0;
+}
+
+.cv-hero-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.cv-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+.btn-primary {
+  background: var(--cv-primary);
+  color: white;
+}
+.btn-ghost {
+  background: white;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  color: var(--cv-primary);
+}
+.btn-outline {
+  background: transparent;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  color: var(--cv-primary);
+  padding: 8px 12px;
+}
+
+.cv-filters {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin: 18px 0;
+}
+.cv-search {
+  flex: 1;
+}
+.cv-search-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  background: white;
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.02) inset;
+}
+
+.cv-list-card {
+  background: white;
+  border-radius: var(--cv-radius-xl);
+  padding: 18px;
+  box-shadow: 0 8px 24px rgba(2, 6, 23, 0.04);
+}
+
+.cv-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.cv-list-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+.cv-list-sub {
+  color: #64748b;
+  font-size: 13px;
+  margin: 4px 0 0;
+}
+
+.cv-table-wrap {
+  overflow: auto;
+}
+.cv-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.cv-table thead th {
+  text-align: left;
+  padding: 12px;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 700;
+}
+.cv-table tbody td {
+  padding: 12px;
+  border-top: 1px solid rgba(15, 23, 42, 0.04);
+  vertical-align: middle;
+}
+.cv-table tbody tr:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(248, 250, 252, 0.6),
+    rgba(255, 255, 255, 0.6)
+  );
+}
+
+.cv-candidate-name {
+  font-weight: 700;
+}
+.cv-candidate-email {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.cv-skills {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.cv-skill-chip {
+  background: #f1f5f9;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: #0f172a;
+}
+.cv-more {
+  color: #475569;
+  font-size: 12px;
+}
+
+.cv-empty {
+  padding: 20px;
+  text-align: center;
+  color: #64748b;
+}
+
+/* Avatar styles used in CV table */
+.cv-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f172a;
+  color: white;
+}
+.cv-avatar-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+/* Small tweaks for table checkbox column */
+.cv-table thead th:first-child,
+.cv-table tbody td:first-child {
+  text-align: center;
+  width: 40px;
+}
+
+/* Pagination buttons small style */
+.cv-list-card .btn-ghost {
+  background: transparent;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+}
+.cv-list-card .btn-primary {
+  background: var(--cv-primary);
+  color: #fff;
+}
+
+/* Responsiveness tweaks */
+@media (max-width: 768px) {
+  .cv-hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .cv-hero-right {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .cv-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* Top search banner */
+.cv-top-search {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: white;
+  border-radius: var(--cv-radius-xl);
+  padding: 14px;
+  margin-bottom: 18px;
+  box-shadow: 0 8px 20px rgba(2, 6, 23, 0.04);
+}
+.cv-top-search-input {
+  flex: 1;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+}
+.cv-top-search-btn {
+  padding: 12px 18px;
+}
+
+/* Filter pills */
+.cv-filter-pills {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.cv-filters-label {
+  color: #64748b;
+  font-weight: 700;
+}
+.cv-pill {
+  background: #f8fafc;
+  border: 1px solid rgba(15, 23, 42, 0.04);
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: #0f172a;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.cv-pill-close {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+}
+.cv-add-filter {
+  background: transparent;
+  border: none;
+  color: var(--cv-secondary);
+  font-weight: 600;
+  cursor: pointer;
+}

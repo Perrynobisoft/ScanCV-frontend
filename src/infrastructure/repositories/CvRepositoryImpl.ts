@@ -1,0 +1,54 @@
+import { type ResponseCommon } from '@/application/dto/response/ResponseCommon'
+import {
+  type CvItem,
+  type CreateCvRequest,
+  type SearchCvRequest,
+  type UpdateCvRequest,
+} from '@/domain/models/Cv'
+import { type DeleteCommonParams } from '@/domain/models/common/CommonParams'
+import {
+  useDeleteApi,
+  useGetApi,
+  usePostApi,
+  usePutApi,
+} from '@/infrastructure/hooks/useApi'
+import { Endpoints } from '@/shared/endpoints'
+import { type CvRepository } from '@/application/repositories/CvRepository'
+
+export const CvRepositoryImpl = (): CvRepository => ({
+  search: () =>
+    usePostApi<SearchCvRequest, ResponseCommon<CvItem[]>>({
+      endpoint: Endpoints.Cv.SEARCH,
+    }),
+  getAll: (params, options) =>
+    useGetApi<ResponseCommon<CvItem[]>>({
+      endpoint: Endpoints.Cv.GET_ALL,
+      queryParams: {
+        ...(params || {}),
+      },
+      options,
+    }),
+  getById: (params, options) =>
+    useGetApi<ResponseCommon<CvItem>>({
+      endpoint: Endpoints.Cv.GET,
+      queryParams: {
+        ...(params || {}),
+      },
+      options,
+    }),
+  create: () =>
+    usePostApi<CreateCvRequest, ResponseCommon<CvItem>>({
+      endpoint: Endpoints.Cv.CREATE,
+    }),
+  update: () =>
+    usePutApi<UpdateCvRequest, ResponseCommon<CvItem>>({
+      endpoint: Endpoints.Cv.UPDATE,
+    }),
+  delete: () =>
+    useDeleteApi<DeleteCommonParams, ResponseCommon<boolean>>({
+      endpoint: Endpoints.Cv.DELETE,
+      buildQueryParams: (params) => ({
+        ...(params || {}),
+      }),
+    }),
+})

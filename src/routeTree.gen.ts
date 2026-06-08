@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AppProfileRouteImport } from './routes/_app/profile'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
+import { Route as AppCvRouteImport } from './routes/_app/cv'
 import { Route as AppAdminRouteImport } from './routes/_app/admin'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
 import { Route as errors500RouteImport } from './routes/(errors)/500'
@@ -48,6 +49,11 @@ const AppProfileRoute = AppProfileRouteImport.update({
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppCvRoute = AppCvRouteImport.update({
+  id: '/cv',
+  path: '/cv',
   getParentRoute: () => AppRouteRoute,
 } as any)
 const AppAdminRoute = AppAdminRouteImport.update({
@@ -84,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/admin': typeof AppAdminRoute
+  '/cv': typeof AppCvRoute
   '/dashboard': typeof AppDashboardRoute
   '/profile': typeof AppProfileRoute
   '/auth/login': typeof AuthLoginRoute
@@ -96,6 +103,7 @@ export interface FileRoutesByTo {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/admin': typeof AppAdminRoute
+  '/cv': typeof AppCvRoute
   '/dashboard': typeof AppDashboardRoute
   '/profile': typeof AppProfileRoute
   '/auth/login': typeof AuthLoginRoute
@@ -110,6 +118,7 @@ export interface FileRoutesById {
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
   '/_app/admin': typeof AppAdminRoute
+  '/_app/cv': typeof AppCvRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/profile': typeof AppProfileRoute
   '/auth/login': typeof AuthLoginRoute
@@ -124,6 +133,7 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/admin'
+    | '/cv'
     | '/dashboard'
     | '/profile'
     | '/auth/login'
@@ -136,6 +146,7 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/admin'
+    | '/cv'
     | '/dashboard'
     | '/profile'
     | '/auth/login'
@@ -149,6 +160,7 @@ export interface FileRouteTypes {
     | '/(errors)/500'
     | '/(errors)/503'
     | '/_app/admin'
+    | '/_app/cv'
     | '/_app/dashboard'
     | '/_app/profile'
     | '/auth/login'
@@ -208,6 +220,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/_app/cv': {
+      id: '/_app/cv'
+      path: '/cv'
+      fullPath: '/cv'
+      preLoaderRoute: typeof AppCvRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/_app/admin': {
       id: '/_app/admin'
       path: '/admin'
@@ -248,12 +267,14 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteRouteChildren {
   AppAdminRoute: typeof AppAdminRoute
+  AppCvRoute: typeof AppCvRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppProfileRoute: typeof AppProfileRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppAdminRoute: AppAdminRoute,
+  AppCvRoute: AppCvRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppProfileRoute: AppProfileRoute,
 }
