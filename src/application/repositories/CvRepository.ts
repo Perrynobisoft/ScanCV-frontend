@@ -1,4 +1,5 @@
 import { type ResponseCommon } from '@/application/dto/response/ResponseCommon'
+import { type PaginatedResponse } from '@/application/dto/response/PaginatedResponse'
 import {
   type CvItem,
   type CreateCvRequest,
@@ -19,13 +20,13 @@ import {
 import { type QueryOptions } from '@/shared/types/react-query'
 
 export interface CvRepository {
-  search: () => ReturnType<
-    typeof usePostApi<SearchCvRequest, ResponseCommon<CvItem[]>>
-  >
+  search: (
+    params?: PaginationParams,
+  ) => ReturnType<typeof usePostApi<SearchCvRequest, PaginatedResponse<CvItem>>>
   getAll: (
     params?: PaginationParams,
-    options?: QueryOptions<ResponseCommon<CvItem[]>>,
-  ) => ReturnType<typeof useGetApi<ResponseCommon<CvItem[]>>>
+    options?: QueryOptions<PaginatedResponse<CvItem>>,
+  ) => ReturnType<typeof useGetApi<PaginatedResponse<CvItem>>>
   getById: (
     params: GetByIdCommonParams,
     options?: QueryOptions<ResponseCommon<CvItem>>,

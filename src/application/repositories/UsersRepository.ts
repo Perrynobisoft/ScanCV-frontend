@@ -15,13 +15,14 @@ import {
 } from '@/infrastructure/hooks/useApi'
 import { type QueryOptions } from '@shared/types/react-query'
 import { type ResponseCommon } from '@application/dto/response/ResponseCommon'
+import { type PaginatedResponse } from '@application/dto/response/PaginatedResponse'
 import type { PaginationParams } from '@domain/models/common/PaginationParams'
 
 export interface UsersRepository {
   getAll: (
     params?: PaginationParams,
-    options?: QueryOptions<ResponseCommon<Users[]>>,
-  ) => ReturnType<typeof useGetApi<ResponseCommon<Users[]>>>
+    options?: QueryOptions<PaginatedResponse<Users>>,
+  ) => ReturnType<typeof useGetApi<PaginatedResponse<Users>>>
   getById: (
     params: GetByIdCommonParams,
     options?: QueryOptions<ResponseCommon<Users>>,

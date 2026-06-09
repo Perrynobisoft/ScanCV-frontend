@@ -1,4 +1,5 @@
 import { type ResponseCommon } from '@/application/dto/response/ResponseCommon'
+import { type PaginatedResponse } from '@/application/dto/response/PaginatedResponse'
 import {
   type CvItem,
   type CreateCvRequest,
@@ -16,12 +17,15 @@ import { Endpoints } from '@/shared/endpoints'
 import { type CvRepository } from '@/application/repositories/CvRepository'
 
 export const CvRepositoryImpl = (): CvRepository => ({
-  search: () =>
-    usePostApi<SearchCvRequest, ResponseCommon<CvItem[]>>({
+  search: (params) =>
+    usePostApi<SearchCvRequest, PaginatedResponse<CvItem>>({
       endpoint: Endpoints.Cv.SEARCH,
+      queryParams: {
+        ...(params || {}),
+      },
     }),
   getAll: (params, options) =>
-    useGetApi<ResponseCommon<CvItem[]>>({
+    useGetApi<PaginatedResponse<CvItem>>({
       endpoint: Endpoints.Cv.GET_ALL,
       queryParams: {
         ...(params || {}),

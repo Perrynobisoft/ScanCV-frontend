@@ -13,9 +13,9 @@ export interface FormattedError {
 
 export const getFormattedErrorMessage = (
   formattedError: unknown,
-  fallback = m.common_error_generic(),
-) => {
+  fallback?: string,
+): string => {
   const error = formattedError as Partial<FormattedError>
 
-  return error.error?.message || fallback
+  return error.error?.message || fallback || m.common_error_generic()
 }
