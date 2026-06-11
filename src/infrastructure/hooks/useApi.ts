@@ -1,4 +1,5 @@
 import type { FormattedError } from '@/application/dto/response/ErrorResponse'
+import ErrorHandler from '@/infrastructure/services/ErrorHandler'
 import { buildUrl } from '@/shared/url'
 import {
   type MutationFunctionContext,
@@ -28,6 +29,13 @@ const handleApiError = <TRequest>(
   variables?: TRequest | undefined,
   context?: unknown,
 ) => {
+  // Centralized error handling: show toast unless explicitly silenced.
+  const cfg = (context as ApiConfig<unknown, TRequest>) || {}
+  const silent =
+    _silentError || cfg.silentError === true || cfg.showErrorToast === false
+  if (!silent) {
+    ErrorHandler.notifyApiError(error)
+  }
   if (onError) onError(error, variables, context)
 }
 

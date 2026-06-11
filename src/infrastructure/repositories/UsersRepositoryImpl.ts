@@ -1,4 +1,5 @@
 import { type ResponseCommon } from '@/application/dto/response/ResponseCommon'
+import { type PaginatedResponse } from '@/application/dto/response/PaginatedResponse'
 import { type UsersRepository } from '@/application/repositories/UsersRepository'
 import {
   type Users,
@@ -22,9 +23,9 @@ import { type QueryOptions } from '@/shared/types/react-query'
 export const UsersRepositoryImpl = (): UsersRepository => ({
   getAll: (
     params?: PaginationParams,
-    options?: QueryOptions<ResponseCommon<Users[]>>,
+    options?: QueryOptions<PaginatedResponse<Users>>,
   ) => {
-    return useGetApi<ResponseCommon<Users[]>>({
+    return useGetApi<PaginatedResponse<Users>>({
       endpoint: Endpoints.Users.GET_ALL,
       queryParams: {
         ...(params || {}),

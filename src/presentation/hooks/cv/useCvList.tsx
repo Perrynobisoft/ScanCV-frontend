@@ -1,37 +1,56 @@
-import { useMemo } from 'react'
-import type { CvItem } from '@/domain/models/Cv'
+import { useEffect, useState } from 'react'
+import { useRepository } from '@/di/RepositoriesProvider'
+import { type PaginatedData } from '@/application/dto/response/PaginatedResponse'
 
-const cvList: CvItem[] = [
-  {
-    id: 1,
-    candidateName: 'Sarah Chen',
-    email: 'sarah.chen@example.com',
-    position: 'Senior Frontend Architect',
-    skills: ['React', 'TypeScript', 'Tailwind'],
-    uploadDate: '2024-05-24T12:00:00Z',
-    owner: 'Michael R.',
-  },
-  {
-    id: 2,
-    candidateName: 'James Blackwell',
-    email: 'j.blackwell@techhub.io',
-    position: 'DevOps Specialist',
-    skills: ['AWS', 'Kubernetes', 'Terraform'],
-    uploadDate: '2024-05-22T12:00:00Z',
-    owner: 'You',
-  },
-  {
-    id: 3,
-    candidateName: 'Amara Miller',
-    email: 'amara.m@designstudio.co',
-    position: 'Product Designer',
-    skills: ['Figma', 'Design Systems', 'UX'],
-    uploadDate: '2024-05-20T12:00:00Z',
-    owner: 'Linda K.',
-  },
-]
+const DEFAULT_PAGE = 1
+const DEFAULT_LIMIT = 10
 
-export const useCvList = () => {
-  const data = useMemo(() => cvList, [])
-  return { data }
+export const useCvList = (searchQuery?: string) => {
+  const { cvRepository } = useRepository()
+  const [page, setPage] = useState(DEFAULT_PAGE)
+  const [limit] = useState(DEFAULT_LIMIT)
+
+  const query = cvRepository.getAll(
+    {
+      page,
+      limit,
+      search: searchQuery || undefined,
+    },
+    { enabled: searchQuery !== undefined },
+  )
+
+  useEffect(() => {
+    setPage(DEFAULT_PAGE)
+  }, [searchQuery])
+
+  const normalizeListResponse = (
+    response:
+      | PaginatedData<unknown>
+      | { data?: PaginatedData<unknown> }
+      | undefined,
+  ): PaginatedData<unknown> | undefined => {
+    if (!response) return undefined
+    if ('data' in response && response.data) return response.data
+    return response as PaginatedData<unknown>
+  }
+
+  const listResponse = normalizeListResponse(query.data)
+  const items = listResponse?.items ?? []
+  const total = listResponse?.meta?.total ?? 0
+  const totalPages =
+    listResponse?.meta?.totalPages ?? Math.max(1, Math.ceil(total / limit))
+  const errorMessage =
+    query.error?.error?.message || (query.error as any)?.message || null
+
+  return {
+    page,
+    setPage,
+    limit,
+    items,
+    total,
+    totalPages,
+    isLoading: query.isLoading,
+    errorMessage,
+    searchQuery,
+  }
 }

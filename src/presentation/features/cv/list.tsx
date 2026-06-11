@@ -1,47 +1,55 @@
 import { useMemo, useState } from 'react'
+import { useSearchCv } from '@/presentation/hooks/cv/useSearchCv'
 import { useCvList } from '@/presentation/hooks/cv/useCvList'
-import { useRepository } from '@/di/RepositoriesProvider'
-import type { CvItem } from '@/domain/models/Cv'
 import { formatDate } from '@/shared/date'
+import { type CvItem } from '@/domain/models/Cv'
+import { SearchMode, SEARCH_MODE_OPTIONS } from '@/shared/enums/SearchMode'
 import { Button } from '@/presentation/components/ui/button'
 import { Input } from '@/presentation/components/ui/input'
+import { Select } from '@/presentation/components/ui/select'
 import Avatar from '@/presentation/components/ui/avatar'
 import { m } from '@/paraglide/messages'
+import { Pagination } from '@/presentation/components/ui/pagination'
 
 export default function CvListPage() {
-  const { data: cvs } = useCvList()
-  const { cvRepository } = useRepository()
-  const [searchValue, setSearchValue] = useState('')
+  const [searchMode, setSearchMode] = useState<SearchMode>(SearchMode.Keyword)
+  const [keywordInput, setKeywordInput] = useState('')
+  const [keywordQuery, setKeywordQuery] = useState<string | undefined>(
+    undefined,
+  )
+
+  const aiSearch = useSearchCv()
+  const keywordSearch = useCvList(keywordQuery)
+
+  const activeSearch = searchMode === 'ai' ? aiSearch : keywordSearch
+  const searchValue = searchMode === 'ai' ? aiSearch.searchValue : keywordInput
+
+  const handleSearch = (query?: string) => {
+    const value = query ?? searchValue
+    if (searchMode === SearchMode.Ai) {
+      aiSearch.handleSearch(value)
+    } else {
+      setKeywordQuery(value)
+    }
+  }
+
+  const handleInputChange = (value: string) => {
+    if (searchMode === SearchMode.Ai) {
+      aiSearch.setSearchValue(value)
+    } else {
+      setKeywordInput(value)
+    }
+  }
+
+  const { page, setPage, items, total, totalPages, isLoading } = activeSearch
   const [selectedIds, setSelectedIds] = useState<number[]>([])
-  const [apiCvs, setApiCvs] = useState<CvItem[] | null>(null)
-  const [apiError, setApiError] = useState<string | null>(null)
 
-  const searchApi = cvRepository.search()
-
-  const filteredCvs = useMemo(() => {
-    // Only use API results when available. Otherwise show the full mock list.
-    if (apiCvs) return apiCvs
-    return cvs
-  }, [cvs, apiCvs])
+  const filteredCvs = useMemo(() => items as CvItem[], [items])
 
   const toggleSelect = (id: number) => {
     setSelectedIds((s) =>
       s.includes(id) ? s.filter((x) => x !== id) : [...s, id],
     )
-  }
-
-  const handleSearch = async (query?: string) => {
-    const q = query ?? searchValue
-    setApiError(null)
-    try {
-      const response = await searchApi.mutateAsync({ query: q })
-      const searchResults = Array.isArray(response?.data) ? response.data : []
-
-      setApiCvs(searchResults)
-    } catch (err: any) {
-      setApiError(err?.error?.message || err?.message || 'API error')
-      setApiCvs(null)
-    }
   }
 
   return (
@@ -52,81 +60,25 @@ export default function CvListPage() {
           <Input
             placeholder="Find senior Java developers with AWS experience in Seattle..."
             value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
+            onChange={(e) => handleInputChange(e.target.value)}
             className="flex-1"
           />
-          <Button
-            onClick={() => handleSearch()}
-            variant="primary"
-            className="py-3"
-          >
-            Search →
-          </Button>
-        </div>
-        <div className="mt-3 text-sm text-gray-500">
-          {m.cv_try_label()}
-          <Button
-            variant="ghost"
-            className="text-blue-600 hover:underline mx-1 p-0"
-            onClick={() => {
-              setSearchValue('Recent PhD graduates in Machine Learning')
-              handleSearch('Recent PhD graduates in Machine Learning')
-            }}
-          >
-            "Recent PhD graduates in Machine Learning"
-          </Button>
-          <span className="text-gray-300">•</span>
-          <Button
-            variant="ghost"
-            className="text-blue-600 hover:underline mx-1 p-0"
-            onClick={() => {
-              setSearchValue('Top 10% React developers from last month')
-              handleSearch('Top 10% React developers from last month')
-            }}
-          >
-            "Top 10% React developers from last month"
-          </Button>
-        </div>
-
-        {apiError && (
-          <div className="mt-3 text-sm text-red-500">{apiError}</div>
-        )}
-      </section>
-
-      <section className="flex items-center justify-between gap-4 my-4">
-        <div className="flex gap-2 items-center flex-wrap">
-          <div className="text-sm font-semibold text-gray-500">
-            {m.cv_filters()}
-          </div>
-          <div className="bg-gray-50 border border-gray-100 px-2 py-1 rounded-md text-sm text-gray-800 flex items-center gap-2">
-            Ownership: All
+          <div className="flex items-center gap-2">
+            <Select
+              value={searchMode}
+              onChange={(e) => setSearchMode(e.target.value as SearchMode)}
+              options={SEARCH_MODE_OPTIONS}
+              className="w-56 py-3"
+            />
             <Button
-              variant="ghost"
-              className="text-gray-400 px-1 py-0 hover:bg-transparent"
+              onClick={() => handleSearch()}
+              variant="primary"
+              className="py-3"
             >
-              ✕
+              Search →
             </Button>
           </div>
-          <div className="bg-gray-50 border border-gray-100 px-2 py-1 rounded-md text-sm text-gray-800 flex items-center gap-2">
-            Position: Engineering
-            <Button
-              variant="ghost"
-              className="text-gray-400 px-1 py-0 hover:bg-transparent"
-            >
-              ✕
-            </Button>
-          </div>
-          <Button
-            variant="ghost"
-            className="text-blue-600 font-semibold bg-transparent hover:bg-gray-100"
-          >
-            {m.cv_add_filter()}
-          </Button>
         </div>
-
-        {/* <div>
-          <Button variant="default" className="mr-2">Filters</Button>
-        </div> */}
       </section>
 
       <section className="bg-white rounded-2xl p-4 shadow-lg">
@@ -190,84 +142,64 @@ export default function CvListPage() {
                     />
                   </td>
                   <td className="p-3 flex items-center gap-3">
-                    <Avatar name={cv.candidateName} />
+                    <Avatar name={cv.full_name} />
                     <div>
                       <div className="font-semibold text-gray-900">
-                        {cv.candidateName}
+                        {cv.full_name}
                       </div>
                       <div className="text-sm text-gray-500">{cv.email}</div>
                     </div>
                   </td>
-                  <td className="p-3 text-sm text-gray-700">{cv.position}</td>
+                  <td className="p-3 text-sm text-gray-700 capitalize">
+                    {cv.position}
+                  </td>
                   <td className="p-3">
                     <div className="flex gap-2 flex-wrap">
-                      {cv.skills.slice(0, 3).map((s) => (
+                      {(cv.skills ?? []).slice(0, 3).map((skill) => (
                         <span
-                          key={s}
+                          key={skill}
                           className="bg-gray-100 text-sm px-2 py-1 rounded-full text-gray-800"
                         >
-                          {s}
+                          {skill}
                         </span>
                       ))}
-                      {cv.skills.length > 3 && (
+                      {(cv.skills ?? []).length > 3 && (
                         <span className="text-sm text-gray-500">
-                          +{cv.skills.length - 3}
+                          +{(cv.skills ?? []).length - 3}
                         </span>
                       )}
                     </div>
                   </td>
                   <td className="p-3 text-sm text-gray-600">
-                    {formatDate(cv.uploadDate)}
+                    {formatDate(cv.created_at)}
                   </td>
-                  <td className="p-3 flex items-center gap-2 text-sm text-gray-900">
-                    <Avatar name={cv.owner} size={28} />
-                    <div className="text-sm text-gray-900">{cv.owner}</div>
+                  <td className="p-3 text-sm text-gray-900">
+                    {cv.uploaded_by?.full_name ?? 'N/A'}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
 
-          {filteredCvs.length === 0 && (
+          {isLoading && (
+            <div className="p-5 text-center text-gray-500">Loading...</div>
+          )}
+
+          {!isLoading && filteredCvs.length === 0 && (
             <div className="p-5 text-center text-gray-500">
               {m.cv_no_match()}
             </div>
           )}
 
-          {/* Footer pagination mock */}
-          <div className="flex justify-between items-center mt-4">
+          <div className="flex flex-col gap-4 mt-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="text-sm text-gray-500">
-              Showing 1-15 of {filteredCvs.length} candidates
+              Showing {filteredCvs.length} of {total} candidates
             </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                className="px-2 py-1 border border-gray-200"
-              >
-                &lt;
-              </Button>
-              <Button variant="primary" className="px-3 py-1">
-                1
-              </Button>
-              <Button
-                variant="ghost"
-                className="px-3 py-1 border border-gray-200"
-              >
-                2
-              </Button>
-              <Button
-                variant="ghost"
-                className="px-3 py-1 border border-gray-200"
-              >
-                3
-              </Button>
-              <Button
-                variant="ghost"
-                className="px-2 py-1 border border-gray-200"
-              >
-                &gt;
-              </Button>
-            </div>
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              onPageChange={setPage}
+            />
           </div>
         </div>
       </section>
