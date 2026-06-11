@@ -15,15 +15,19 @@ export const useSearchCv = () => {
   // POST search: do not send search text as query param. We'll send
   // { query, page, limit } in the POST body when mutating.
   const searchMutation = cvRepository.search()
+  const { mutateAsync } = searchMutation
 
   useEffect(() => {
     if (!searchQuery) return
-    void searchMutation.mutateAsync({ query: searchQuery, page, limit })
-  }, [searchQuery, page, limit, searchMutation])
+    if (page === DEFAULT_PAGE) return
+    void mutateAsync({ query: searchQuery, page, limit })
+  }, [searchQuery, page, limit, mutateAsync])
 
   const handleSearch = (query?: string) => {
+    const value = query ?? searchValue
     setPage(DEFAULT_PAGE)
-    setSearchQuery(query ?? searchValue)
+    setSearchQuery(value)
+    void mutateAsync({ query: value, page: DEFAULT_PAGE, limit })
   }
 
   const normalizeSearchResponse = (
