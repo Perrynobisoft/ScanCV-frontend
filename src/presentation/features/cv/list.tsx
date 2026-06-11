@@ -142,25 +142,25 @@ export default function CvListPage() {
                     />
                   </td>
                   <td className="p-3 flex items-center gap-3">
-                    <Avatar name={cv.fullName} />
+                    <Avatar name={cv.full_name} />
                     <div>
                       <div className="font-semibold text-gray-900">
-                        {cv.fullName}
+                        {cv.full_name}
                       </div>
                       <div className="text-sm text-gray-500">{cv.email}</div>
                     </div>
                   </td>
                   <td className="p-3 text-sm text-gray-700 capitalize">
-                    {cv.status}
+                    {cv.position}
                   </td>
                   <td className="p-3">
                     <div className="flex gap-2 flex-wrap">
                       {(cv.skills ?? []).slice(0, 3).map((skill) => (
                         <span
-                          key={skill.id}
+                          key={skill}
                           className="bg-gray-100 text-sm px-2 py-1 rounded-full text-gray-800"
                         >
-                          {skill.skill.name}
+                          {skill}
                         </span>
                       ))}
                       {(cv.skills ?? []).length > 3 && (
@@ -171,10 +171,10 @@ export default function CvListPage() {
                     </div>
                   </td>
                   <td className="p-3 text-sm text-gray-600">
-                    {formatDate(cv.createdAt)}
+                    {formatDate(cv.created_at)}
                   </td>
                   <td className="p-3 text-sm text-gray-900">
-                    {cv.file?.uploadedBy ?? 'N/A'}
+                    {cv.uploaded_by?.full_name ?? 'N/A'}
                   </td>
                 </tr>
               ))}

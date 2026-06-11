@@ -9,6 +9,7 @@ export interface User {
   socialId: string
   firstName: string
   lastName: string
+  full_name: string
   provider: string
   role?: Role | null
 }

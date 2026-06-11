@@ -1,46 +1,43 @@
+import type { User } from './Auth'
+
 export interface CvFile {
   id: number
-  uploadedBy: number
-  originalFileName: string
-  fileUrl: string
-  fileType: string
-  fileSize: number
-  aiDocumentId?: string
-  createdAt: string
-  updatedAt: string
+  uploaded_by: number
+  original_file_name: string
+  file_url: string
+  file_type: string
+  file_size: number
+  ai_document_id?: string
+  created_at: string
+  updated_at: string
 }
 
-export interface Skill {
-  id: number
-  name: string
-  createdAt: string
-}
-
-export interface CvSkill {
-  id: number
-  cvInfoId: number
-  skillId: number
-  confidenceScore: number
-  yearsOfExperience: number
-  skill: Skill
-}
+// export interface CvSkill {
+//   id?: number
+//   cv_info_id?: number
+//   name: string
+//   confidence_score?: number
+//   years_of_experience?: number
+// }
 
 export interface CvItem {
   id: number
-  cvFileId: number
-  fullName: string
+  cv_file_id: number
+  full_name: string
   email: string
   phone: string
-  dateOfBirth: string
+  date_of_birth: string
   address: string
   summary: string
   educations: string[]
   certifications: string[]
   status: string
-  createdAt: string
-  updatedAt: string
+  created_at: string
+  updated_at: string
   file?: CvFile
-  skills?: CvSkill[]
+  skills?: string[]
+  uploaded_by?: User
+  position: string
 }
 
 export interface SearchCvRequest {
@@ -50,20 +47,20 @@ export interface SearchCvRequest {
 }
 
 export interface CreateCvRequest {
-  cvFileId: number
-  fullName: string
+  cv_file_id: number
+  full_name: string
   email: string
   phone?: string
-  dateOfBirth?: string
+  date_of_birth?: string
   address?: string
   summary?: string
   educations?: string[]
   certifications?: string[]
   status?: string
   skills?: Array<{
-    skillId: number
-    confidenceScore: number
-    yearsOfExperience: number
+    name: string
+    confidence_score?: number
+    years_of_experience?: number
   }>
 }
 

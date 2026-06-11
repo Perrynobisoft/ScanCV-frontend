@@ -12,8 +12,6 @@ export const useSearchCv = () => {
   const [page, setPage] = useState(DEFAULT_PAGE)
   const [limit] = useState(DEFAULT_LIMIT)
 
-  // POST search: do not send search text as query param. We'll send
-  // { query, page, limit } in the POST body when mutating.
   const searchMutation = cvRepository.search()
   const { mutateAsync } = searchMutation
 
