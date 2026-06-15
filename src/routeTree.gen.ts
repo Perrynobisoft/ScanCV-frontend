@@ -13,6 +13,7 @@ import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as AppSmartSearchRouteImport } from './routes/_app/smart-search'
 import { Route as AppProfileRouteImport } from './routes/_app/profile'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppCvRouteImport } from './routes/_app/cv'
@@ -40,6 +41,11 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => AuthRouteRoute,
+} as any)
+const AppSmartSearchRoute = AppSmartSearchRouteImport.update({
+  id: '/smart-search',
+  path: '/smart-search',
+  getParentRoute: () => AppRouteRoute,
 } as any)
 const AppProfileRoute = AppProfileRouteImport.update({
   id: '/profile',
@@ -93,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/cv': typeof AppCvRoute
   '/dashboard': typeof AppDashboardRoute
   '/profile': typeof AppProfileRoute
+  '/smart-search': typeof AppSmartSearchRoute
   '/auth/login': typeof AuthLoginRoute
 }
 export interface FileRoutesByTo {
@@ -106,6 +113,7 @@ export interface FileRoutesByTo {
   '/cv': typeof AppCvRoute
   '/dashboard': typeof AppDashboardRoute
   '/profile': typeof AppProfileRoute
+  '/smart-search': typeof AppSmartSearchRoute
   '/auth/login': typeof AuthLoginRoute
 }
 export interface FileRoutesById {
@@ -121,6 +129,7 @@ export interface FileRoutesById {
   '/_app/cv': typeof AppCvRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/profile': typeof AppProfileRoute
+  '/_app/smart-search': typeof AppSmartSearchRoute
   '/auth/login': typeof AuthLoginRoute
 }
 export interface FileRouteTypes {
@@ -136,6 +145,7 @@ export interface FileRouteTypes {
     | '/cv'
     | '/dashboard'
     | '/profile'
+    | '/smart-search'
     | '/auth/login'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -149,6 +159,7 @@ export interface FileRouteTypes {
     | '/cv'
     | '/dashboard'
     | '/profile'
+    | '/smart-search'
     | '/auth/login'
   id:
     | '__root__'
@@ -163,6 +174,7 @@ export interface FileRouteTypes {
     | '/_app/cv'
     | '/_app/dashboard'
     | '/_app/profile'
+    | '/_app/smart-search'
     | '/auth/login'
   fileRoutesById: FileRoutesById
 }
@@ -205,6 +217,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/auth/login'
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof AuthRouteRoute
+    }
+    '/_app/smart-search': {
+      id: '/_app/smart-search'
+      path: '/smart-search'
+      fullPath: '/smart-search'
+      preLoaderRoute: typeof AppSmartSearchRouteImport
+      parentRoute: typeof AppRouteRoute
     }
     '/_app/profile': {
       id: '/_app/profile'
@@ -270,6 +289,7 @@ interface AppRouteRouteChildren {
   AppCvRoute: typeof AppCvRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppProfileRoute: typeof AppProfileRoute
+  AppSmartSearchRoute: typeof AppSmartSearchRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
@@ -277,6 +297,7 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppCvRoute: AppCvRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppProfileRoute: AppProfileRoute,
+  AppSmartSearchRoute: AppSmartSearchRoute,
 }
 
 const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(

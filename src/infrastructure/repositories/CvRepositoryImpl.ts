@@ -24,11 +24,14 @@ export const CvRepositoryImpl = (): CvRepository => ({
         ...(params || {}),
       },
     }),
-  getAll: (params, options) =>
-    useGetApi<PaginatedResponse<CvItem>>({
+  getAll: (_params, options) =>
+    usePostApi<
+      import('@/domain/models/Cv').GetAllCvRequest,
+      PaginatedResponse<CvItem>
+    >({
       endpoint: Endpoints.Cv.GET_ALL,
       queryParams: {
-        ...(params || {}),
+        ...(_params || {}),
       },
       options,
     }),

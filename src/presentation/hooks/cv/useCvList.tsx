@@ -10,18 +10,21 @@ export const useCvList = (searchQuery?: string) => {
   const [page, setPage] = useState(DEFAULT_PAGE)
   const [limit] = useState(DEFAULT_LIMIT)
 
-  const query = cvRepository.getAll(
-    {
-      page,
-      limit,
-      search: searchQuery || undefined,
-    },
-    { enabled: searchQuery !== undefined },
-  )
+  const listMutation = cvRepository.getAll()
+  const { mutateAsync } = listMutation
 
   useEffect(() => {
     setPage(DEFAULT_PAGE)
   }, [searchQuery])
+
+  useEffect(() => {
+    void mutateAsync({
+      page,
+      limit,
+      search: searchQuery ?? '',
+      extensions: 'string',
+    })
+  }, [mutateAsync, searchQuery, page, limit])
 
   const normalizeListResponse = (
     response:
@@ -34,13 +37,15 @@ export const useCvList = (searchQuery?: string) => {
     return response as PaginatedData<unknown>
   }
 
-  const listResponse = normalizeListResponse(query.data)
+  const listResponse = normalizeListResponse(listMutation.data)
   const items = listResponse?.items ?? []
   const total = listResponse?.meta?.total ?? 0
   const totalPages =
     listResponse?.meta?.totalPages ?? Math.max(1, Math.ceil(total / limit))
   const errorMessage =
-    query.error?.error?.message || (query.error as any)?.message || null
+    listMutation.error?.error?.message ||
+    (listMutation.error as any)?.message ||
+    null
 
   return {
     page,
@@ -49,7 +54,7 @@ export const useCvList = (searchQuery?: string) => {
     items,
     total,
     totalPages,
-    isLoading: query.isLoading,
+    isLoading: listMutation.status === 'pending',
     errorMessage,
     searchQuery,
   }

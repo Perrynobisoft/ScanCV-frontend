@@ -2,6 +2,7 @@ import { type ResponseCommon } from '@/application/dto/response/ResponseCommon'
 import { type PaginatedResponse } from '@/application/dto/response/PaginatedResponse'
 import {
   type CvItem,
+  type GetAllCvRequest,
   type CreateCvRequest,
   type SearchCvRequest,
   type UpdateCvRequest,
@@ -24,9 +25,9 @@ export interface CvRepository {
     params?: PaginationParams,
   ) => ReturnType<typeof usePostApi<SearchCvRequest, PaginatedResponse<CvItem>>>
   getAll: (
-    params?: PaginationParams,
+    params?: GetAllCvRequest,
     options?: QueryOptions<PaginatedResponse<CvItem>>,
-  ) => ReturnType<typeof useGetApi<PaginatedResponse<CvItem>>>
+  ) => ReturnType<typeof usePostApi<GetAllCvRequest, PaginatedResponse<CvItem>>>
   getById: (
     params: GetByIdCommonParams,
     options?: QueryOptions<ResponseCommon<CvItem>>,
