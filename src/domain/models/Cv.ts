@@ -46,6 +46,19 @@ export interface SearchCvRequest {
   limit?: number
 }
 
+export interface GetAllCvRequest {
+  page?: number
+  limit?: number
+  search?: string
+  filter?: {
+    experience_years?: number
+    skills?: string
+    position?: string
+    style?: string
+  }
+  extensions?: string
+}
+
 export interface CreateCvRequest {
   cv_file_id: number
   full_name: string

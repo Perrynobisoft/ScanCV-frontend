@@ -5,23 +5,65 @@ import { type PaginatedData } from '@/application/dto/response/PaginatedResponse
 const DEFAULT_PAGE = 1
 const DEFAULT_LIMIT = 10
 
-export const useCvList = (searchQuery?: string) => {
+export const useCvList = (
+  searchQuery?: string,
+  filter?: {
+    experience?: string
+    skills?: string
+    position?: string
+    style?: string
+  },
+) => {
   const { cvRepository } = useRepository()
   const [page, setPage] = useState(DEFAULT_PAGE)
   const [limit] = useState(DEFAULT_LIMIT)
 
-  const query = cvRepository.getAll(
-    {
-      page,
-      limit,
-      search: searchQuery || undefined,
-    },
-    { enabled: searchQuery !== undefined },
-  )
+  const listMutation = cvRepository.getAll()
+  const { mutateAsync } = listMutation
 
   useEffect(() => {
     setPage(DEFAULT_PAGE)
-  }, [searchQuery])
+  }, [
+    searchQuery,
+    filter?.experience,
+    filter?.skills,
+    filter?.position,
+    filter?.style,
+  ])
+
+  const mapExperienceToYears = (exp?: string): number | undefined => {
+    if (!exp || exp === 'All') return undefined
+    if (exp === 'Under 1y') return 0
+    if (exp === '1-3y') return 1
+    if (exp === '3-5y') return 3
+    if (exp === '5y+') return 5
+    const parsed = parseInt(exp ?? '', 10)
+    return Number.isNaN(parsed) ? undefined : parsed
+  }
+
+  useEffect(() => {
+    void mutateAsync({
+      page,
+      limit,
+      search: searchQuery ?? '',
+      extensions: 'string',
+      filter: {
+        experience_years: mapExperienceToYears(filter?.experience),
+        skills: filter?.skills ?? '',
+        position: filter?.position ?? '',
+        style: filter?.style ?? '',
+      },
+    })
+  }, [
+    mutateAsync,
+    searchQuery,
+    page,
+    limit,
+    filter?.experience,
+    filter?.skills,
+    filter?.position,
+    filter?.style,
+  ])
 
   const normalizeListResponse = (
     response:
@@ -34,13 +76,15 @@ export const useCvList = (searchQuery?: string) => {
     return response as PaginatedData<unknown>
   }
 
-  const listResponse = normalizeListResponse(query.data)
+  const listResponse = normalizeListResponse(listMutation.data)
   const items = listResponse?.items ?? []
   const total = listResponse?.meta?.total ?? 0
   const totalPages =
     listResponse?.meta?.totalPages ?? Math.max(1, Math.ceil(total / limit))
   const errorMessage =
-    query.error?.error?.message || (query.error as any)?.message || null
+    listMutation.error?.error?.message ||
+    (listMutation.error as any)?.message ||
+    null
 
   return {
     page,
@@ -49,7 +93,7 @@ export const useCvList = (searchQuery?: string) => {
     items,
     total,
     totalPages,
-    isLoading: query.isLoading,
+    isLoading: listMutation.status === 'pending',
     errorMessage,
     searchQuery,
   }

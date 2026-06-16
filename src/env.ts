@@ -31,6 +31,7 @@ export const env = createEnv({
       .optional()
       .default('false'),
     VITE_APP_ENABLE_MSW: z.enum(['true', 'false']).optional().default('false'),
+    VITE_APP_MOCK_API: z.enum(['true', 'false']).optional().default('false'),
 
     // Optional Configuration
     VITE_APP_ENVIRONMENT: z

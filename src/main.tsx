@@ -22,7 +22,19 @@ import { LocaleProvider } from './presentation/provider/locale/locale-provider.t
 overwriteGetLocale(resolvePreferredLocale)
 
 async function enableMocking() {
-  if (import.meta.env.DEV && env.VITE_APP_ENABLE_MSW === 'true') {
+  const isMockEnabled =
+    // Allow explicit control with VITE_APP_MOCK_API: when set to 'false'
+    // it should disable mocking even if VITE_APP_ENABLE_MSW is 'true'.
+    // Logic: if VITE_APP_MOCK_API === 'true' -> enable mock;
+    // if VITE_APP_MOCK_API === 'false' -> disable mock;
+    // otherwise fallback to VITE_APP_ENABLE_MSW.
+    ((): boolean => {
+      if (env.VITE_APP_MOCK_API === 'true') return true
+      if (env.VITE_APP_MOCK_API === 'false') return false
+      return env.VITE_APP_ENABLE_MSW === 'true'
+    })()
+
+  if (import.meta.env.DEV && isMockEnabled) {
     const { worker } = await import('./mocks/browser')
     return worker.start({
       onUnhandledRequest: 'bypass',
@@ -31,6 +43,7 @@ async function enableMocking() {
       },
     })
   }
+
   return Promise.resolve()
 }
 
