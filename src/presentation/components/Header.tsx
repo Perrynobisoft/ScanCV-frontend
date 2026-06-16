@@ -1,147 +1,46 @@
-import { useLogout } from '@/presentation/hooks/auth/useLogout'
 import { useAuth } from '@/presentation/provider/auth/auth-provider'
-import { m } from '@/paraglide/messages'
-import { useLocale } from '@/presentation/provider/locale/locale-provider'
-import { useState } from 'react'
-import { Roles } from '@/shared/enums/Roles'
-import { Link, useRouter } from '@tanstack/react-router'
-import { GB, DE, VN } from 'country-flag-icons/react/3x2'
-
-const LOCALE_CONFIG = {
-  en: { flag: GB, name: 'English' },
-  de: { flag: DE, name: 'Deutsch' },
-  vi: { flag: VN, name: 'Tiếng Việt' },
-} as const
-
-const getLocaleInfo = (locale: string) => {
-  return (
-    (LOCALE_CONFIG as Record<string, any>)[locale] || {
-      flag: '🌐',
-      name: locale,
-    }
-  )
-}
+import { useRouter } from '@tanstack/react-router'
+import { Button } from './ui/button'
+import { Upload, Bell, ChevronDown } from 'lucide-react'
 
 export default function Header() {
   const router = useRouter()
   const { user } = useAuth()
-  const { logout, isPending } = useLogout()
-  const {
-    locale: currentLocale,
-    setLocale: changeLocale,
-    locales: availableLocales,
-  } = useLocale()
-  const canAccessAdmin = user?.role?.id === Roles.ADMIN
-  const [open, setOpen] = useState(false)
 
-  const CurrentFlag = getLocaleInfo(currentLocale).flag
-
-  const handleLogout = () => {
-    logout(() => {
-      void router.navigate({
-        to: '/auth/login',
-        replace: true,
-      })
-    })
-  }
+  const initials = (() => {
+    const name = user?.firstName || user?.email || 'AN'
+    return name
+      .split(' ')
+      .map((s) => s[0])
+      .slice(0, 2)
+      .join('')
+      .toUpperCase()
+  })()
 
   return (
-    <header className="border-b border-slate-200 bg-white/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <nav className="flex items-center gap-6">
-          <Link
-            className="text-lg font-semibold tracking-tight text-slate-950"
-            to="/dashboard"
-          >
-            {m.header_brand()}
-          </Link>
-          <Link className="text-sm font-medium text-slate-600" to="/dashboard">
-            {m.header_dashboard()}
-          </Link>
-          <Link className="text-sm font-medium text-slate-600" to="/cv">
-            {m.cv_management()}
-          </Link>
-          <Link className="text-sm font-medium text-slate-600" to="/profile">
-            {m.header_profile()}
-          </Link>
-          {canAccessAdmin && (
-            <Link className="text-sm font-medium text-slate-600" to="/admin">
-              {m.header_admin()}
-            </Link>
-          )}
-        </nav>
-
+    <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95">
+      <div className="flex max-w-full items-center justify-end px-6 py-3">
         <div className="flex items-center gap-3">
-          {/* Language Selector */}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setOpen((s) => !s)}
-              className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm hover:bg-slate-50 transition"
-            >
-              {typeof CurrentFlag === 'function' ? (
-                <CurrentFlag className="h-4 w-6" aria-hidden />
-              ) : (
-                <span className="text-lg">{CurrentFlag}</span>
-              )}
-              <span className="font-medium text-slate-700">
-                {currentLocale.toUpperCase()}
-              </span>
-            </button>
-
-            {open && (
-              <div className="absolute right-0 mt-2 w-48 rounded-lg bg-white shadow-lg border border-slate-200 z-50">
-                {availableLocales.map((loc) => {
-                  const Flag = getLocaleInfo(loc).flag
-                  return (
-                    <button
-                      key={loc}
-                      onClick={() => {
-                        setOpen(false)
-                        if (loc !== currentLocale) {
-                          void changeLocale(loc)
-                        }
-                      }}
-                      className={`w-full flex items-center gap-3 px-4 py-3 text-sm transition ${
-                        currentLocale === loc
-                          ? 'bg-slate-100 font-semibold text-slate-900'
-                          : 'text-slate-700 hover:bg-slate-50'
-                      }`}
-                      type="button"
-                    >
-                      {typeof Flag === 'function' ? (
-                        <Flag className="h-4 w-6" aria-hidden />
-                      ) : (
-                        <span className="text-xl">{Flag}</span>
-                      )}
-                      <div className="flex flex-col items-start">
-                        <span className="font-medium">
-                          {getLocaleInfo(loc).name}
-                        </span>
-                        <span className="text-xs text-slate-500">{loc}</span>
-                      </div>
-                    </button>
-                  )
-                })}
-              </div>
-            )}
-          </div>
-
-          <div className="hidden text-right sm:block">
-            <p className="text-sm font-medium text-slate-900">
-              {user?.firstName || user?.email || m.header_authenticated_user()}
-            </p>
-            <p className="text-xs text-slate-500">{user?.email}</p>
-          </div>
-
-          <button
-            className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
-            disabled={isPending}
-            onClick={handleLogout}
-            type="button"
+          <Button
+            variant="accent"
+            className="rounded-sm px-4 py-2"
+            onClick={() => void router.navigate({ to: '/cv' })}
           >
-            {isPending ? m.logout_button_loading() : m.logout_button()}
+            <Upload className="mr-2 h-4 w-4" />
+            Upload CVs
+          </Button>
+
+          <button className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-transparent bg-white text-slate-600">
+            <Bell className="h-4 w-4" />
           </button>
+
+          <div className="inline-flex items-center gap-3 rounded-full px-3 py-1">
+            <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-accent text-white font-semibold">
+              {initials}
+            </div>
+            <div className="text-sm text-slate-900">Admin</div>
+            <ChevronDown className="h-4 w-4 text-slate-600" />
+          </div>
         </div>
       </div>
     </header>
