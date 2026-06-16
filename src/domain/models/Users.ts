@@ -17,8 +17,8 @@ export interface Users {
   lastName: string
   provider: string
   socialId: string
-  role: Role
-  status: Status
+  role: string
+  status: string
   createdAt: string
   updatedAt: string
   deletedAt: string | null
@@ -26,14 +26,17 @@ export interface Users {
 
 export interface CreateUsersRequest {
   email: string
-  firstName: string
-  lastName: string
+  fullname: string
+  password: string
+  confirmPassword: string
   provider?: string
   socialId?: string
-  roleId?: number
-  statusId?: number
+  role: string
 }
 
-export interface UpdateUsersRequest extends Partial<CreateUsersRequest> {
+export interface UpdateUsersRequest {
   id: number
+  email: string
+  fullname: string
+  role: string
 }
