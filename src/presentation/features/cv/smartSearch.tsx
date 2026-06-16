@@ -1,14 +1,10 @@
-import { useState } from 'react'
-import { Search, Sparkles, X } from 'lucide-react'
+import { Search, Sparkles } from 'lucide-react'
 import Avatar from '@/presentation/components/ui/avatar'
 import { Button } from '@/presentation/components/ui/button'
 import { Input } from '@/presentation/components/ui/input'
 import { useSearchCv } from '@/presentation/hooks/cv/useSearchCv'
 
-const DEFAULT_FILTERS = ['Python +2', 'Under 1y', 'Mid-level', 'Remote', 'PhD']
-
 export default function SmartSearchPage() {
-  const [filters, setFilters] = useState(DEFAULT_FILTERS)
   const {
     searchValue,
     setSearchValue,
@@ -18,11 +14,6 @@ export default function SmartSearchPage() {
     isLoading,
     hasSearched,
   } = useSearchCv()
-
-  const clearFilters = () => setFilters([])
-  const removeFilter = (filter: string) => {
-    setFilters((current) => current.filter((item) => item !== filter))
-  }
 
   return (
     <main className="space-y-6">
@@ -61,29 +52,6 @@ export default function SmartSearchPage() {
               Search
             </Button>
           </div>
-        </div>
-
-        <div className="mt-5 flex flex-wrap items-center gap-3">
-          {filters.map((filter) => (
-            <button
-              key={filter}
-              type="button"
-              onClick={() => removeFilter(filter)}
-              className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm text-slate-700 transition hover:bg-slate-200"
-            >
-              <span>{filter}</span>
-              <X className="h-3.5 w-3.5" />
-            </button>
-          ))}
-          {filters.length > 0 && (
-            <button
-              type="button"
-              onClick={clearFilters}
-              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-500 hover:bg-slate-50"
-            >
-              Xóa ({filters.length})
-            </button>
-          )}
         </div>
       </section>
 

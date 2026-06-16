@@ -20,7 +20,7 @@ export default function Sidebar() {
   })()
 
   return (
-    <aside className="hidden h-full overflow-y-auto flex-col border-r border-slate-200 bg-primary px-6 py-8 lg:flex">
+    <aside className="flex h-full overflow-y-auto flex-col border-r border-slate-200 bg-primary px-6 py-8">
       <div className="mb-10">
         <Link
           className="inline-flex items-center gap-3 text-2xl font-semibold"

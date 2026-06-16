@@ -41,8 +41,14 @@ export default function CvListPage() {
   const [experienceFilter, setExperienceFilter] = useState('All')
   const [skillFilter, setSkillFilter] = useState('')
   const [positionFilter, setPositionFilter] = useState('')
+  const [styleFilter, setStyleFilter] = useState('')
 
-  const keywordSearch = useCvList(keywordQuery)
+  const keywordSearch = useCvList(keywordQuery, {
+    experience: experienceFilter,
+    skills: skillFilter,
+    position: positionFilter,
+    style: styleFilter,
+  })
   const { page, setPage, items, total, totalPages, isLoading } = keywordSearch
   const filteredCvs = useMemo(() => items as CvItem[], [items])
 
@@ -60,7 +66,7 @@ export default function CvListPage() {
   }, [debouncedKeyword])
 
   return (
-    <main className="space-y-6">
+    <main className="space-y-6 overflow-hidden">
       <section className="rounded-md border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex gap-4">
           <div className="relative">
@@ -87,8 +93,8 @@ export default function CvListPage() {
           <Select
             options={STYLE_OPTIONS}
             className="w-30 rounded-sm"
-            value={positionFilter}
-            onChange={(e) => setPositionFilter(e.target.value)}
+            value={styleFilter}
+            onChange={(e) => setStyleFilter(e.target.value)}
           />
           <div className="flex items-center gap-2 text-sm">
             {EXPERIENCE_OPTIONS.map((option) => (

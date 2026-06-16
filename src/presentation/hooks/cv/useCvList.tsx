@@ -5,7 +5,15 @@ import { type PaginatedData } from '@/application/dto/response/PaginatedResponse
 const DEFAULT_PAGE = 1
 const DEFAULT_LIMIT = 10
 
-export const useCvList = (searchQuery?: string) => {
+export const useCvList = (
+  searchQuery?: string,
+  filter?: {
+    experience?: string
+    skills?: string
+    position?: string
+    style?: string
+  },
+) => {
   const { cvRepository } = useRepository()
   const [page, setPage] = useState(DEFAULT_PAGE)
   const [limit] = useState(DEFAULT_LIMIT)
@@ -15,7 +23,23 @@ export const useCvList = (searchQuery?: string) => {
 
   useEffect(() => {
     setPage(DEFAULT_PAGE)
-  }, [searchQuery])
+  }, [
+    searchQuery,
+    filter?.experience,
+    filter?.skills,
+    filter?.position,
+    filter?.style,
+  ])
+
+  const mapExperienceToYears = (exp?: string): number | undefined => {
+    if (!exp || exp === 'All') return undefined
+    if (exp === 'Under 1y') return 0
+    if (exp === '1-3y') return 1
+    if (exp === '3-5y') return 3
+    if (exp === '5y+') return 5
+    const parsed = parseInt(exp ?? '', 10)
+    return Number.isNaN(parsed) ? undefined : parsed
+  }
 
   useEffect(() => {
     void mutateAsync({
@@ -23,8 +47,23 @@ export const useCvList = (searchQuery?: string) => {
       limit,
       search: searchQuery ?? '',
       extensions: 'string',
+      filter: {
+        experience_years: mapExperienceToYears(filter?.experience),
+        skills: filter?.skills ?? '',
+        position: filter?.position ?? '',
+        style: filter?.style ?? '',
+      },
     })
-  }, [mutateAsync, searchQuery, page, limit])
+  }, [
+    mutateAsync,
+    searchQuery,
+    page,
+    limit,
+    filter?.experience,
+    filter?.skills,
+    filter?.position,
+    filter?.style,
+  ])
 
   const normalizeListResponse = (
     response:

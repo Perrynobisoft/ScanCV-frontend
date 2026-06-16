@@ -16,13 +16,21 @@ import {
 import { Endpoints } from '@/shared/endpoints'
 import { type CvRepository } from '@/application/repositories/CvRepository'
 
+const normalizeQueryParams = (
+  params?: any,
+): Record<string, string | number | boolean | undefined> =>
+  Object.fromEntries(
+    Object.entries(params || {}).map(([k, v]) => [
+      k,
+      v !== null && typeof v === 'object' ? JSON.stringify(v) : (v as any),
+    ]),
+  )
+
 export const CvRepositoryImpl = (): CvRepository => ({
   search: (params) =>
     usePostApi<SearchCvRequest, PaginatedResponse<CvItem>>({
       endpoint: Endpoints.Cv.SEARCH,
-      queryParams: {
-        ...(params || {}),
-      },
+      queryParams: normalizeQueryParams(params),
     }),
   getAll: (_params, options) =>
     usePostApi<
@@ -30,17 +38,13 @@ export const CvRepositoryImpl = (): CvRepository => ({
       PaginatedResponse<CvItem>
     >({
       endpoint: Endpoints.Cv.GET_ALL,
-      queryParams: {
-        ...(_params || {}),
-      },
+      queryParams: normalizeQueryParams(_params),
       options,
     }),
   getById: (params, options) =>
     useGetApi<ResponseCommon<CvItem>>({
       endpoint: Endpoints.Cv.GET,
-      queryParams: {
-        ...(params || {}),
-      },
+      queryParams: normalizeQueryParams(params),
       options,
     }),
   create: () =>
@@ -54,8 +58,6 @@ export const CvRepositoryImpl = (): CvRepository => ({
   delete: () =>
     useDeleteApi<DeleteCommonParams, ResponseCommon<boolean>>({
       endpoint: Endpoints.Cv.DELETE,
-      buildQueryParams: (params) => ({
-        ...(params || {}),
-      }),
+      buildQueryParams: (params) => normalizeQueryParams(params),
     }),
 })

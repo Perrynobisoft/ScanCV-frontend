@@ -15,7 +15,7 @@
     "check:lint": "eslint src/**/*.{ts,tsx}",
     "check:type": "tsc --noEmit",
     "check:format": "prettier --check .",
-    "check": "run-p check:*",
+    "check": "run-s check:*",
     "check:staged": "lint-staged",
     "fix:lint": "eslint src/**/*.{ts,tsx} --fix",
     "fix:format": "prettier --write .",

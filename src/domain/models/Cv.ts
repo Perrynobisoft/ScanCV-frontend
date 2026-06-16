@@ -50,6 +50,12 @@ export interface GetAllCvRequest {
   page?: number
   limit?: number
   search?: string
+  filter?: {
+    experience_years?: number
+    skills?: string
+    position?: string
+    style?: string
+  }
   extensions?: string
 }
 

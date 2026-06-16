@@ -103,7 +103,7 @@ export const cvColumns: TableColumn<CvItem>[] = [
     title: 'STATUS',
     width: 'w-[120px]',
     render: (cv: CvItem) => (
-      <span className="inline-flex rounded-lg border border-slate-200 px-3 py-2 text-xs">
+      <span className="w-20 inline-flex rounded-lg border border-slate-200 px-3 py-2 text-xs">
         {cv.status ?? 'Yêu thích'}
       </span>
     ),
