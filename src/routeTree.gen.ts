@@ -46,6 +46,8 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
 const AppUserManagementRoute = AppUserManagementRouteImport.update({
   id: '/user-management',
   path: '/user-management',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const AppSmartSearchRoute = AppSmartSearchRouteImport.update({
   id: '/smart-search',
   path: '/smart-search',
