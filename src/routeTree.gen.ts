@@ -235,6 +235,8 @@ declare module '@tanstack/react-router' {
       path: '/user-management'
       fullPath: '/user-management'
       preLoaderRoute: typeof AppUserManagementRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/_app/smart-search': {
       id: '/_app/smart-search'
       path: '/smart-search'
