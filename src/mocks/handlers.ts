@@ -2,6 +2,7 @@ import { http, HttpResponse } from 'msw'
 import { Endpoints } from '@/shared/endpoints'
 import { env } from '@/env'
 import { cvMockData } from './cv'
+import { smartSearchCvMockData } from './smartSearch'
 
 const API_URL = env.VITE_APP_API_URL
 
@@ -178,13 +179,23 @@ export const handlers = [
       .trim()
       .toLowerCase()
     const filtered = normalizedQuery
-      ? cvMockData.filter(
-          (item) =>
-            item.full_name.toLowerCase().includes(normalizedQuery) ||
-            item.position.toLowerCase().includes(normalizedQuery) ||
-            item.email.toLowerCase().includes(normalizedQuery),
+      ? smartSearchCvMockData.filter((item) =>
+          [
+            item.full_name,
+            item.position,
+            item.email,
+            item.summary,
+            ...(item.skills ?? []),
+          ]
+            .filter(Boolean)
+            .some((value) =>
+              String(value).toLowerCase().includes(normalizedQuery),
+            ),
         )
-      : cvMockData
+      : [...smartSearchCvMockData]
+
+    // Sort by AI score descending so UI shows best matches first
+    filtered.sort((a, b) => (b.ai_score ?? 0) - (a.ai_score ?? 0))
 
     return HttpResponse.json({
       data: {

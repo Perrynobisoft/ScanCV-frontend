@@ -3,6 +3,7 @@ import { Button } from '@/presentation/components/ui/button'
 import { formatDate } from '@/shared/date'
 import type { TableColumn } from '@/presentation/components/ui/table/table.types'
 import type { CvItem } from './cv-table.types'
+import { Download } from 'lucide-react'
 
 export const cvColumns: TableColumn<CvItem>[] = [
   {
@@ -11,9 +12,7 @@ export const cvColumns: TableColumn<CvItem>[] = [
     width: 'w-[260px]',
     render: (cv: CvItem) => (
       <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-700 text-white">
-          <Avatar name={cv.full_name} />
-        </div>
+        <Avatar name={cv.full_name} />
 
         <div className="min-w-0">
           <div className="truncate text-sm font-semibold text-slate-900">
@@ -103,9 +102,9 @@ export const cvColumns: TableColumn<CvItem>[] = [
     title: 'STATUS',
     width: 'w-[120px]',
     render: (cv: CvItem) => (
-      <span className="w-20 inline-flex rounded-lg border border-slate-200 px-3 py-2 text-xs">
+      <Button variant="default" className="rounded-sm">
         {cv.status ?? 'Yêu thích'}
-      </span>
+      </Button>
     ),
   },
   {
@@ -114,11 +113,16 @@ export const cvColumns: TableColumn<CvItem>[] = [
     width: 'w-[160px]',
     render: () => (
       <div className="flex gap-2 whitespace-nowrap">
-        <Button variant="ghost" className="h-8 px-3 text-xs">
+        {/* <Button variant="default" className="h-8 px-3 text-xs rounded-sm! text-accent!">
+          <Eye className='h-4 w-4' />
           View
-        </Button>
+        </Button> */}
 
-        <Button variant="ghost" className="h-8 px-3 text-xs">
+        <Button
+          variant="default"
+          className="h-8 px-3 text-xs rounded-sm! text-accent!"
+        >
+          <Download className="h-4 w-4" />
           Export
         </Button>
       </div>

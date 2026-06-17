@@ -18,7 +18,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ variant = 'default', className = '', children, ...props }, ref) => (
     <button
       ref={ref}
-      className={`${variantStyles[variant]} flex items-center justify-center gap-2 rounded-md font-semibold transition cursor-pointer ${className}`}
+      className={`flex items-center justify-center gap-2 rounded-md font-semibold transition cursor-pointer ${variantStyles[variant]} ${className}`}
       type="button"
       {...props}
     >

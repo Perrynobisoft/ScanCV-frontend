@@ -18,6 +18,7 @@ import { Toaster } from 'react-hot-toast'
 import { overwriteGetLocale } from './paraglide/runtime.js'
 import { resolvePreferredLocale } from './shared/locale'
 import { LocaleProvider } from './presentation/provider/locale/locale-provider.tsx'
+import { pdfjs } from 'react-pdf'
 
 overwriteGetLocale(resolvePreferredLocale)
 
@@ -127,6 +128,8 @@ enableMocking().then(() => {
     )
   }
 })
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

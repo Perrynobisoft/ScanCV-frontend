@@ -1,5 +1,4 @@
 import { useMemo, useState, useEffect } from 'react'
-import { useNavigate } from '@tanstack/react-router'
 import { useCvList } from '@/presentation/hooks/cv/useCvList'
 import { type CvItem } from '@/domain/models/Cv'
 import { Input } from '@/presentation/components/ui/input'
@@ -7,6 +6,7 @@ import { Select } from '@/presentation/components/ui/select'
 import { m } from '@/paraglide/messages'
 import { Pagination } from '@/presentation/components/ui/pagination'
 import CvTable from './cv-table'
+import CvDetail from '../CvDetail'
 import { Search } from 'lucide-react'
 import useDebounce from '@/presentation/hooks/useDebounce'
 
@@ -51,13 +51,13 @@ export default function CvListPage() {
   })
   const { page, setPage, items, total, totalPages, isLoading } = keywordSearch
   const filteredCvs = useMemo(() => items as CvItem[], [items])
+  const [selectedCv, setSelectedCv] = useState<CvItem | null>(null)
 
   const handleInputChange = (value: string) => {
     setKeywordInput(value)
   }
 
   const searchValue = keywordInput
-  const navigate = useNavigate()
   const debouncedKeyword = useDebounce(searchValue, 600)
 
   useEffect(() => {
@@ -96,21 +96,25 @@ export default function CvListPage() {
             value={styleFilter}
             onChange={(e) => setStyleFilter(e.target.value)}
           />
-          <div className="flex items-center gap-2 text-sm">
-            {EXPERIENCE_OPTIONS.map((option) => (
-              <button
-                key={option}
-                type="button"
-                onClick={() => setExperienceFilter(option)}
-                className={`rounded-full border px-4 py-2 transition truncate ${
-                  experienceFilter === option
-                    ? 'border-accent bg-cyan-50 text-accent'
-                    : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50'
-                }`}
-              >
-                {option}
-              </button>
-            ))}
+          <div className="flex items-center rounded-sm text-sm border border-slate-300 bg-white text-slate-600 overflow-hidden shadow-sm">
+            {EXPERIENCE_OPTIONS.map((option) => {
+              const isLast =
+                option === EXPERIENCE_OPTIONS[EXPERIENCE_OPTIONS.length - 1]
+              return (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => setExperienceFilter(option)}
+                  className={`px-4 py-3 transition truncate border-slate-300 ${!isLast && 'border-r'} ${
+                    experienceFilter === option
+                      ? 'bg-cyan-50 text-accent'
+                      : 'text-slate-600 hover:border-slate-300 hover:bg-slate-50'
+                  }`}
+                >
+                  {option}
+                </button>
+              )
+            })}
           </div>
         </div>
       </section>
@@ -133,9 +137,14 @@ export default function CvListPage() {
             <CvTable
               data={filteredCvs}
               loading={isLoading}
-              onRowClick={(cv) => {
-                navigate({ to: `/cv/${cv.id}` })
-              }}
+              onRowClick={(cv) => setSelectedCv(cv as CvItem)}
+            />
+          )}
+          {selectedCv && (
+            <CvDetail
+              cv={selectedCv}
+              pdfUrl={selectedCv?.file?.file_url ?? selectedCv?.pdf_url ?? ''}
+              onClose={() => setSelectedCv(null)}
             />
           )}
         </div>
