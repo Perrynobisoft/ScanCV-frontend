@@ -87,9 +87,7 @@ export default function SmartSearchPage() {
               >
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex flex-1 items-start gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-900 text-lg font-semibold text-white">
-                      <Avatar name={item.full_name || item.name || 'CV'} />
-                    </div>
+                    <Avatar name={item.full_name || item.name || 'CV'} />
                     <div className="min-w-0">
                       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                         <div>

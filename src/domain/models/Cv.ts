@@ -12,14 +12,6 @@ export interface CvFile {
   updated_at: string
 }
 
-// export interface CvSkill {
-//   id?: number
-//   cv_info_id?: number
-//   name: string
-//   confidence_score?: number
-//   years_of_experience?: number
-// }
-
 export interface CvItem {
   id: number
   cv_file_id: number
@@ -38,6 +30,7 @@ export interface CvItem {
   skills?: string[]
   uploaded_by?: User
   position: string
+  pdf_url?: string
 }
 
 export interface SearchCvRequest {

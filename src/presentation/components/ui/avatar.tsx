@@ -12,7 +12,7 @@ export function Avatar({ name, size = 36 }: { name?: string; size?: number }) {
 
   return (
     <div
-      className={`${sizeClass} inline-flex items-center justify-center rounded-full bg-slate-950 text-white`}
+      className={`${sizeClass} inline-flex items-center justify-center rounded-full bg-accent text-white`}
     >
       <span className="font-semibold">{initials}</span>
     </div>

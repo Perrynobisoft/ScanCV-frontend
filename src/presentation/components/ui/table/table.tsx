@@ -51,7 +51,7 @@ export default function Table<T>({
                 <th
                   key={column.key}
                   className={`
-                    px-6 py-4
+                    px-2 py-4
                     text-xs font-semibold uppercase tracking-wider text-slate-500
                     ${getAlignClass(column.align)}
                     ${column.width ?? ''}
@@ -89,7 +89,7 @@ export default function Table<T>({
                     <td
                       key={column.key}
                       className={`
-                        px-6 py-5 align-top
+                        px-2 py-5 align-top
                         ${getAlignClass(column.align)}
                         ${column.cellClassName ?? ''}
                       `}
