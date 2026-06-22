@@ -37,7 +37,7 @@ export const requireRoles = ({
   auth: AuthContext
   allowedRoles: Roles[]
 }) => {
-  const roleId = auth.user?.role?.id
+  const roleId = auth.user?.role ? Number(auth.user.role) : undefined
 
   if (!hasRequiredRole(roleId, allowedRoles)) {
     throw redirect({

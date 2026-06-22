@@ -23,8 +23,7 @@ export default function ProfilePage() {
               {m.profile_full_name_label()}
             </p>
             <p className="mt-2 text-base font-semibold text-slate-900">
-              {[user?.firstName, user?.lastName].filter(Boolean).join(' ') ||
-                m.profile_empty_value()}
+              {user?.fullName || m.profile_empty_value()}
             </p>
           </div>
 
@@ -42,7 +41,7 @@ export default function ProfilePage() {
               {m.profile_provider_label()}
             </p>
             <p className="mt-2 text-base font-semibold text-slate-900">
-              {user?.provider || m.profile_empty_value()}
+              {m.profile_empty_value()}
             </p>
           </div>
 
@@ -51,7 +50,7 @@ export default function ProfilePage() {
               {m.profile_role_label()}
             </p>
             <p className="mt-2 text-base font-semibold text-slate-900">
-              {user?.role?.name || m.profile_empty_value()}
+              {user?.role || m.profile_empty_value()}
             </p>
           </div>
         </div>
