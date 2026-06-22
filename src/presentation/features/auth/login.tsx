@@ -2,7 +2,7 @@ import { useLogin } from '@/presentation/hooks/auth/useLogin'
 import { AuthLayout } from '@/presentation/layouts/auth/auth-layout'
 import { useRouter, useSearch } from '@tanstack/react-router'
 import { useState, type FormEvent } from 'react'
-import { Eye, EyeOff, Lock, Mail } from 'lucide-react'
+import { ArrowRight, Eye, EyeOff, Lock, Mail } from 'lucide-react'
 import { Button } from '@/presentation/components/ui/button'
 import { Input } from '@/presentation/components/ui/input'
 
@@ -45,33 +45,35 @@ export default function LoginPage() {
 
   return (
     <AuthLayout>
-      <div className="w-full max-w-[380px]">
+      <div className="w-full max-w-[560px]">
         {/* Heading */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900">Welcome back</h1>
-          <p className="mt-1.5 text-sm text-slate-500">
+        <div className="mb-10">
+          <h1 className="text-[44px] font-bold leading-tight text-slate-900">
+            Welcome back
+          </h1>
+          <p className="mt-2 text-base text-slate-500">
             Sign in to your RecruitAI account
           </p>
         </div>
 
         {/* Login Form */}
-        <form className="space-y-5" onSubmit={handleLogin}>
+        <form className="space-y-7" onSubmit={handleLogin}>
           {/* Email */}
           <div>
             <label
-              className="mb-1.5 block text-sm font-semibold text-slate-700"
+              className="mb-2 block text-base font-semibold text-slate-700"
               htmlFor="email"
             >
               Email address
             </label>
             <div className="relative">
               <Mail
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-                size={16}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                size={20}
               />
               <Input
                 autoComplete="email"
-                className="h-11 pl-9"
+                className="h-[60px] pl-12 text-base"
                 id="email"
                 name="email"
                 onChange={(e) => setEmail(e.target.value)}
@@ -85,15 +87,15 @@ export default function LoginPage() {
 
           {/* Password */}
           <div>
-            <div className="mb-1.5 flex items-center justify-between">
+            <div className="mb-2 flex items-center justify-between">
               <label
-                className="text-sm font-semibold text-slate-700"
+                className="text-base font-semibold text-slate-700"
                 htmlFor="password"
               >
                 Password
               </label>
               <a
-                className="text-xs font-semibold text-[#0d9488] hover:text-[#0b7c71]"
+                className="text-sm font-semibold text-[#0d9488] hover:text-[#0b7c71]"
                 href="#"
               >
                 Forgot password?
@@ -101,12 +103,12 @@ export default function LoginPage() {
             </div>
             <div className="relative">
               <Lock
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-                size={16}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                size={20}
               />
               <Input
                 autoComplete="current-password"
-                className="h-11 pl-9 pr-10"
+                className="h-[60px] pl-12 pr-14 text-base"
                 id="password"
                 name="password"
                 onChange={(e) => setPassword(e.target.value)}
@@ -117,21 +119,21 @@ export default function LoginPage() {
               />
               <button
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
                 onClick={() => setShowPassword((v) => !v)}
                 type="button"
               >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
           </div>
 
           {/* Error message */}
-          {error && <p className="text-xs font-medium text-red-500">{error}</p>}
+          {error && <p className="text-sm font-medium text-red-500">{error}</p>}
 
           {/* Submit */}
           <Button
-            className="mt-2"
+            className="mt-3 h-[60px] text-xl"
             variant="login"
             disabled={isPending}
             type="submit"
@@ -141,9 +143,9 @@ export default function LoginPage() {
                 <svg
                   className="animate-spin"
                   fill="none"
-                  height="16"
+                  height="20"
                   viewBox="0 0 24 24"
-                  width="16"
+                  width="20"
                 >
                   <circle
                     className="opacity-25"
@@ -162,18 +164,12 @@ export default function LoginPage() {
                 Signing in...
               </>
             ) : (
-              <>Sign In</>
+              <>
+                Sign In <ArrowRight size={20} />
+              </>
             )}
           </Button>
         </form>
-
-        {/* Footer */}
-        <p className="mt-6 text-center text-sm text-slate-500">
-          Don't have an account?{' '}
-          <a className="font-bold text-slate-900 hover:text-[#0d9488]" href="#">
-            Request access
-          </a>
-        </p>
       </div>
     </AuthLayout>
   )

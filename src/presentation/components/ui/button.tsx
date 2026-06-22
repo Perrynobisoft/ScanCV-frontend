@@ -13,7 +13,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   primary: 'bg-slate-950 text-white text-sm px-4 py-2 hover:bg-slate-800',
   accent: 'bg-accent text-white text-sm px-4 py-2 hover:bg-cyan-700',
   login:
-    'h-11 w-full rounded-lg bg-[#0d9488] text-sm font-semibold text-white hover:bg-[#0b7c71] disabled:cursor-not-allowed disabled:opacity-60',
+    'w-full rounded-lg bg-[#0d9488] font-semibold text-white hover:bg-[#0b7c71] disabled:cursor-not-allowed disabled:opacity-60',
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
