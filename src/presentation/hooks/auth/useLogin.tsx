@@ -4,8 +4,13 @@ import { getFormattedErrorMessage } from '@/application/dto/response/ErrorRespon
 import { type LoginRequest, type LoginResponse } from '@/domain/models/Auth'
 import { persistAuthTokens } from '@/shared/auth-storage'
 import { useAuth } from '@/presentation/provider/auth/auth-provider'
+import { getUserIdFromToken } from '@/presentation/hooks/auth/useMe'
 import { m } from '@/paraglide/messages'
 import { toast } from 'sonner'
+import HttpClient from '@/infrastructure/http/HttpClient'
+import { buildUrl } from '@/shared/url'
+import { Endpoints } from '@/shared/endpoints'
+import type { Users } from '@/domain/models/Users'
 
 export const useLogin = () => {
   const auth = useAuth()
@@ -25,7 +30,20 @@ export const useLogin = () => {
         )) as ResponseCommon<LoginResponse>
         const result = response.data
         persistAuthTokens(result)
-        auth.setAuthenticated(result.user)
+
+        // Decode token to get user id, then fetch user info
+        const userId = getUserIdFromToken()
+        if (userId) {
+          try {
+            const userResponse = await HttpClient.getAxiosInstance().get<
+              ResponseCommon<{ user: Users }>
+            >(buildUrl(Endpoints.Users.GET, { id: userId }))
+            auth.setAuthenticated(userResponse.data.data?.user as any)
+          } catch {
+            auth.setAuthenticated(null)
+          }
+        }
+
         toast.success(m.login_success())
         return result
       } catch (error) {

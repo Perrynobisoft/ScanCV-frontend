@@ -1,17 +1,10 @@
-export interface Role {
-  id: number
-  name: string
-}
-
 export interface User {
   id: number
   email: string
-  socialId: string
-  firstName: string
-  lastName: string
-  full_name: string
-  provider: string
-  role?: Role | null
+  fullName: string
+  role: string
+  status: string
+  lastActive: string
 }
 
 export interface LoginRequest {
@@ -28,12 +21,9 @@ export interface LoginWithFacebookRequest {
 }
 
 export interface LoginResponse {
-  userId: number
-  token: string
+  accessToken: string
   refreshToken: string
-  isPasswordChangeRequired: boolean
-  tokenExpires: number
-  user: User
+  expiresAt: string
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
