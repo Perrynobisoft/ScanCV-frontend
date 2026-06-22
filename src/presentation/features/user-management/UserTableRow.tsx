@@ -25,7 +25,7 @@ export function UserTableRow({
   onEdit,
   onDelete,
 }: UserTableRowProps) {
-  const fullName = `${user.firstName} ${user.lastName}`.trim()
+  const fullName = user.fullName ?? ''
   const roleName = user.role ?? ''
   const statusName = user.status ?? ''
   const isActive = statusName === 'Active'

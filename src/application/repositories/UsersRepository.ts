@@ -11,7 +11,7 @@ import {
   type useDeleteApi,
   type useGetApi,
   type usePostApi,
-  type usePutApi,
+  type usePatchApi,
 } from '@/infrastructure/hooks/useApi'
 import { type QueryOptions } from '@shared/types/react-query'
 import { type ResponseCommon } from '@application/dto/response/ResponseCommon'
@@ -31,7 +31,7 @@ export interface UsersRepository {
     typeof usePostApi<CreateUsersRequest, ResponseCommon<Users>>
   >
   update: () => ReturnType<
-    typeof usePutApi<UpdateUsersRequest, ResponseCommon<Users>>
+    typeof usePatchApi<UpdateUsersRequest, ResponseCommon<Users>>
   >
   delete: () => ReturnType<
     typeof useDeleteApi<DeleteCommonParams, ResponseCommon<boolean>>

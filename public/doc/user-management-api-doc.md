@@ -18,12 +18,12 @@ Bearer Token (Admin)
 
 ### Query Parameters
 
-| Name     | Type   | Required | Description                   |
-| -------- | ------ | -------- | ----------------------------- |
-| page     | int    | No       | Current page                  |
-| pageSize | int    | No       | Number of items per page      |
-| role     | string | No       | Admin, Recruiter, Interviewer |
-| status   | string | No       | Active, Inactive              |
+| Name   | Type   | Required | Description                   |
+| ------ | ------ | -------- | ----------------------------- |
+| page   | int    | No       | Current page                  |
+| limit  | int    | No       | Number of items per page      |
+| role   | string | No       | Admin, Recruiter, Interviewer |
+| status | string | No       | Active, Inactive              |
 
 ### Response 200
 

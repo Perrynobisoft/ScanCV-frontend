@@ -33,11 +33,12 @@ class HttpClient {
     this.TIMEOUT = timeout
 
     this.instance = axios.create({
-      baseURL: env.VITE_APP_API_URL,
+      baseURL: '/',
       timeout: this.TIMEOUT,
       headers: {
         'Content-Type': 'application/json',
         'x-custom-lang': getLocale(),
+        'ngrok-skip-browser-warning': 'true',
       },
     })
 
@@ -160,7 +161,7 @@ class HttpClient {
 
   private handleLogout(): void {
     handleLogout(queryClient)
-    window.location.assign('/auth/login')
+    // window.location.assign('/auth/login')
   }
 
   private rejectRefreshQueue(error: unknown): void {
