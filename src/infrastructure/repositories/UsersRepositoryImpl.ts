@@ -15,7 +15,7 @@ import {
   useDeleteApi,
   useGetApi,
   usePostApi,
-  usePutApi,
+  usePatchApi,
 } from '@/infrastructure/hooks/useApi'
 import { Endpoints } from '@/shared/endpoints'
 import { type QueryOptions } from '@/shared/types/react-query'
@@ -51,15 +51,18 @@ export const UsersRepositoryImpl = (): UsersRepository => ({
     })
   },
   update: () => {
-    return usePutApi<UpdateUsersRequest, ResponseCommon<Users>>({
+    return usePatchApi<UpdateUsersRequest, ResponseCommon<Users>>({
       endpoint: Endpoints.Users.UPDATE,
+      buildUrlParams: (params: UpdateUsersRequest) => ({
+        id: params.id,
+      }),
     })
   },
   delete: () => {
     return useDeleteApi<DeleteCommonParams, ResponseCommon<boolean>>({
       endpoint: Endpoints.Users.DELETE,
-      buildQueryParams: (params) => ({
-        ...(params || {}),
+      buildUrlParams: (params: DeleteCommonParams) => ({
+        id: params.id,
       }),
     })
   },

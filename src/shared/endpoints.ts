@@ -2,7 +2,7 @@ const Prefix = 'api/v1'
 
 export const Endpoints = {
   Auth: {
-    LOGIN: `${Prefix}/auth/email/login`,
+    LOGIN: `${Prefix}/auth/login`,
     LOGIN_WITH_GOOGLE: `${Prefix}/auth/google/login`,
     LOGIN_WITH_FACEBOOK: `${Prefix}/auth/facebook/login`,
     LOGOUT: `${Prefix}/auth/logout`,
@@ -15,10 +15,10 @@ export const Endpoints = {
     ME: `${Prefix}/auth/me`,
   },
   Users: {
-    CREATE: `${Prefix}/users/create`,
-    UPDATE: `${Prefix}/users/update`,
-    DELETE: `${Prefix}/users/delete`,
-    GET_ALL: `${Prefix}/users/getAll`,
+    CREATE: `${Prefix}/users`,
+    UPDATE: `${Prefix}/users/:id`,
+    DELETE: `${Prefix}/users/:id`,
+    GET_ALL: `${Prefix}/users`,
     GET: `${Prefix}/users/get`,
   },
   Cv: {

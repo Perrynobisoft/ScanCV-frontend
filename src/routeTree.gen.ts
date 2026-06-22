@@ -105,8 +105,8 @@ export interface FileRoutesByFullPath {
   '/cv': typeof AppCvRoute
   '/dashboard': typeof AppDashboardRoute
   '/profile': typeof AppProfileRoute
-  '/user-management': typeof AppUserManagementRoute
   '/smart-search': typeof AppSmartSearchRoute
+  '/user-management': typeof AppUserManagementRoute
   '/auth/login': typeof AuthLoginRoute
 }
 export interface FileRoutesByTo {
@@ -120,8 +120,8 @@ export interface FileRoutesByTo {
   '/cv': typeof AppCvRoute
   '/dashboard': typeof AppDashboardRoute
   '/profile': typeof AppProfileRoute
-  '/user-management': typeof AppUserManagementRoute
   '/smart-search': typeof AppSmartSearchRoute
+  '/user-management': typeof AppUserManagementRoute
   '/auth/login': typeof AuthLoginRoute
 }
 export interface FileRoutesById {
@@ -137,8 +137,8 @@ export interface FileRoutesById {
   '/_app/cv': typeof AppCvRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/profile': typeof AppProfileRoute
-  '/_app/user-management': typeof AppUserManagementRoute
   '/_app/smart-search': typeof AppSmartSearchRoute
+  '/_app/user-management': typeof AppUserManagementRoute
   '/auth/login': typeof AuthLoginRoute
 }
 export interface FileRouteTypes {
@@ -154,8 +154,8 @@ export interface FileRouteTypes {
     | '/cv'
     | '/dashboard'
     | '/profile'
-    | '/user-management'
     | '/smart-search'
+    | '/user-management'
     | '/auth/login'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -169,8 +169,8 @@ export interface FileRouteTypes {
     | '/cv'
     | '/dashboard'
     | '/profile'
-    | '/user-management'
     | '/smart-search'
+    | '/user-management'
     | '/auth/login'
   id:
     | '__root__'
@@ -185,8 +185,8 @@ export interface FileRouteTypes {
     | '/_app/cv'
     | '/_app/dashboard'
     | '/_app/profile'
-    | '/_app/user-management'
     | '/_app/smart-search'
+    | '/_app/user-management'
     | '/auth/login'
   fileRoutesById: FileRoutesById
 }
@@ -308,8 +308,8 @@ interface AppRouteRouteChildren {
   AppCvRoute: typeof AppCvRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppProfileRoute: typeof AppProfileRoute
-  AppUserManagementRoute: typeof AppUserManagementRoute
   AppSmartSearchRoute: typeof AppSmartSearchRoute
+  AppUserManagementRoute: typeof AppUserManagementRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
@@ -317,8 +317,8 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppCvRoute: AppCvRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppProfileRoute: AppProfileRoute,
-  AppUserManagementRoute: AppUserManagementRoute,
   AppSmartSearchRoute: AppSmartSearchRoute,
+  AppUserManagementRoute: AppUserManagementRoute,
 }
 
 const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(

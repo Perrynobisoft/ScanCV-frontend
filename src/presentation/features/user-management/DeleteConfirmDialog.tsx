@@ -15,7 +15,7 @@ export function DeleteConfirmDialog({
   onSuccess,
 }: DeleteConfirmDialogProps) {
   const { remove, isPending } = useDeleteUsers()
-  const fullName = `${user.firstName} ${user.lastName}`.trim()
+  const fullName = user.fullName?.trim() ?? user.email
 
   const handleDelete = () => {
     remove({ id: user.id }, () => {

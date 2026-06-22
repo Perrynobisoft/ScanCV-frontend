@@ -47,13 +47,13 @@ describe('LoginPage', () => {
 
     render(<LoginPage />)
 
-    fireEvent.change(screen.getByLabelText('Email'), {
+    fireEvent.change(screen.getByLabelText('Email address'), {
       target: { value: 'new@test.com' },
     })
     fireEvent.change(screen.getByLabelText('Password'), {
       target: { value: 'super-secret' },
     })
-    fireEvent.submit(screen.getByRole('button', { name: 'Sign in' }))
+    fireEvent.submit(screen.getByRole('button', { name: /sign in/i }))
 
     expect(login).toHaveBeenCalledWith({
       email: 'new@test.com',

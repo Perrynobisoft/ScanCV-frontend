@@ -13,8 +13,7 @@ export interface Status {
 export interface Users {
   id: number
   email: string
-  firstName: string
-  lastName: string
+  fullName: string
   provider: string
   socialId: string
   role: string
@@ -27,8 +26,6 @@ export interface Users {
 export interface CreateUsersRequest {
   email: string
   fullname: string
-  password: string
-  confirmPassword: string
   provider?: string
   socialId?: string
   role: string

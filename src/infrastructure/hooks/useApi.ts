@@ -107,12 +107,14 @@ const useMutationApi = <TRequest = void, TResponse = unknown>(
     endpoint,
     urlParams = {},
     queryParams = {},
+    buildUrlParams,
     buildQueryParams,
     options = {},
   }: {
     endpoint: string
     urlParams?: Record<string, string | number>
     queryParams?: Record<string, string | number | boolean | undefined>
+    buildUrlParams?: (payload: TRequest) => Record<string, string | number>
     buildQueryParams?: (
       payload: TRequest,
     ) => Record<string, string | number | boolean | undefined>
@@ -132,6 +134,10 @@ const useMutationApi = <TRequest = void, TResponse = unknown>(
     ApiConfig<TResponse, TRequest>
   >({
     mutationFn: async (payload: TRequest): Promise<TResponse> => {
+      const resolvedUrlParams = {
+        ...urlParams,
+        ...(buildUrlParams ? buildUrlParams(payload) : {}),
+      }
       const resolvedQueryParams = {
         ...queryParams,
         ...(buildQueryParams ? buildQueryParams(payload) : {}),
@@ -140,7 +146,7 @@ const useMutationApi = <TRequest = void, TResponse = unknown>(
         signal: newAbortSignal(),
         headers: options?.meta?.headers as Record<string, string>,
       }
-      const url = buildUrl(endpoint, urlParams, resolvedQueryParams)
+      const url = buildUrl(endpoint, resolvedUrlParams, resolvedQueryParams)
 
       const response =
         method === 'delete'
@@ -210,7 +216,12 @@ export const usePutApi = <TRequest = void, TResponse = unknown>(props: {
 
 export const usePatchApi = <TRequest = void, TResponse = unknown>(props: {
   endpoint: string
+  urlParams?: Record<string, string | number>
   queryParams?: Record<string, string | number | boolean | undefined>
+  buildUrlParams?: (payload: TRequest) => Record<string, string | number>
+  buildQueryParams?: (
+    payload: TRequest,
+  ) => Record<string, string | number | boolean | undefined>
   options?: MutationOptions<
     TResponse,
     ApiError,
@@ -221,7 +232,9 @@ export const usePatchApi = <TRequest = void, TResponse = unknown>(props: {
 
 export const useDeleteApi = <TRequest = void, TResponse = unknown>(props: {
   endpoint: string
+  urlParams?: Record<string, string | number>
   queryParams?: Record<string, string | number | boolean | undefined>
+  buildUrlParams?: (payload: TRequest) => Record<string, string | number>
   buildQueryParams?: (
     payload: TRequest,
   ) => Record<string, string | number | boolean | undefined>
