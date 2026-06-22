@@ -143,29 +143,29 @@ export const handlers = [
 
   http.get(`${API_URL}/${Endpoints.Auth.ME}`, async () => {
     return HttpResponse.json({
-      result: {
+      data: {
         id: 1,
         email: 'test@test.com',
-        socialId: '1234567890',
-        firstName: 'Test',
-        lastName: 'User',
-        provider: 'email',
-        role: { id: 1, name: 'Admin' },
+        fullName: 'Test User',
+        role: '1',
+        status: 'Active',
+        lastActive: new Date().toISOString(),
       },
+      success: true,
     })
   }),
 
   http.get(`http://localhost/${Endpoints.Auth.ME}`, async () => {
     return HttpResponse.json({
-      result: {
+      data: {
         id: 1,
         email: 'test@test.com',
-        socialId: '1234567890',
-        firstName: 'Test',
-        lastName: 'User',
-        provider: 'email',
-        role: { id: 1, name: 'Admin' },
+        fullName: 'Test User',
+        role: '1',
+        status: 'Active',
+        lastActive: new Date().toISOString(),
       },
+      success: true,
     })
   }),
 

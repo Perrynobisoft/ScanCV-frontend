@@ -1,23 +1,23 @@
 import { useRepository } from '@/di/RepositoriesProvider'
 import { useAuth } from '@/presentation/provider/auth/auth-provider'
+import { useRouter } from '@tanstack/react-router'
 
 export const useLogout = () => {
-  const auth = useAuth()
   const { authRepository } = useRepository()
-  const { mutate: logout, ...rest } = authRepository.logout()
+  const { clearAuth } = useAuth()
+  const router = useRouter()
+  const { mutateAsync: logoutMutation, isPending } = authRepository.logout()
 
-  return {
-    logout: (onSettled?: () => void) => {
-      logout(
-        {},
-        {
-          onSettled: () => {
-            auth.clearAuth()
-            onSettled?.()
-          },
-        },
-      )
-    },
-    ...rest,
+  const logout = async () => {
+    try {
+      await logoutMutation(undefined)
+    } catch {
+      // Silently ignore — server-side logout failure should not block local cleanup
+    } finally {
+      clearAuth()
+      await router.navigate({ to: '/auth/login', replace: true })
+    }
   }
+
+  return { logout, isPending }
 }

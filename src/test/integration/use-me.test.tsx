@@ -14,8 +14,7 @@ describe('useMe', () => {
 
     expect(result.current.result).toMatchObject({
       email: 'test@test.com',
-      firstName: 'Test',
-      lastName: 'User',
+      fullName: 'Test User',
     })
   })
 })

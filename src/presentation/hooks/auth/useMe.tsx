@@ -1,26 +1,21 @@
 import HttpClient from '@/infrastructure/http/HttpClient'
 import { Endpoints } from '@/shared/endpoints'
 import { queryOptions, useQuery } from '@tanstack/react-query'
-import type { User, Role } from '@/domain/models/Auth'
+import type { User } from '@/domain/models/Auth'
+import type { ResponseCommon } from '@/application/dto/response/ResponseCommon'
 
-export interface MeResponse {
-  result: User & {
-    role?: Role | null
-  }
-}
-
-export const getMeQueryOptions = () =>
-  queryOptions({
+export const getMeQueryOptions = () => {
+  return queryOptions({
     queryKey: [Endpoints.Auth.ME],
     queryFn: async () => {
-      const response = await HttpClient.getAxiosInstance().get<MeResponse>(
-        Endpoints.Auth.ME,
-      )
-
+      const response = await HttpClient.getAxiosInstance().get<
+        ResponseCommon<User>
+      >(Endpoints.Auth.ME)
       return response.data
     },
     retry: false,
   })
+}
 
 export const useMe = (
   options?: Partial<ReturnType<typeof getMeQueryOptions>>,
@@ -38,6 +33,6 @@ export const useMe = (
     isLoading: query.isLoading,
     isSuccess: query.isSuccess,
     refetch: query.refetch,
-    result: query.data?.result ?? null,
+    result: query.data?.data ?? null,
   }
 }

@@ -2,11 +2,12 @@ import { createFileRoute, Outlet } from '@tanstack/react-router'
 import Header from '@/presentation/components/Header'
 import Sidebar from '@/presentation/components/Sidebar'
 import { useLocale } from '@/presentation/provider/locale/locale-provider'
+import { requireAuth } from '@/shared/route-guards'
 
 export const Route = createFileRoute('/_app')({
   component: RouteComponent,
-  beforeLoad: async () => {
-    return
+  beforeLoad: ({ context, location }) => {
+    requireAuth({ auth: context.auth, location })
   },
 })
 

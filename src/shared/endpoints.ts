@@ -19,7 +19,7 @@ export const Endpoints = {
     UPDATE: `${Prefix}/users/:id`,
     DELETE: `${Prefix}/users/:id`,
     GET_ALL: `${Prefix}/users`,
-    GET: `${Prefix}/users/get`,
+    GET: `${Prefix}/users/:id`,
   },
   Cv: {
     SEARCH: `${Prefix}/cvs/search`,

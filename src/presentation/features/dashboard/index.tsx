@@ -3,7 +3,7 @@ import { useAuth } from '@/presentation/provider/auth/auth-provider'
 
 export default function DashboardPage() {
   const { user } = useAuth()
-  const welcomeSuffix = user?.firstName ? `, ${user.firstName}.` : '.'
+  const welcomeSuffix = user?.fullName ? `, ${user.fullName}.` : '.'
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-10">
@@ -44,7 +44,7 @@ export default function DashboardPage() {
               {m.dashboard_role_label()}
             </p>
             <p className="mt-2 text-base font-semibold text-slate-900">
-              {user?.role?.name || m.profile_empty_value()}
+              {user?.role || m.profile_empty_value()}
             </p>
           </div>
         </div>

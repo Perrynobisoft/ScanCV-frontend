@@ -144,7 +144,7 @@ class HttpClient {
         Endpoints.Auth.REFRESH_TOKEN,
         {},
       )
-      const accessToken = data.token
+      const accessToken = data.accessToken
       persistAuthTokens(data)
 
       this.refreshQueue.forEach((queueItem) => queueItem.resolve(accessToken))

@@ -34,7 +34,7 @@ export default function AdminPage() {
               {m.admin_role_label()}
             </p>
             <p className="mt-2 text-base font-semibold text-slate-900">
-              {user?.role?.name || m.profile_empty_value()}
+              {user?.role || m.profile_empty_value()}
             </p>
           </div>
 

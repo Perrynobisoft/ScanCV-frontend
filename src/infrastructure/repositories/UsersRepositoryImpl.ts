@@ -39,9 +39,7 @@ export const UsersRepositoryImpl = (): UsersRepository => ({
   ) => {
     return useGetApi<ResponseCommon<Users>>({
       endpoint: Endpoints.Users.GET,
-      queryParams: {
-        ...(params || {}),
-      },
+      urlParams: { id: params.id },
       options,
     })
   },

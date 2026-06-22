@@ -3,7 +3,7 @@ import { Constants } from './constants'
 
 type AuthTokenPayload = Pick<
   LoginResponse | RefreshTokenResponse,
-  'token' | 'refreshToken'
+  'accessToken' | 'refreshToken'
 >
 
 const getStorageItem = <T>(key: string): T | null => {
@@ -29,7 +29,7 @@ const removeStorageItem = (key: string) => {
 }
 
 export const persistAuthTokens = (payload: AuthTokenPayload) => {
-  setStorageItem(Constants.API_TOKEN_STORAGE, payload.token)
+  setStorageItem(Constants.API_TOKEN_STORAGE, payload.accessToken)
   setStorageItem(Constants.API_REFRESH_TOKEN_STORAGE, payload.refreshToken)
 }
 
