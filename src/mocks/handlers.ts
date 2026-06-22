@@ -75,6 +75,44 @@ const mockUsers = [
 ]
 
 export const handlers = [
+  http.get(`${API_URL}/${Endpoints.Users.GET}`, ({ params }) => {
+    const id = Number(params.id)
+    const user = mockUsers.find((u) => u.id === id) ?? mockUsers[0]
+    return HttpResponse.json({
+      success: true,
+      message: 'User retrieved successfully',
+      data: {
+        user: {
+          id: user.id,
+          fullName: `${user.firstName} ${user.lastName}`,
+          email: user.email,
+          role: user.role,
+          status: user.status,
+          lastActive: user.updatedAt,
+        },
+      },
+    })
+  }),
+
+  http.get(`http://localhost/${Endpoints.Users.GET}`, ({ params }) => {
+    const id = Number(params.id)
+    const user = mockUsers.find((u) => u.id === id) ?? mockUsers[0]
+    return HttpResponse.json({
+      success: true,
+      message: 'User retrieved successfully',
+      data: {
+        user: {
+          id: user.id,
+          fullName: `${user.firstName} ${user.lastName}`,
+          email: user.email,
+          role: user.role,
+          status: user.status,
+          lastActive: user.updatedAt,
+        },
+      },
+    })
+  }),
+
   http.get(`${API_URL}/${Endpoints.Users.GET_ALL}`, ({ request }) => {
     const url = new URL(request.url)
     const page = Number(url.searchParams.get('page') ?? 1)
@@ -121,23 +159,27 @@ export const handlers = [
 
   http.post(`${API_URL}/${Endpoints.Auth.LOGIN}`, async () => {
     return HttpResponse.json({
+      success: true,
+      statusCode: 200,
+      message: 'Login successful',
       data: {
-        userId: 1,
-        token: 'mock-token',
-        refreshToken: 'mock-refresh-token',
-        isPasswordChangeRequired: false,
-        tokenExpires: Date.now() + 1000 * 60 * 60,
+        accessToken: 'mock-access-token-jwt',
+        accessTokenExpiresAt: new Date(
+          Date.now() + 15 * 60 * 1000,
+        ).toISOString(), // 15 min
+        refreshToken: 'mock-refresh-token-jwt',
+        refreshTokenExpiresAt: new Date(
+          Date.now() + 7 * 24 * 60 * 60 * 1000,
+        ).toISOString(), // 7 days
         user: {
           id: 1,
           email: 'test@test.com',
-          socialId: '1234567890',
-          firstName: 'Test',
-          lastName: 'User',
-          provider: 'email',
-          role: { id: 1, name: 'Admin' },
+          fullName: 'Test User',
+          role: 'admin',
+          status: 'active',
+          lastActive: new Date().toISOString(),
         },
       },
-      success: true,
     })
   }),
 
