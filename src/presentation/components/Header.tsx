@@ -49,7 +49,6 @@ export default function Header() {
         <div className="flex items-center gap-3">
           <Button
             variant="accent"
-            className="rounded-sm px-4 py-2"
             onClick={() => void router.navigate({ to: '/cv' })}
           >
             <Upload className="mr-2 h-4 w-4" />

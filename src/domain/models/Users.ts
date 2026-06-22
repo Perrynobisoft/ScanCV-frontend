@@ -10,19 +10,6 @@ export interface Status {
   __entity: string
 }
 
-export interface Users {
-  id: number
-  email: string
-  fullName: string
-  provider: string
-  socialId: string
-  role: string
-  status: string
-  createdAt: string
-  updatedAt: string
-  deletedAt: string | null
-}
-
 export interface CreateUsersRequest {
   email: string
   fullname: string
