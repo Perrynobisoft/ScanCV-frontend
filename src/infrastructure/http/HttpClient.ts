@@ -33,7 +33,7 @@ class HttpClient {
     this.TIMEOUT = timeout
 
     this.instance = axios.create({
-      baseURL: '/',
+      baseURL: env.VITE_APP_API_URL ?? '/',
       timeout: this.TIMEOUT,
       headers: {
         'Content-Type': 'application/json',

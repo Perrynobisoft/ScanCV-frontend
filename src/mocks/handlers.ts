@@ -154,6 +154,20 @@ export const handlers = [
     })
   }),
 
+  http.get(`http://localhost/${Endpoints.Auth.ME}`, async () => {
+    return HttpResponse.json({
+      result: {
+        id: 1,
+        email: 'test@test.com',
+        socialId: '1234567890',
+        firstName: 'Test',
+        lastName: 'User',
+        provider: 'email',
+        role: { id: 1, name: 'Admin' },
+      },
+    })
+  }),
+
   http.post(`${API_URL}/${Endpoints.Auth.LOGOUT}`, async () => {
     return HttpResponse.json({ result: true })
   }),
