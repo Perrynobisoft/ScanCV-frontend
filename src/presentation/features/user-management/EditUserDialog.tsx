@@ -21,9 +21,7 @@ export function EditUserDialog({
   onClose,
   onSuccess,
 }: EditUserDialogProps) {
-  const [fullName, setFullName] = useState(
-    `${user.firstName} ${user.lastName}`.trim(),
-  )
+  const [fullName, setFullName] = useState(user.fullName?.trim() ?? '')
   const [role, setRole] = useState<Role>((user.role as Role) ?? 'Recruiter')
   const [status, setStatus] = useState<Status>(
     (user.status as Status) ?? 'Active',

@@ -29,7 +29,7 @@ export default function LoginPage() {
 
     // Handle first-login password change requirement
     if ((result as any).requirePasswordChange) {
-      await router.navigate({ to: '/auth/change-password' })
+      window.location.href = '/auth/change-password'
       return
     }
 
