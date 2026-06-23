@@ -1,3 +1,13 @@
+export interface Users {
+  id: number
+  email: string
+  fullName?: string
+  role: Role
+  status: Status
+  createdAt?: string
+  updatedAt?: string
+}
+
 export interface Role {
   id: number
   name: string
