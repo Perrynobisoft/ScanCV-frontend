@@ -273,7 +273,8 @@ export const handlers = [
 
   http.get(`${API_URL}/${Endpoints.Cv.GET}`, async ({ request }) => {
     const id = Number(new URL(String(request.url)).searchParams.get('id'))
-    const result = cvMockData.find((item) => item.id === id) ?? cvMockData[0]
+    const result =
+      cvMockData.find((item) => item.cv_infos_id === id) ?? cvMockData[0]
 
     return HttpResponse.json({
       data: result,

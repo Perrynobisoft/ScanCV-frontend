@@ -107,17 +107,17 @@ const useMutationApi = <TRequest = void, TResponse = unknown>(
     endpoint,
     urlParams = {},
     queryParams = {},
-    buildUrlParams,
     buildQueryParams,
+    buildUrlParams,
     options = {},
   }: {
     endpoint: string
     urlParams?: Record<string, string | number>
     queryParams?: Record<string, string | number | boolean | undefined>
-    buildUrlParams?: (payload: TRequest) => Record<string, string | number>
     buildQueryParams?: (
       payload: TRequest,
     ) => Record<string, string | number | boolean | undefined>
+    buildUrlParams?: (payload: TRequest) => Record<string, string | number>
     options?: MutationOptions<
       TResponse,
       ApiError,
@@ -194,7 +194,9 @@ const useMutationApi = <TRequest = void, TResponse = unknown>(
 }
 export const usePostApi = <TRequest = void, TResponse = unknown>(props: {
   endpoint: string
+  urlParams?: Record<string, string | number>
   queryParams?: Record<string, string | number | boolean | undefined>
+  buildUrlParams?: (payload: TRequest) => Record<string, string | number>
   options?: MutationOptions<
     TResponse,
     ApiError,
@@ -205,7 +207,9 @@ export const usePostApi = <TRequest = void, TResponse = unknown>(props: {
 
 export const usePutApi = <TRequest = void, TResponse = unknown>(props: {
   endpoint: string
+  urlParams?: Record<string, string | number>
   queryParams?: Record<string, string | number | boolean | undefined>
+  buildUrlParams?: (payload: TRequest) => Record<string, string | number>
   options?: MutationOptions<
     TResponse,
     ApiError,

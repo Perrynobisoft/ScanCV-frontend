@@ -27,6 +27,7 @@ export default function Table<T>({
   emptyText = 'No data',
   className,
   tableClassName,
+  maxHeight,
   onRowClick,
 }: TableProps<T>) {
   if (loading) {
@@ -39,12 +40,13 @@ export default function Table<T>({
 
   return (
     <div
-      className={`overflow-x-hidden rounded-xl border border-slate-200 bg-white ${className ?? ''}`}
+      className={`rounded-xl border border-slate-200 bg-white ${className ?? ''}`}
     >
-      <div className="overflow-x-auto">
-        <table
-          className={`w-full min-w-300 border-collapse overflow-x-hidden ${tableClassName ?? ''}`}
-        >
+      <div
+        className="overflow-y-auto"
+        style={maxHeight ? { maxHeight } : undefined}
+      >
+        <table className={`w-full border-collapse ${tableClassName ?? ''}`}>
           <thead className="border-b border-slate-200 bg-slate-50">
             <tr>
               {columns.map((column) => (

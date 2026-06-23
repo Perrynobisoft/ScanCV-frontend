@@ -8,10 +8,12 @@ const DEFAULT_LIMIT = 10
 export const useCvList = (
   searchQuery?: string,
   filter?: {
+    job_title?: string
     experience?: string
     skills?: string
     position?: string
-    style?: string
+    location?: string
+    work_type?: string
   },
 ) => {
   const { cvRepository } = useRepository()
@@ -28,7 +30,7 @@ export const useCvList = (
     filter?.experience,
     filter?.skills,
     filter?.position,
-    filter?.style,
+    filter?.work_type,
   ])
 
   const mapExperienceToYears = (exp?: string): number | undefined => {
@@ -48,10 +50,10 @@ export const useCvList = (
       search: searchQuery ?? '',
       extensions: 'string',
       filter: {
-        experience_years: mapExperienceToYears(filter?.experience),
+        total_experience_years: mapExperienceToYears(filter?.experience),
         skills: filter?.skills ?? '',
         position: filter?.position ?? '',
-        style: filter?.style ?? '',
+        work_type: filter?.work_type ?? '',
       },
     })
   }, [
@@ -62,7 +64,7 @@ export const useCvList = (
     filter?.experience,
     filter?.skills,
     filter?.position,
-    filter?.style,
+    filter?.work_type,
   ])
 
   const normalizeListResponse = (

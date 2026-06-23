@@ -6,7 +6,7 @@ export default function AdminPage() {
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-10">
-      <section className="overflow-hidden rounded-3xl border border-amber-200 bg-white shadow-sm">
+      <section className="overflow-y-auto rounded-3xl border border-amber-200 bg-white shadow-sm">
         <div className="bg-amber-50 px-8 py-8">
           <p className="text-sm font-semibold uppercase tracking-[0.3em] text-amber-700">
             {m.admin_eyebrow()}

@@ -7,7 +7,7 @@ export default function DashboardPage() {
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-10">
-      <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+      <section className="overflow-y-auto rounded-3xl border border-slate-200 bg-white shadow-sm">
         <div className="bg-slate-950 px-8 py-10 text-white">
           <p className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-300">
             {m.dashboard_overview()}
