@@ -23,6 +23,7 @@ export type TableProps<T> = {
 
   className?: string
   tableClassName?: string
+  maxHeight?: string
 
   onRowClick?: (row: T) => void
 }

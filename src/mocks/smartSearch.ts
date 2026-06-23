@@ -7,7 +7,7 @@ export interface SmartSearchCvItem extends CvItem {
 
 export const smartSearchCvMockData: SmartSearchCvItem[] = [
   {
-    id: 201,
+    cv_infos_id: 201,
     cv_file_id: 301,
     full_name: 'Nguyễn Văn An',
     email: 'nguyenvanan@example.com',
@@ -16,16 +16,34 @@ export const smartSearchCvMockData: SmartSearchCvItem[] = [
     address: 'Hà Nội, Việt Nam',
     summary:
       'Senior frontend engineer highly experienced in React, TypeScript và component-driven development. Đã xây dựng nhiều sản phẩm SaaS với UI hiệu năng cao.',
-    educations: ['B.Sc. Computer Science - Đại học Bách Khoa Hà Nội'],
+    educations: [
+      {
+        field: 'Computer Science',
+        degree: 'B.Sc.',
+        university: 'Đại học Bách Khoa Hà Nội',
+        graduation_year: 2023,
+      },
+    ],
     certifications: ['React Professional', 'AWS Cloud Practitioner'],
     status: 'active',
+    tag: 'in-progress',
     position: 'Senior Frontend Engineer',
     skills: ['React', 'TypeScript', 'Next.js', 'Tailwind CSS', 'Jest'],
     experience: '7 years',
     ai_score: 95,
     created_at: '2026-02-10T08:00:00.000Z',
     updated_at: '2026-06-01T11:15:00.000Z',
-    file: {
+    scores: {
+      offline_score: 92,
+      matching_score: 90,
+      final_score: 91,
+    },
+    reasons: {
+      offline_reason: 'Mô hình NLP và semantic search xuất sắc',
+      matching_reason: 'Kỹ năng phù hợp với yêu cầu vị trí',
+      overall_conclusion: 'Ứng viên mạnh, phù hợp với vai trò data scientist',
+    },
+    cv_file: {
       id: 301,
       uploaded_by: 1,
       original_file_name: 'Nguyen_Van_An_CV.pdf',
@@ -37,7 +55,7 @@ export const smartSearchCvMockData: SmartSearchCvItem[] = [
     },
   },
   {
-    id: 202,
+    cv_infos_id: 202,
     cv_file_id: 302,
     full_name: 'Trần Bảo Quân',
     email: 'tranbaoquan@example.com',
@@ -46,7 +64,14 @@ export const smartSearchCvMockData: SmartSearchCvItem[] = [
     address: 'TP. Hồ Chí Minh, Việt Nam',
     summary:
       'Data scientist chuyên về machine learning và semantic search. Kinh nghiệm xử lý dữ liệu lớn, mô hình NLP và recommendation engine.',
-    educations: ['M.Sc. Data Science - Đại học Quốc gia TP.HCM'],
+    educations: [
+      {
+        field: 'Data Science',
+        degree: 'M.Sc.',
+        university: 'Đại học Quốc gia TP.HCM',
+        graduation_year: 2024,
+      },
+    ],
     certifications: [
       'TensorFlow Developer',
       'Data Engineering on Google Cloud',
@@ -58,7 +83,17 @@ export const smartSearchCvMockData: SmartSearchCvItem[] = [
     ai_score: 92,
     created_at: '2026-01-20T09:35:00.000Z',
     updated_at: '2026-05-18T14:40:00.000Z',
-    file: {
+    scores: {
+      offline_score: 92,
+      matching_score: 90,
+      final_score: 91,
+    },
+    reasons: {
+      offline_reason: 'Mô hình NLP và semantic search xuất sắc',
+      matching_reason: 'Kỹ năng phù hợp với yêu cầu vị trí',
+      overall_conclusion: 'Ứng viên mạnh, phù hợp với vai trò data scientist',
+    },
+    cv_file: {
       id: 302,
       uploaded_by: 2,
       original_file_name: 'Tran_Bao_Quan_CV.pdf',
@@ -70,7 +105,7 @@ export const smartSearchCvMockData: SmartSearchCvItem[] = [
     },
   },
   {
-    id: 203,
+    cv_infos_id: 203,
     cv_file_id: 303,
     full_name: 'Lê Hồng Nhung',
     email: 'lehongnhung@example.com',
@@ -80,7 +115,12 @@ export const smartSearchCvMockData: SmartSearchCvItem[] = [
     summary:
       'Product manager với nền tảng kỹ thuật, dẫn dắt các đội cross-functional và ra mắt sản phẩm digital thành công trong fintech và e-commerce.',
     educations: [
-      'MBA Product Management - Đại học Quản lý và Công nghệ Hà Nội',
+      {
+        field: 'Product Management',
+        degree: 'MBA',
+        university: 'Đại học Quản lý và Công nghệ Hà Nội',
+        graduation_year: 2023,
+      },
     ],
     certifications: ['Certified Scrum Product Owner'],
     status: 'review',
@@ -90,7 +130,18 @@ export const smartSearchCvMockData: SmartSearchCvItem[] = [
     ai_score: 88,
     created_at: '2025-12-11T07:45:00.000Z',
     updated_at: '2026-04-22T10:10:00.000Z',
-    file: {
+    scores: {
+      offline_score: 88,
+      matching_score: 85,
+      final_score: 86,
+    },
+    reasons: {
+      offline_reason: 'Kinh nghiệm quản lý sản phẩm xuất sắc',
+      matching_reason: 'Kỹ năng phù hợp với yêu cầu vị trí',
+      overall_conclusion:
+        'Ứng viên có tiềm năng, cần thêm thời gian để đánh giá chi tiết',
+    },
+    cv_file: {
       id: 303,
       uploaded_by: 4,
       original_file_name: 'Le_Hong_Nhung_CV.docx',
@@ -103,7 +154,7 @@ export const smartSearchCvMockData: SmartSearchCvItem[] = [
     },
   },
   {
-    id: 204,
+    cv_infos_id: 204,
     cv_file_id: 304,
     full_name: 'Phạm Quốc Dũng',
     email: 'phamquocdung@example.com',
@@ -112,7 +163,14 @@ export const smartSearchCvMockData: SmartSearchCvItem[] = [
     address: 'Hải Phòng, Việt Nam',
     summary:
       'Backend developer với chuyên môn microservices, Node.js và hệ thống real-time. Tối ưu hóa hiệu suất và xây dựng API chuẩn REST/GraphQL.',
-    educations: ['B.Sc. Software Engineering - Đại học Hàng Hải Việt Nam'],
+    educations: [
+      {
+        field: 'Software Engineering',
+        degree: 'B.Sc.',
+        university: 'Đại học Hàng Hải Việt Nam',
+        graduation_year: 2023,
+      },
+    ],
     certifications: ['Node.js Certified Developer'],
     status: 'active',
     position: 'Backend Engineer',
@@ -121,7 +179,17 @@ export const smartSearchCvMockData: SmartSearchCvItem[] = [
     ai_score: 90,
     created_at: '2026-03-18T10:00:00.000Z',
     updated_at: '2026-06-09T12:55:00.000Z',
-    file: {
+    scores: {
+      offline_score: 92,
+      matching_score: 90,
+      final_score: 91,
+    },
+    reasons: {
+      offline_reason: 'Mô hình NLP và semantic search xuất sắc',
+      matching_reason: 'Kỹ năng phù hợp với yêu cầu vị trí',
+      overall_conclusion: 'Ứng viên mạnh, phù hợp với vai trò data scientist',
+    },
+    cv_file: {
       id: 304,
       uploaded_by: 1,
       original_file_name: 'Pham_Quoc_Dung_CV.pdf',
@@ -133,7 +201,7 @@ export const smartSearchCvMockData: SmartSearchCvItem[] = [
     },
   },
   {
-    id: 205,
+    cv_infos_id: 205,
     cv_file_id: 305,
     full_name: 'Đỗ Thị Lan',
     email: 'dothilan@example.com',
@@ -142,7 +210,14 @@ export const smartSearchCvMockData: SmartSearchCvItem[] = [
     address: 'Nha Trang, Việt Nam',
     summary:
       'UX designer with strong background in research-driven design và prototyping. Thiết kế sản phẩm mobile-first và tối ưu trải nghiệm khách hàng.',
-    educations: ['B.Des. Graphic Design - Đại học Văn Lang'],
+    educations: [
+      {
+        field: 'Graphic Design',
+        degree: 'B.Des.',
+        university: 'Đại học Văn Lang',
+        graduation_year: 2024,
+      },
+    ],
     certifications: ['NN/g UX Certification'],
     status: 'pending',
     position: 'UX Designer',
@@ -151,7 +226,18 @@ export const smartSearchCvMockData: SmartSearchCvItem[] = [
     ai_score: 83,
     created_at: '2026-04-01T08:25:00.000Z',
     updated_at: '2026-05-20T13:30:00.000Z',
-    file: {
+    scores: {
+      offline_score: 83,
+      matching_score: 80,
+      final_score: 81,
+    },
+    reasons: {
+      offline_reason: 'Kỹ năng thiết kế xuất sắc',
+      matching_reason: 'Phù hợp với yêu cầu vị trí',
+      overall_conclusion:
+        'Ứng viên có tiềm năng, cần thêm thời gian để đánh giá chi tiết',
+    },
+    cv_file: {
       id: 305,
       uploaded_by: 3,
       original_file_name: 'Do_Thi_Lan_CV.pdf',
@@ -163,7 +249,7 @@ export const smartSearchCvMockData: SmartSearchCvItem[] = [
     },
   },
   {
-    id: 206,
+    cv_infos_id: 206,
     cv_file_id: 306,
     full_name: 'Hoàng Đức Minh',
     email: 'hoangducminh@example.com',
@@ -172,11 +258,28 @@ export const smartSearchCvMockData: SmartSearchCvItem[] = [
     address: 'Quảng Ninh, Việt Nam',
     summary:
       'Cloud engineer và DevOps specialist. Xây dựng CI/CD pipeline, quản lý container và hệ thống chịu lỗi trên AWS.',
-    educations: ['B.Sc. Information Systems - Đại học Hạ Long'],
+    educations: [
+      {
+        field: 'Information Systems',
+        degree: 'B.Sc.',
+        university: 'Đại học Hạ Long',
+        graduation_year: 2024,
+      },
+    ],
     certifications: [
       'AWS Certified Solutions Architect',
       'Docker Certified Associate',
     ],
+    scores: {
+      offline_score: 92,
+      matching_score: 90,
+      final_score: 91,
+    },
+    reasons: {
+      offline_reason: 'Mô hình NLP và semantic search xuất sắc',
+      matching_reason: 'Kỹ năng phù hợp với yêu cầu vị trí',
+      overall_conclusion: 'Ứng viên mạnh, phù hợp với vai trò data scientist',
+    },
     status: 'active',
     position: 'DevOps Engineer',
     skills: ['AWS', 'Docker', 'Kubernetes', 'Terraform', 'CI/CD'],
@@ -184,7 +287,7 @@ export const smartSearchCvMockData: SmartSearchCvItem[] = [
     ai_score: 89,
     created_at: '2026-02-28T09:00:00.000Z',
     updated_at: '2026-05-27T11:20:00.000Z',
-    file: {
+    cv_file: {
       id: 306,
       uploaded_by: 2,
       original_file_name: 'Hoang_Duc_Minh_CV.pdf',

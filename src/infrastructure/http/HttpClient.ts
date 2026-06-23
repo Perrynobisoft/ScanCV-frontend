@@ -158,6 +158,8 @@ class HttpClient {
 
   private handleLogout(): void {
     handleLogout(queryClient)
+    // Commented out to avoid forcing users back to the login page during development.
+    // window.location.assign('/auth/login')
   }
 
   private rejectRefreshQueue(error: unknown): void {

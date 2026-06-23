@@ -13,7 +13,7 @@ export interface CvFile {
 }
 
 export interface CvItem {
-  id: number
+  cv_infos_id: number
   cv_file_id: number
   full_name: string
   email: string
@@ -21,16 +21,35 @@ export interface CvItem {
   date_of_birth: string
   address: string
   summary: string
-  educations: string[]
+  educations: {
+    field: string
+    degree: string
+    university: string
+    graduation_year: number
+  }[]
   certifications: string[]
   status: string
   created_at: string
   updated_at: string
-  file?: CvFile
+  cv_file?: CvFile
   skills?: string[]
   uploaded_by?: User
   position: string
-  pdf_url?: string
+  total_experience_years?: number
+  work_type?: string
+  tag?: 'new' | 'in-progress' | 'rejected' | 'hired' | 'contacted'
+  is_marked?: boolean
+  notes?: string
+  scores: {
+    offline_score?: number
+    matching_score?: number
+    final_score?: number
+  }
+  reasons?: {
+    offline_reason?: string
+    matching_reason?: string
+    overall_conclusion?: string
+  }
 }
 
 export interface SearchCvRequest {
@@ -44,10 +63,10 @@ export interface GetAllCvRequest {
   limit?: number
   search?: string
   filter?: {
-    experience_years?: number
+    total_experience_years?: number
     skills?: string
     position?: string
-    style?: string
+    work_type?: string
   }
   extensions?: string
 }
@@ -59,7 +78,13 @@ export interface CreateCvRequest {
   phone?: string
   date_of_birth?: string
   address?: string
+  position?: string
+  work_type?: string
+  total_experience_years?: number
   summary?: string
+  is_marked?: boolean
+  notes?: string
+  tag?: string
   educations?: string[]
   certifications?: string[]
   status?: string

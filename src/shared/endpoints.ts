@@ -26,7 +26,10 @@ export const Endpoints = {
     GET_ALL: `${Prefix}/cvs/getAll`,
     GET: `${Prefix}/cvs/get`,
     CREATE: `${Prefix}/cvs/create`,
-    UPDATE: `${Prefix}/cvs/update`,
+    UPDATE: `${Prefix}/cvs/:id`,
     DELETE: `${Prefix}/cvs/delete`,
+    BULK_UPLOAD: `${Prefix}/cvs/bulk-upload`,
+    BULK_UPLOAD_STATUS: `${Prefix}/cvs/bulk-upload/:batchId`,
+    CANCEL_BULK_UPLOAD: `${Prefix}/cvs/bulk-upload/:batchId/cancel`,
   },
 }

@@ -11,9 +11,14 @@ import {
   useDeleteApi,
   useGetApi,
   usePostApi,
+  usePostFormApi,
   usePutApi,
 } from '@/infrastructure/hooks/useApi'
 import { Endpoints } from '@/shared/endpoints'
+import {
+  type BulkUploadStatusResponse,
+  type BulkUploadResponse,
+} from '@/domain/models/BulkUpload'
 import { type CvRepository } from '@/application/repositories/CvRepository'
 
 const normalizeQueryParams = (
@@ -54,10 +59,26 @@ export const CvRepositoryImpl = (): CvRepository => ({
   update: () =>
     usePutApi<UpdateCvRequest, ResponseCommon<CvItem>>({
       endpoint: Endpoints.Cv.UPDATE,
+      buildUrlParams: (payload) => ({ id: payload.id }),
     }),
   delete: () =>
     useDeleteApi<DeleteCommonParams, ResponseCommon<boolean>>({
       endpoint: Endpoints.Cv.DELETE,
       buildQueryParams: (params) => normalizeQueryParams(params),
+    }),
+  bulkUpload: () =>
+    usePostFormApi<ResponseCommon<BulkUploadResponse>>({
+      endpoint: Endpoints.Cv.BULK_UPLOAD,
+    }),
+  getBulkUploadStatus: (params) =>
+    useGetApi<ResponseCommon<BulkUploadStatusResponse>>({
+      endpoint: Endpoints.Cv.BULK_UPLOAD_STATUS,
+      urlParams: { batchId: params.batchId },
+      options: { enabled: !!params.batchId },
+    }),
+  cancelBulkUpload: () =>
+    usePostApi<{ batchId: string }, ResponseCommon<unknown>>({
+      endpoint: Endpoints.Cv.CANCEL_BULK_UPLOAD,
+      buildUrlParams: (payload) => ({ batchId: payload.batchId }),
     }),
 })
