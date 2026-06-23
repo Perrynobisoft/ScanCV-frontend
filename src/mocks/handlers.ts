@@ -157,7 +157,16 @@ export const handlers = [
     })
   }),
 
-  http.post(`${API_URL}/${Endpoints.Auth.LOGIN}`, async () => {
+  http.post(`${API_URL}/${Endpoints.Auth.LOGIN}`, async ({ request }) => {
+    const body = (await request.json()) as { email?: string }
+    const email = String(body?.email ?? '')
+      .trim()
+      .toLowerCase()
+
+    // Tìm user theo email, fallback về admin nếu không khớp
+    const matched = mockUsers.find((u) => u.email.toLowerCase() === email)
+    const loginUser = matched ?? mockUsers[0]
+
     return HttpResponse.json({
       success: true,
       statusCode: 200,
@@ -169,12 +178,12 @@ export const handlers = [
         ).toISOString(), // 15 min
         // refreshToken KHÔNG có trong body — backend set qua Set-Cookie HttpOnly
         user: {
-          id: 1,
-          email: 'test@test.com',
-          fullName: 'Test User',
-          role: 'admin',
-          status: 'active',
-          lastActive: new Date().toISOString(),
+          id: loginUser.id,
+          email: loginUser.email,
+          fullName: `${loginUser.firstName} ${loginUser.lastName}`,
+          role: loginUser.role,
+          status: loginUser.status,
+          lastActive: loginUser.updatedAt,
         },
       },
     })
@@ -184,9 +193,9 @@ export const handlers = [
     return HttpResponse.json({
       data: {
         id: 1,
-        email: 'test@test.com',
-        fullName: 'Test User',
-        role: '1',
+        email: 'admin@recruitai.io',
+        fullName: 'Nguyen Van Admin',
+        role: 'Admin',
         status: 'Active',
         lastActive: new Date().toISOString(),
       },
@@ -198,9 +207,9 @@ export const handlers = [
     return HttpResponse.json({
       data: {
         id: 1,
-        email: 'test@test.com',
-        fullName: 'Test User',
-        role: '1',
+        email: 'admin@recruitai.io',
+        fullName: 'Nguyen Van Admin',
+        role: 'Admin',
         status: 'Active',
         lastActive: new Date().toISOString(),
       },
