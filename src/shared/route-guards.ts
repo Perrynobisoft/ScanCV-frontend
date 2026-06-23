@@ -1,5 +1,4 @@
 import type { AuthContext } from '@/presentation/provider/auth/auth-provider'
-import type { Roles } from '@/shared/enums/Roles'
 import { redirect } from '@tanstack/react-router'
 
 /**
@@ -23,11 +22,11 @@ export const requireAuth = ({
 }
 
 export const hasRequiredRole = (
-  roleId: number | null | undefined,
-  allowedRoles: Roles[],
+  role: string | null | undefined,
+  allowedRoles: string[],
 ) => {
-  if (!roleId) return false
-  return allowedRoles.includes(roleId)
+  if (!role) return false
+  return allowedRoles.includes(role)
 }
 
 export const requireRoles = ({
@@ -35,11 +34,11 @@ export const requireRoles = ({
   allowedRoles,
 }: {
   auth: AuthContext
-  allowedRoles: Roles[]
+  allowedRoles: string[]
 }) => {
-  const roleId = auth.user?.role ? Number(auth.user.role) : undefined
+  const role = auth.user?.role ?? undefined
 
-  if (!hasRequiredRole(roleId, allowedRoles)) {
+  if (!hasRequiredRole(role, allowedRoles)) {
     throw redirect({
       to: '/403',
       replace: true,

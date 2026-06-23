@@ -3,12 +3,9 @@ import { type AuthRepository } from '@/application/repositories/AuthRepository'
 import {
   type ChangePasswordRequest,
   type ConfirmEmailRequest,
-  type ConfirmEmailResponse,
   type ForgotPasswordRequest,
   type LoginRequest,
   type LoginResponse,
-  type LoginWithFacebookRequest,
-  type LoginWithGoogleRequest,
   type RegisterRequest,
   type RegisterResponse,
   type ResetPasswordRequest,
@@ -21,29 +18,17 @@ import {
   usePostApi,
 } from '@/infrastructure/hooks/useApi'
 import { Endpoints } from '@/shared/endpoints'
-import { type QueryOptions } from '@tanstack/react-query'
+import { type QueryOptions } from '@/shared/types/react-query'
 
 export const AuthRepositoryImpl = (): AuthRepository => ({
   login: () =>
     usePostApi<LoginRequest, ResponseCommon<LoginResponse>>({
       endpoint: Endpoints.Auth.LOGIN,
     }),
-  loginWithGoogle: () =>
-    usePostApi<LoginWithGoogleRequest, ResponseCommon<LoginResponse>>({
-      endpoint: Endpoints.Auth.LOGIN_WITH_GOOGLE,
-    }),
-  loginWithFacebook: () =>
-    usePostApi<LoginWithFacebookRequest, ResponseCommon<LoginResponse>>({
-      endpoint: Endpoints.Auth.LOGIN_WITH_FACEBOOK,
-    }),
   logout: () => usePostApi({ endpoint: Endpoints.Auth.LOGOUT }),
   register: () =>
     usePostApi<RegisterRequest, ResponseCommon<RegisterResponse>>({
       endpoint: Endpoints.Auth.REGISTER,
-    }),
-  confirmEmail: () =>
-    usePostApi<ConfirmEmailRequest, ResponseCommon<ConfirmEmailResponse>>({
-      endpoint: Endpoints.Auth.CONFIRM_EMAIL,
     }),
   forgotPassword: () =>
     usePostApi<ForgotPasswordRequest, ResponseCommon<any>>({
@@ -58,7 +43,7 @@ export const AuthRepositoryImpl = (): AuthRepository => ({
       endpoint: Endpoints.Auth.RESET_PASSWORD,
     }),
 
-  me: (options?: QueryOptions) =>
+  me: (options?: QueryOptions<ResponseCommon<User>>) =>
     useGetApi<ResponseCommon<User>>({
       endpoint: Endpoints.Auth.ME,
       ...options,
@@ -67,5 +52,10 @@ export const AuthRepositoryImpl = (): AuthRepository => ({
   updateMe: () =>
     usePatchApi<UpdateMeRequest, ResponseCommon<User>>({
       endpoint: Endpoints.Auth.ME,
+    }),
+
+  confirmEmail: () =>
+    usePostApi<ConfirmEmailRequest, ResponseCommon<any>>({
+      endpoint: Endpoints.Auth.CONFIRM_EMAIL,
     }),
 })

@@ -12,22 +12,18 @@ export interface LoginRequest {
   password: string
 }
 
-export interface LoginWithGoogleRequest {
-  idToken: string
-}
-
-export interface LoginWithFacebookRequest {
-  accessToken: string
-}
-
 export interface LoginResponse {
   accessToken: string
-  refreshToken: string
-  expiresAt: string
+  accessTokenExpiresAt: string
+  // refreshToken không có trong response body.
+  // Backend set qua Set-Cookie: HttpOnly; Secure; Path=/api/v1/auth/refresh
+  user: User
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface RefreshTokenResponse extends LoginResponse {}
+export interface RefreshTokenResponse {
+  accessToken: string
+  accessTokenExpiresAt: string
+}
 
 export interface ChangePasswordRequest {
   currentPassword: string
@@ -44,10 +40,9 @@ export interface ForgotPasswordRequest {
 }
 
 export interface RegisterRequest {
-  firstName: string
-  lastName: string
+  fullName: string
   email: string
-  password: string
+  role: string
 }
 
 export interface RegisterResponse {
@@ -58,13 +53,7 @@ export interface ConfirmEmailRequest {
   hash: string
 }
 
-export interface ConfirmEmailResponse {
-  message: string
-}
-
 export interface UpdateMeRequest {
-  firstName?: string
-  lastName?: string
-  password?: string
-  oldPassword?: string
+  fullName?: string
+  email?: string
 }
