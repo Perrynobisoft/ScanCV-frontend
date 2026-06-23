@@ -7,6 +7,7 @@ export default {
       [
         'feat', // New feature
         'fix', // Fix
+        'update',
         'docs', // Change documentation
         'style', // Change code format (without affecting logic)
         'refactor', // Refactor code

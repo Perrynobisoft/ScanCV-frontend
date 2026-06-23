@@ -14,7 +14,7 @@ export const useChangePassword = () => {
       changePassword(requestData, {
         onSuccess: () => {
           auth.clearAuth()
-          router.navigate({ to: '/' }) // Redirect sau khi login
+          router.navigate({ to: '/' }) // Redirect sau khi đổi mật khẩu
         },
       })
     },

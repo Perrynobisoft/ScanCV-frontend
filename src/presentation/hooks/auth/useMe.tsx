@@ -1,29 +1,13 @@
-import HttpClient from '@/infrastructure/http/HttpClient'
+import { useRepository } from '@/di/RepositoriesProvider'
 import { Endpoints } from '@/shared/endpoints'
-import { queryOptions, useQuery } from '@tanstack/react-query'
-import type { User } from '@/domain/models/Auth'
+import type { QueryOptions } from '@/shared/types/react-query'
 import type { ResponseCommon } from '@/application/dto/response/ResponseCommon'
+import type { User } from '@/domain/models/Auth'
 
-export const getMeQueryOptions = () => {
-  return queryOptions({
-    queryKey: [Endpoints.Auth.ME],
-    queryFn: async () => {
-      const response = await HttpClient.getAxiosInstance().get<
-        ResponseCommon<User>
-      >(Endpoints.Auth.ME)
-      return response.data
-    },
-    retry: false,
-  })
-}
+export const useMe = (options?: QueryOptions<ResponseCommon<User>>) => {
+  const { authRepository } = useRepository()
 
-export const useMe = (
-  options?: Partial<ReturnType<typeof getMeQueryOptions>>,
-) => {
-  const query = useQuery({
-    ...getMeQueryOptions(),
-    ...options,
-  })
+  const query = authRepository.me(options)
 
   return {
     data: query.data,
@@ -33,6 +17,8 @@ export const useMe = (
     isLoading: query.isLoading,
     isSuccess: query.isSuccess,
     refetch: query.refetch,
-    result: query.data?.data ?? null,
+    // response shape: { data: User }
+    result: (query.data as ResponseCommon<User> | undefined)?.data ?? null,
+    queryKey: [Endpoints.Auth.ME],
   }
 }

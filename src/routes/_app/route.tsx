@@ -17,7 +17,7 @@ function RouteComponent() {
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900" lang={locale}>
       <div className="flex min-h-screen">
-        <div className="fixed w-72 h-full z-50">
+        <div className="fixed w-72 h-full z-30">
           <Sidebar />
         </div>
 

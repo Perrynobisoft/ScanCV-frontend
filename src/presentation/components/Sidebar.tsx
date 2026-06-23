@@ -2,8 +2,7 @@ import { Link, useLocation } from '@tanstack/react-router'
 import { useAuth } from '@/presentation/provider/auth/auth-provider'
 import { Roles } from '@/shared/enums/Roles'
 import { NAVIGATION } from '@/shared/constants/sidebar'
-import { Button } from './ui/button'
-import { Upload, Brain, Settings } from 'lucide-react'
+import { Brain, Settings } from 'lucide-react'
 import { ROUTES } from '@/shared/constants/routes'
 import Avatar from './ui/avatar'
 
@@ -15,11 +14,11 @@ const ADMIN = {
 export default function Sidebar() {
   const { user } = useAuth()
   const location = useLocation()
-  const canAccessAdmin = Number(user?.role) === Roles.ADMIN
+  const canAccessAdmin = user?.role === Roles.ADMIN
 
   return (
-    <aside className="flex h-full overflow-y-auto flex-col border-r border-slate-200 bg-primary px-6 py-8">
-      <div className="mb-10">
+    <aside className="flex h-full overflow-y-auto flex-col border-r border-slate-200 bg-primary px-6 py-8 z-30">
+      <div className="mb-5">
         <Link
           className="inline-flex items-center gap-3 text-2xl font-semibold"
           to={ROUTES.CV}
@@ -36,12 +35,7 @@ export default function Sidebar() {
         </Link>
       </div>
 
-      <Button className="rounded-sm py-3 px-2 text-lg" variant="accent">
-        <Upload className="h-4 w-4" />
-        <span>Upload CV</span>
-      </Button>
-
-      <nav className="mt-10 flex flex-col gap-2 text-sm font-medium text-white">
+      <nav className="mt-5 flex flex-col gap-2 text-sm font-medium text-white">
         {NAVIGATION.map((item) => {
           if (item?.adminOnly && !canAccessAdmin) {
             return null

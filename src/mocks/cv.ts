@@ -2,7 +2,7 @@ import type { CvItem } from '@/domain/models/Cv'
 
 export const cvMockData: CvItem[] = [
   {
-    id: 101,
+    cv_infos_id: 101,
     cv_file_id: 201,
     full_name: 'Nguyễn Hoàng Anh',
     email: 'hoanganh.nguyen@example.com',
@@ -11,14 +11,32 @@ export const cvMockData: CvItem[] = [
     address: 'TP. Hồ Chí Minh, Việt Nam',
     summary:
       'Software engineer with 5+ years experience in React, Node.js and cloud-native applications. Passionate about building scalable products và cải thiện trải nghiệm người dùng.',
-    educations: ['B.Sc. Computer Science - Đại học Bách Khoa TP.HCM'],
+    scores: {
+      offline_score: 92,
+      matching_score: 90,
+      final_score: 91,
+    },
+    reasons: {
+      offline_reason: 'Mô hình NLP và semantic search xuất sắc',
+      matching_reason: 'Kỹ năng phù hợp với yêu cầu vị trí',
+      overall_conclusion: 'Ứng viên mạnh, phù hợp với vai trò data scientist',
+    },
+    educations: [
+      {
+        field: 'Computer Science',
+        degree: 'B.Sc.',
+        university: 'Đại học Bách Khoa TP.HCM',
+        graduation_year: 2024,
+      },
+    ],
     certifications: ['AWS Certified Developer', 'Scrum Master'],
     status: 'active',
+    tag: 'new',
     position: 'Frontend Engineer',
     skills: ['React', 'TypeScript', 'Node.js', 'AWS', 'GraphQL'],
     created_at: '2025-11-20T08:45:00.000Z',
     updated_at: '2026-04-15T12:20:00.000Z',
-    file: {
+    cv_file: {
       id: 201,
       uploaded_by: 1,
       original_file_name: 'Nguyen_Hoang_Anh_CV.pdf',
@@ -30,23 +48,41 @@ export const cvMockData: CvItem[] = [
     },
   },
   {
-    id: 102,
+    cv_infos_id: 102,
     cv_file_id: 202,
     full_name: 'Lê Thị Mai',
     email: 'lethi.mai@example.com',
     phone: '+84 909 123 456',
     date_of_birth: '1991-09-29',
     address: 'Hà Nội, Việt Nam',
+    scores: {
+      offline_score: 85,
+      matching_score: 82,
+      final_score: 83,
+    },
+    reasons: {
+      offline_reason: 'Kinh nghiệm digital marketing xuất sắc',
+      matching_reason: 'Kỹ năng phù hợp với yêu cầu vị trí',
+      overall_conclusion:
+        'Ứng viên có tiềm năng, cần thêm thời gian để đánh giá chi tiết',
+    },
     summary:
       'Digital marketing specialist with strong background in content strategy, SEO và campaign optimization. Thích hợp cho các dự án tăng trưởng và thương hiệu.',
-    educations: ['MBA Marketing - Đại học Kinh tế Quốc dân'],
+    educations: [
+      {
+        field: 'Marketing',
+        degree: 'MBA',
+        university: 'Đại học Kinh tế Quốc dân',
+        graduation_year: 2024,
+      },
+    ],
     certifications: ['Google Analytics', 'Facebook Ads'],
     status: 'pending',
     position: 'Marketing Specialist',
     skills: ['SEO', 'Content Marketing', 'Google Ads', 'Analytics'],
     created_at: '2026-01-14T10:30:00.000Z',
     updated_at: '2026-05-02T16:05:00.000Z',
-    file: {
+    cv_file: {
       id: 202,
       uploaded_by: 1,
       original_file_name: 'Le_Thi_Mai_CV.pdf',
@@ -58,7 +94,7 @@ export const cvMockData: CvItem[] = [
     },
   },
   {
-    id: 103,
+    cv_infos_id: 103,
     cv_file_id: 203,
     full_name: 'Trần Minh Tuấn',
     email: 'tranminhtuan@example.com',
@@ -67,14 +103,32 @@ export const cvMockData: CvItem[] = [
     address: 'Đà Nẵng, Việt Nam',
     summary:
       'Project manager experienced in agile delivery và phối hợp đội ngũ cross-functional. Chuyên về các sản phẩm fintech và SaaS.',
-    educations: ['B.Sc. Information Technology - Đại học Duy Tân'],
+    educations: [
+      {
+        field: 'Information Technology',
+        degree: 'B.Sc.',
+        university: 'Đại học Duy Tân',
+        graduation_year: 2023,
+      },
+    ],
+    scores: {
+      offline_score: 88,
+      matching_score: 85,
+      final_score: 86,
+    },
+    reasons: {
+      offline_reason: 'Kinh nghiệm quản lý sản phẩm xuất sắc',
+      matching_reason: 'Kỹ năng phù hợp với yêu cầu vị trí',
+      overall_conclusion:
+        'Ứng viên có tiềm năng, cần thêm thời gian để đánh giá chi tiết',
+    },
     certifications: ['PMP', 'Prince2'],
     status: 'review',
     position: 'Project Manager',
     skills: ['Agile', 'Scrum', 'Stakeholder Management', 'Jira'],
     created_at: '2025-09-03T13:10:00.000Z',
     updated_at: '2026-02-28T09:50:00.000Z',
-    file: {
+    cv_file: {
       id: 203,
       uploaded_by: 2,
       original_file_name: 'Tran_Minh_Tuan_CV.docx',
@@ -87,23 +141,40 @@ export const cvMockData: CvItem[] = [
     },
   },
   {
-    id: 104,
+    cv_infos_id: 104,
     cv_file_id: 204,
     full_name: 'Phạm Thuỳ Linh',
     email: 'phamthuylinh@example.com',
     phone: '+84 933 444 555',
     date_of_birth: '1997-03-22',
     address: 'Cần Thơ, Việt Nam',
+    scores: {
+      offline_score: 92,
+      matching_score: 90,
+      final_score: 91,
+    },
+    reasons: {
+      offline_reason: 'Mô hình NLP và semantic search xuất sắc',
+      matching_reason: 'Kỹ năng phù hợp với yêu cầu vị trí',
+      overall_conclusion: 'Ứng viên mạnh, phù hợp với vai trò data scientist',
+    },
     summary:
       'UI/UX designer with strong portfolio in mobile và web applications. Tập trung vào thiết kế đơn giản, thân thiện người dùng và tối ưu trải nghiệm.',
-    educations: ['B.Des. Industrial Design - Đại học Mỹ Thuật Công Nghiệp'],
+    educations: [
+      {
+        field: 'Industrial Design',
+        degree: 'B.Des.',
+        university: 'Đại học Mỹ Thuật Công Nghiệp',
+        graduation_year: 2023,
+      },
+    ],
     certifications: ['UX Certification by Nielsen Norman Group'],
     status: 'active',
     position: 'UI/UX Designer',
     skills: ['Figma', 'Adobe XD', 'User Research', 'Design Systems'],
     created_at: '2026-03-01T07:20:00.000Z',
     updated_at: '2026-06-05T15:40:00.000Z',
-    file: {
+    cv_file: {
       id: 204,
       uploaded_by: 3,
       original_file_name: 'Pham_Thuy_Linh_CV.pdf',
