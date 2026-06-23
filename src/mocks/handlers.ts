@@ -67,11 +67,11 @@ export const handlers = [
       data: {
         user: {
           id: user.id,
-          fullName: `${user.firstName} ${user.lastName}`,
+          fullName: user.fullName,
           email: user.email,
           role: user.role,
           status: user.status,
-          lastActive: user.updatedAt,
+          lastActive: user.lastActive,
         },
       },
     })
@@ -86,11 +86,11 @@ export const handlers = [
       data: {
         user: {
           id: user.id,
-          fullName: `${user.firstName} ${user.lastName}`,
+          fullName: user.fullName,
           email: user.email,
           role: user.role,
           status: user.status,
-          lastActive: user.updatedAt,
+          lastActive: user.lastActive,
         },
       },
     })
@@ -163,10 +163,10 @@ export const handlers = [
         user: {
           id: loginUser.id,
           email: loginUser.email,
-          fullName: `${loginUser.firstName} ${loginUser.lastName}`,
+          fullName: loginUser.fullName,
           role: loginUser.role,
           status: loginUser.status,
-          lastActive: loginUser.updatedAt,
+          lastActive: loginUser.lastActive,
         },
       },
     })
