@@ -22,8 +22,14 @@ import {
   type usePostApi,
   type usePostFormApi,
   type usePutApi,
+  type usePatchApi,
 } from '@/infrastructure/hooks/useApi'
 import { type QueryOptions } from '@/shared/types/react-query'
+
+export interface MarkAsTalentRequest {
+  id: number
+  is_marked: boolean
+}
 
 export interface CvRepository {
   search: (
@@ -54,5 +60,12 @@ export interface CvRepository {
   }) => ReturnType<typeof useGetApi<ResponseCommon<BulkUploadStatusResponse>>>
   cancelBulkUpload: () => ReturnType<
     typeof usePostApi<{ batchId: string }, ResponseCommon<unknown>>
+  >
+  getTalentPool: (
+    params?: GetAllCvRequest,
+    options?: QueryOptions<PaginatedResponse<CvItem>>,
+  ) => ReturnType<typeof usePostApi<GetAllCvRequest, PaginatedResponse<CvItem>>>
+  markAsTalent: () => ReturnType<
+    typeof usePatchApi<MarkAsTalentRequest, ResponseCommon<CvItem>>
   >
 }

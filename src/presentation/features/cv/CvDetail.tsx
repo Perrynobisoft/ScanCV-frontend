@@ -5,6 +5,7 @@ import { Download, X, FileText, GraduationCap, Bookmark } from 'lucide-react'
 import PdfViewer from '@/presentation/components/PDFViewer'
 import { useState, useEffect } from 'react'
 import { useCvEdit } from '@/presentation/hooks/cv/useCvEdit'
+import { useMarkAsTalent } from '@/presentation/hooks/cv/useMarkAsTalent'
 import { type CvItem } from '@/domain/models/Cv'
 
 export interface CVDetailProps {
@@ -21,6 +22,7 @@ export default function CvDetail({
   onUpdated,
 }: CVDetailProps) {
   const { updateCv, isLoading: isUpdating } = useCvEdit()
+  const { markAsTalent, isPending: isMarkingTalent } = useMarkAsTalent()
   const [isMark, setIsMark] = useState(!!cv.is_marked)
   const [editMode, setEditMode] = useState<{ [key: string]: boolean }>({})
   const [shouldClose, setShouldClose] = useState(false)
@@ -348,38 +350,38 @@ export default function CvDetail({
               {/* Favorites Section */}
               <div className="border-t border-slate-200 pt-4 mt-4">
                 <div className="text-xs text-slate-400 flex items-center justify-between gap-2">
-                  <span>ĐÁNH DẤU</span>
-                  <button
-                    type="button"
-                    className="text-xs font-semibold text-accent cursor-pointer"
-                    onClick={() => {
-                      const nextMark = !isMark
-                      setIsMark(nextMark)
-                      handleChange('is_marked', nextMark)
-                      setEditMode((prev) => ({
-                        ...prev,
-                        is_marked: true,
-                      }))
-                    }}
-                  ></button>
+                  <span>ĐÁNH DẤU TALENT</span>
                 </div>
                 <Button
                   variant={isMark ? 'accent' : 'ghost'}
-                  className="w-full flex items-center justify-center gap-2"
+                  className="w-full flex items-center justify-center gap-2 mt-2"
+                  disabled={isMarkingTalent}
                   onClick={() => {
                     const nextMark = !isMark
                     setIsMark(nextMark)
                     handleChange('is_marked', nextMark)
-                    setEditMode((prev) => ({
-                      ...prev,
-                      is_marked: true,
-                    }))
+                    markAsTalent(
+                      cv.cv_infos_id,
+                      nextMark,
+                      (response) => {
+                        if (response?.data) onUpdated?.(response.data)
+                      },
+                      () => {
+                        // revert on error
+                        setIsMark(!nextMark)
+                        handleChange('is_marked', !nextMark)
+                      },
+                    )
                   }}
                 >
                   <Bookmark
                     className={`h-4 w-4 ${isMark ? 'fill-white text-white' : ''}`}
                   />
-                  {isMark ? 'Đã đánh dấu' : 'Đánh dấu'}
+                  {isMarkingTalent
+                    ? 'Đang lưu…'
+                    : isMark
+                      ? 'Đã đánh dấu Talent'
+                      : 'Đánh dấu là Talent'}
                 </Button>
               </div>
 

@@ -31,5 +31,7 @@ export const Endpoints = {
     BULK_UPLOAD: `${Prefix}/cvs/bulk-upload`,
     BULK_UPLOAD_STATUS: `${Prefix}/cvs/bulk-upload/:batchId`,
     CANCEL_BULK_UPLOAD: `${Prefix}/cvs/bulk-upload/:batchId/cancel`,
+    GET_TALENT_POOL: `${Prefix}/cvs/talent-pool`,
+    MARK_AS_TALENT: `${Prefix}/cvs/:id/talent`,
   },
 }
