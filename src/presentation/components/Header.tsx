@@ -89,7 +89,7 @@ export default function Header() {
                   className="flex w-full items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
                   onClick={() => {
                     setDropdownOpen(false)
-                    // TODO: navigate to profile page
+                    void router.navigate({ to: '/profile' })
                   }}
                 >
                   <User className="h-4 w-4 text-slate-500" />
@@ -100,7 +100,7 @@ export default function Header() {
 
                 {/* Log Out */}
                 <button
-                  className="flex w-full items-center gap-3 px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition-colors disabled:opacity-50"
+                  className="flex w-full items-center gap-3 px-4 py-3 text-sm text-red-500 hover:bg-slate-50 transition-colors disabled:opacity-50"
                   onClick={handleLogout}
                   disabled={isPending}
                 >
