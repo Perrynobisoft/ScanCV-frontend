@@ -15,7 +15,7 @@ const ADMIN = {
 export default function Sidebar() {
   const { user } = useAuth()
   const location = useLocation()
-  const canAccessAdmin = Number(user?.role) === Roles.ADMIN
+  const canAccessAdmin = user?.role === Roles.ADMIN
 
   return (
     <aside className="flex h-full overflow-y-auto flex-col border-r border-slate-200 bg-primary px-6 py-8">

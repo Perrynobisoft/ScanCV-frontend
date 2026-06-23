@@ -48,3 +48,12 @@ export interface RegisterRequest {
 export interface RegisterResponse {
   userId: number
 }
+
+export interface ConfirmEmailRequest {
+  hash: string
+}
+
+export interface UpdateMeRequest {
+  fullName?: string
+  email?: string
+}

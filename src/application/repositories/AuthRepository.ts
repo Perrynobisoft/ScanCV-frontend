@@ -1,12 +1,14 @@
 import { type ResponseCommon } from '@/application/dto/response/ResponseCommon'
 import {
   type ChangePasswordRequest,
+  type ConfirmEmailRequest,
   type ForgotPasswordRequest,
   type LoginRequest,
   type LoginResponse,
   type RegisterRequest,
   type RegisterResponse,
   type ResetPasswordRequest,
+  type UpdateMeRequest,
   type User,
 } from '@/domain/models/Auth'
 import {
@@ -15,7 +17,6 @@ import {
   type usePostApi,
 } from '@/infrastructure/hooks/useApi'
 import { type QueryOptions } from '@/shared/types/react-query'
-import type { UpdateUsersRequest } from 'src/domain/models/Users'
 
 export interface AuthRepository {
   login: () => ReturnType<
@@ -38,6 +39,9 @@ export interface AuthRepository {
     options?: QueryOptions<ResponseCommon<User>>,
   ) => ReturnType<typeof useGetApi<ResponseCommon<User>>>
   updateMe: () => ReturnType<
-    typeof usePatchApi<UpdateUsersRequest, ResponseCommon<User>>
+    typeof usePatchApi<UpdateMeRequest, ResponseCommon<User>>
+  >
+  confirmEmail: () => ReturnType<
+    typeof usePostApi<ConfirmEmailRequest, ResponseCommon<any>>
   >
 }

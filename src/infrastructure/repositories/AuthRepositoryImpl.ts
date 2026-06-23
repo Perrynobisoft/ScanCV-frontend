@@ -2,12 +2,14 @@ import { type ResponseCommon } from '@/application/dto/response/ResponseCommon'
 import { type AuthRepository } from '@/application/repositories/AuthRepository'
 import {
   type ChangePasswordRequest,
+  type ConfirmEmailRequest,
   type ForgotPasswordRequest,
   type LoginRequest,
   type LoginResponse,
   type RegisterRequest,
   type RegisterResponse,
   type ResetPasswordRequest,
+  type UpdateMeRequest,
   type User,
 } from '@/domain/models/Auth'
 import {
@@ -17,7 +19,6 @@ import {
 } from '@/infrastructure/hooks/useApi'
 import { Endpoints } from '@/shared/endpoints'
 import { type QueryOptions } from '@/shared/types/react-query'
-import type { UpdateUsersRequest } from 'src/domain/models/Users'
 
 export const AuthRepositoryImpl = (): AuthRepository => ({
   login: () =>
@@ -49,7 +50,12 @@ export const AuthRepositoryImpl = (): AuthRepository => ({
     }),
 
   updateMe: () =>
-    usePatchApi<UpdateUsersRequest, ResponseCommon<User>>({
+    usePatchApi<UpdateMeRequest, ResponseCommon<User>>({
       endpoint: Endpoints.Auth.ME,
+    }),
+
+  confirmEmail: () =>
+    usePostApi<ConfirmEmailRequest, ResponseCommon<any>>({
+      endpoint: Endpoints.Auth.CONFIRM_EMAIL,
     }),
 })
