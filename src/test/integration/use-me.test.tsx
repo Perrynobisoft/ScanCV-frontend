@@ -43,8 +43,8 @@ describe('useMe', () => {
     // Matches the /auth/me MSW handler response shape: { data: User }
     expect(result.current.result).toMatchObject({
       id: 1,
-      email: 'test@test.com',
-      fullName: 'Test User',
+      email: 'admin@recruitai.io',
+      fullName: 'Nguyen Van Admin',
     })
   })
 })
