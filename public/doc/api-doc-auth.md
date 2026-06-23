@@ -11,15 +11,21 @@ interface ResponseCommon<T> {
 }
 ```
 
-## Token Response Data
+## Token Types
 
 ```ts
+// Trả về trong response body sau khi login / refresh
 interface LoginResponse {
   accessToken: string
   accessTokenExpiresAt: string
-  refreshToken: string
-  refreshTokenExpiresAt: string
   user: User
+}
+
+// refreshToken KHÔNG có trong response body.
+// Backend tự set qua Set-Cookie header: HttpOnly, Secure, Path=/api/v1/auth/refresh
+interface RefreshTokenResponse {
+  accessToken: string
+  accessTokenExpiresAt: string
 }
 
 interface User {
@@ -31,6 +37,11 @@ interface User {
   lastActive: string
 }
 ```
+
+## Authentication Strategy
+
+- **accessToken** — trả trong response body, frontend lưu (memory hoặc cookie JS-accessible) và đính kèm vào mọi request qua header `Authorization: Bearer <accessToken>`.
+- **refreshToken** — backend set qua `Set-Cookie` với flags `HttpOnly; Secure; SameSite=Strict; Path=/api/v1/auth/refresh`. JS không thể đọc được. Browser tự đính kèm khi gọi endpoint `/api/v1/auth/refresh` (cần `withCredentials: true`).
 
 ---
 
@@ -49,6 +60,14 @@ interface User {
 
 ### Response — Thành công
 
+**Set-Cookie header (backend tự set, JS không đọc được):**
+
+```http
+Set-Cookie: refreshToken=<jwt-refresh-token>; HttpOnly; Secure; SameSite=Strict; Path=/api/v1/auth/refresh; Expires=Sun, 29 Jun 2026 12:00:00 GMT
+```
+
+**Response body:**
+
 ```json
 {
   "success": true,
@@ -57,8 +76,6 @@ interface User {
   "data": {
     "accessToken": "<jwt-access-token>",
     "accessTokenExpiresAt": "2026-06-22T12:15:00.000Z",
-    "refreshToken": "<jwt-refresh-token>",
-    "refreshTokenExpiresAt": "2026-06-29T12:00:00.000Z",
     "user": {
       "id": 42,
       "email": "admin@company.com",
@@ -132,9 +149,24 @@ Authorization: Bearer <accessToken>
 
 ## POST /api/v1/auth/refresh
 
-> `refreshToken` được gửi qua cookie `refreshToken`.
+> `refreshToken` được browser tự đính kèm qua cookie (HttpOnly, chỉ gửi đến path `/api/v1/auth/refresh`).
+> Frontend cần gửi request với `withCredentials: true`.
+> Không cần `Authorization` header.
+
+### Request
+
+```http
+POST /api/v1/auth/refresh
+Cookie: refreshToken=<jwt-refresh-token>   ← browser tự đính kèm, không cần set thủ công
+```
 
 ### Response — Thành công
+
+```http
+Set-Cookie: refreshToken=<new-jwt-refresh-token>; HttpOnly; Secure; SameSite=Strict; Path=/api/v1/auth/refresh; Expires=...
+```
+
+**Response body:**
 
 ```json
 {
@@ -172,6 +204,14 @@ Authorization: Bearer <accessToken>
 ```
 
 ### Response — Thành công
+
+**Set-Cookie header (backend xóa refreshToken cookie):**
+
+```http
+Set-Cookie: refreshToken=; HttpOnly; Secure; SameSite=Strict; Path=/api/v1/auth/refresh; Expires=Thu, 01 Jan 1970 00:00:00 GMT
+```
+
+**Response body:**
 
 ```json
 {

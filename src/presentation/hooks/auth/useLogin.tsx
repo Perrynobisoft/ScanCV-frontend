@@ -25,10 +25,10 @@ export const useLogin = () => {
         )) as ResponseCommon<LoginResponse>
         const result = response.data
 
-        // Persist both tokens to cookies (with their expiry dates)
+        // Lưu accessToken vào cookie. refreshToken do backend set qua HttpOnly cookie.
         persistAuthTokens(result)
 
-        // Set auth state directly from login response — no extra fetch needed
+        // Set auth state từ login response — không cần gọi /auth/me thêm
         auth.setAuthenticated(result.user)
 
         toast.success(m.login_success())

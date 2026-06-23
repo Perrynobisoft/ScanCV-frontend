@@ -15,13 +15,15 @@ export interface LoginRequest {
 export interface LoginResponse {
   accessToken: string
   accessTokenExpiresAt: string
-  refreshToken: string
-  refreshTokenExpiresAt: string
+  // refreshToken không có trong response body.
+  // Backend set qua Set-Cookie: HttpOnly; Secure; Path=/api/v1/auth/refresh
   user: User
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface RefreshTokenResponse extends LoginResponse {}
+export interface RefreshTokenResponse {
+  accessToken: string
+  accessTokenExpiresAt: string
+}
 
 export interface ChangePasswordRequest {
   currentPassword: string

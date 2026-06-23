@@ -167,10 +167,7 @@ export const handlers = [
         accessTokenExpiresAt: new Date(
           Date.now() + 15 * 60 * 1000,
         ).toISOString(), // 15 min
-        refreshToken: 'mock-refresh-token-jwt',
-        refreshTokenExpiresAt: new Date(
-          Date.now() + 7 * 24 * 60 * 60 * 1000,
-        ).toISOString(), // 7 days
+        // refreshToken KHÔNG có trong body — backend set qua Set-Cookie HttpOnly
         user: {
           id: 1,
           email: 'test@test.com',

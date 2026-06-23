@@ -2,14 +2,9 @@ import { m } from '@/paraglide/messages'
 import { getLocale } from '@/paraglide/runtime.js'
 import type { FormattedError } from '@/application/dto/response/ErrorResponse'
 import type { RefreshTokenResponse } from '@/domain/models/Auth'
-// import { RefreshTokenResponse } from '@/domain/models/Auth';
 import LoggerService from '@/infrastructure/services/LoggerServiceImpl'
 import { Endpoints } from '@/shared/endpoints'
-import {
-  getStoredAccessToken,
-  getStoredRefreshToken,
-  persistAuthTokens,
-} from '@/shared/auth-storage'
+import { getStoredAccessToken, persistAuthTokens } from '@/shared/auth-storage'
 import { handleLogout } from '@/shared/helpers'
 import axios, {
   type AxiosInstance,
@@ -29,12 +24,16 @@ class HttpClient {
   }> = []
   private readonly loggerService: LoggerService = new LoggerService()
   private readonly TIMEOUT: number
+
   constructor(timeout: number = Number(env.VITE_APP_TIMEOUT) || 30000) {
     this.TIMEOUT = timeout
 
     this.instance = axios.create({
       baseURL: env.VITE_APP_API_URL ?? '/',
       timeout: this.TIMEOUT,
+      // withCredentials: true để browser tự đính kèm HttpOnly cookie (refreshToken)
+      // khi gọi endpoint /auth/refresh. Các request khác dùng Authorization header.
+      withCredentials: true,
       headers: {
         'Content-Type': 'application/json',
         'x-custom-lang': getLocale(),
@@ -60,14 +59,14 @@ class HttpClient {
   private handleRequest(
     config: InternalAxiosRequestConfig,
   ): InternalAxiosRequestConfig {
-    const token = getStoredAccessToken()
-    const refreshToken = getStoredRefreshToken()
     config.headers['x-custom-lang'] = getLocale()
+
+    const token = getStoredAccessToken()
+
+    // Mọi request đều đính kèm accessToken qua Authorization header,
+    // trừ /auth/refresh — endpoint đó dùng refreshToken HttpOnly cookie (tự động qua withCredentials).
     if (token && config.url !== Endpoints.Auth.REFRESH_TOKEN) {
       config.headers.Authorization = `Bearer ${token}`
-    }
-    if (refreshToken && config.url === Endpoints.Auth.REFRESH_TOKEN) {
-      config.headers.Authorization = `Bearer ${refreshToken}`
     }
 
     return config
@@ -98,12 +97,10 @@ class HttpClient {
         path: error.config?.url,
       })
     }
+
     const { status } = error.response
     if (status === 401) return this.handle401Error(error)
-    // if ([500, 502, 503, 504, 429].includes(status) && retryCount < this.MAX_RETRIES) {
-    //   return this.retryRequest(config!, retryCount);
-    // }
-    // return this.handle401Error(error);
+
     throw this.formatError({
       payload: error.response.data,
       status,
@@ -115,12 +112,13 @@ class HttpClient {
     const originalRequest = error.config
     if (!originalRequest) return Promise.reject(error)
 
-    // if request is refresh token, do not retry
+    // Nếu chính /auth/refresh trả 401 → refreshToken hết hạn, logout luôn
     if (originalRequest.url === Endpoints.Auth.REFRESH_TOKEN) {
-      this.loggerService.error('Refresh token request failed:', error.message)
+      this.loggerService.error('Refresh token expired or invalid')
       return this.handleLogout()
     }
 
+    // Nếu đang refresh, queue request lại chờ token mới
     if (this.isRefreshing) {
       return new Promise((resolve, reject) => {
         this.refreshQueue.push({
@@ -134,20 +132,19 @@ class HttpClient {
     }
 
     this.isRefreshing = true
-    const refreshToken = getStoredRefreshToken()
-    if (!refreshToken) {
-      this.rejectRefreshQueue(new Error(m.missing_refresh_token()))
-      return this.handleLogout()
-    }
+
     try {
+      // refreshToken HttpOnly cookie được browser tự đính kèm nhờ withCredentials: true
       const { data } = await this.instance.post<RefreshTokenResponse>(
         Endpoints.Auth.REFRESH_TOKEN,
         {},
       )
-      const accessToken = data.accessToken
+
+      const { accessToken } = data
+      // Lưu accessToken mới, refreshToken do backend rotate qua Set-Cookie
       persistAuthTokens(data)
 
-      this.refreshQueue.forEach((queueItem) => queueItem.resolve(accessToken))
+      this.refreshQueue.forEach((item) => item.resolve(accessToken))
       this.refreshQueue = []
       originalRequest.headers!.Authorization = `Bearer ${accessToken}`
       return this.instance(originalRequest)
@@ -161,11 +158,10 @@ class HttpClient {
 
   private handleLogout(): void {
     handleLogout(queryClient)
-    // window.location.assign('/auth/login')
   }
 
   private rejectRefreshQueue(error: unknown): void {
-    this.refreshQueue.forEach((queueItem) => queueItem.reject(error))
+    this.refreshQueue.forEach((item) => item.reject(error))
     this.refreshQueue = []
   }
 
@@ -183,9 +179,7 @@ class HttpClient {
     const normalizedPayload = payload as
       | {
           message?: string
-          error?: {
-            message?: string
-          }
+          error?: { message?: string }
           errors?: Record<string, string>
           path?: string
           status?: number

@@ -1,20 +1,23 @@
 import type { LoginResponse, RefreshTokenResponse } from '@/domain/models/Auth'
 import { Constants } from './constants'
 
-type AuthTokenPayload = Pick<
+// accessToken lưu vào JS-accessible cookie (không thể HttpOnly vì JS set).
+// refreshToken được backend set qua Set-Cookie HttpOnly — JS không lưu, không đọc được.
+type AccessTokenPayload = Pick<
   LoginResponse | RefreshTokenResponse,
-  | 'accessToken'
-  | 'accessTokenExpiresAt'
-  | 'refreshToken'
-  | 'refreshTokenExpiresAt'
+  'accessToken' | 'accessTokenExpiresAt'
 >
 
 // ─── Cookie helpers ───────────────────────────────────────────────────────────
 
+// Thêm Secure flag khi chạy trên HTTPS (production).
+const isSecureContext = location.protocol === 'https:'
+
 const setCookie = (name: string, value: string, expiresAt: string) => {
   if (typeof document === 'undefined') return
   const expires = new Date(expiresAt).toUTCString()
-  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Strict`
+  const secure = isSecureContext ? '; Secure' : ''
+  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Strict${secure}`
 }
 
 const getCookie = (name: string): string | null => {
@@ -27,27 +30,24 @@ const getCookie = (name: string): string | null => {
 
 const removeCookie = (name: string) => {
   if (typeof document === 'undefined') return
-  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Strict`
+  const secure = isSecureContext ? '; Secure' : ''
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Strict${secure}`
 }
 
 // ─── Token persistence ────────────────────────────────────────────────────────
 
-export const persistAuthTokens = (payload: AuthTokenPayload) => {
+// Chỉ lưu accessToken. refreshToken do backend quản lý qua HttpOnly cookie.
+export const persistAuthTokens = (payload: AccessTokenPayload) => {
   setCookie(
     Constants.API_TOKEN_STORAGE,
     payload.accessToken,
     payload.accessTokenExpiresAt,
   )
-  setCookie(
-    Constants.API_REFRESH_TOKEN_STORAGE,
-    payload.refreshToken,
-    payload.refreshTokenExpiresAt,
-  )
 }
 
 export const clearAuthStorage = () => {
   removeCookie(Constants.API_TOKEN_STORAGE)
-  removeCookie(Constants.API_REFRESH_TOKEN_STORAGE)
+  // refreshToken (HttpOnly) được xóa bởi backend khi gọi /auth/logout
 }
 
 export const clearStoredAccessToken = () => {
@@ -56,10 +56,6 @@ export const clearStoredAccessToken = () => {
 
 export const getStoredAccessToken = (): string | null => {
   return getCookie(Constants.API_TOKEN_STORAGE)
-}
-
-export const getStoredRefreshToken = (): string | null => {
-  return getCookie(Constants.API_REFRESH_TOKEN_STORAGE)
 }
 
 export const hasStoredAccessToken = () => {
