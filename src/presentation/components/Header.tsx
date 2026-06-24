@@ -22,7 +22,7 @@ export default function Header() {
       .toUpperCase()
   })()
 
-  const displayName = user?.fullName || user?.email || 'User'
+  const displayName = user?.fullName || user?.email || 'HR'
 
   // Close dropdown when clicking outside
   useEffect(() => {
