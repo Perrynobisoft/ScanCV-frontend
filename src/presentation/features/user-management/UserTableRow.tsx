@@ -1,7 +1,7 @@
 import { Pencil, Trash2 } from 'lucide-react'
 import Avatar from '@/presentation/components/ui/avatar'
-import { type Users } from '@/domain/models/Users'
 import { formatLastActive } from './utils'
+import type { User } from 'src/domain/models/Auth'
 
 const roleStyles: Record<string, string> = {
   Admin:
@@ -13,10 +13,10 @@ const roleStyles: Record<string, string> = {
 }
 
 interface UserTableRowProps {
-  user: Users
+  user: User
   isCurrentUser: boolean
-  onEdit: (user: Users) => void
-  onDelete: (user: Users) => void
+  onEdit: (user: User) => void
+  onDelete: (user: User) => void
 }
 
 export function UserTableRow({
@@ -68,7 +68,7 @@ export function UserTableRow({
 
       {/* Last Active */}
       <td className="px-4 py-3 text-sm text-gray-600">
-        {formatLastActive(user.updatedAt)}
+        {formatLastActive(user.lastActive)}
       </td>
 
       {/* Actions */}

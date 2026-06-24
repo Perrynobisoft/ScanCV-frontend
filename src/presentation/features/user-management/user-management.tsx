@@ -4,11 +4,11 @@ import { Button } from '@/presentation/components/ui/button'
 import { Pagination } from '@/presentation/components/ui/pagination'
 import { useGetAllUsers } from '@/presentation/hooks/users/useGetAllUsers'
 import { useAuth } from '@/presentation/provider/auth/auth-provider'
-import { type Users } from '@/domain/models/Users'
 import { UserTableRow } from './UserTableRow'
 import { InviteMemberDialog } from './InviteMemberDialog'
 import { EditUserDialog } from './EditUserDialog'
 import { DeleteConfirmDialog } from './DeleteConfirmDialog'
+import type { User } from 'src/domain/models/Auth'
 
 const ROLE_LEGEND = [
   {
@@ -28,23 +28,25 @@ const ROLE_LEGEND = [
   },
 ]
 
+const LIMIT = import.meta.env.VITE_LIMIT
+
 export default function UserManagementPage() {
   const { user: currentUser } = useAuth()
   const [page, setPage] = useState(1)
   const [showInvite, setShowInvite] = useState(false)
-  const [editUser, setEditUser] = useState<Users | null>(null)
-  const [deleteUser, setDeleteUser] = useState<Users | null>(null)
+  const [editUser, setEditUser] = useState<User | null>(null)
+  const [deleteUser, setDeleteUser] = useState<User | null>(null)
 
-  const { result, isLoading, refetch } = useGetAllUsers({ page, limit: 4 })
+  const { result, isLoading, refetch } = useGetAllUsers({ page, limit: LIMIT })
 
-  const users: Users[] = result?.data?.items ?? []
+  const users: User[] = result?.data?.items ?? []
   const totalPages = result?.data?.meta?.totalPages ?? 1
   const totalItems = result?.data?.meta?.total ?? 0
 
   const handleSuccess = () => refetch()
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-10">
+    <main>
       {/* Page Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-slate-900">User Management</h1>
@@ -58,16 +60,14 @@ export default function UserManagementPage() {
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
           <div className="flex items-center gap-2">
             <UsersIcon className="h-4 w-4 text-gray-500" />
-            <span className="font-semibold text-slate-800">Team Members</span>
-            <span className="ml-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-gray-100 px-1.5 text-xs font-semibold text-gray-600">
+            <span className="font-semibold text-xl text-slate-800">
+              Team Members
+            </span>
+            <span className="ml-1 inline-flex h-6 min-w-6 items-center justify-center rounded-full bg-green-100 px-1.5 text-xs font-semibold text-gray-600">
               {totalItems}
             </span>
           </div>
-          <Button
-            variant="primary"
-            className="flex items-center gap-1.5 bg-emerald-700 hover:bg-emerald-800"
-            onClick={() => setShowInvite(true)}
-          >
+          <Button variant="accent" onClick={() => setShowInvite(true)}>
             <Plus className="h-4 w-4" />
             Invite Member
           </Button>
@@ -78,11 +78,11 @@ export default function UserManagementPage() {
           {ROLE_LEGEND.map(({ role, color, desc }) => (
             <div key={role} className="flex items-center gap-2">
               <span
-                className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${color}`}
+                className={`rounded-full px-2.5 py-0.5 text-base font-semibold ${color}`}
               >
                 {role}
               </span>
-              <span className="text-xs text-gray-500">{desc}</span>
+              <span className="text-sm text-gray-500">{desc}</span>
             </div>
           ))}
         </div>
@@ -92,19 +92,19 @@ export default function UserManagementPage() {
           <table className="min-w-full">
             <thead>
               <tr className="border-b border-gray-100">
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                <th className="px-4 py-3 text-left text-base font-medium font-semibold uppercase tracking-wider text-gray-500">
                   Member
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                <th className="px-4 py-3 text-left text-base font-medium font-semibold uppercase tracking-wider text-gray-500">
                   Role
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                <th className="px-4 py-3 text-left text-base font-medium font-semibold uppercase tracking-wider text-gray-500">
                   Status
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                <th className="px-4 py-3 text-left text-base font-medium font-semibold uppercase tracking-wider text-gray-500">
                   Last Active
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                <th className="px-4 py-3 text-left text-base font-medium font-semibold uppercase tracking-wider text-gray-500">
                   Actions
                 </th>
               </tr>
