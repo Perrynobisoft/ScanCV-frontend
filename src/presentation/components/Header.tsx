@@ -1,12 +1,12 @@
 import { useRef, useState, useEffect } from 'react'
 import { useAuth } from '@/presentation/provider/auth/auth-provider'
-import { useRouter } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { useLogout } from '@/presentation/hooks/auth/useLogout'
 import { Button } from './ui/button'
 import { Upload, Bell, ChevronDown, User, LogOut } from 'lucide-react'
 
 export default function Header() {
-  const router = useRouter()
+  const navigate = useNavigate()
   const { user } = useAuth()
   const { logout, isPending } = useLogout()
   const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -50,7 +50,7 @@ export default function Header() {
           <Button
             variant="accent"
             className="rounded-sm px-4 py-2"
-            onClick={() => void router.navigate({ to: '/cv' })}
+            onClick={() => void navigate({ to: '/cv' })}
           >
             <Upload className="mr-2 h-4 w-4" />
             Upload CVs
@@ -89,7 +89,7 @@ export default function Header() {
                   className="flex w-full items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
                   onClick={() => {
                     setDropdownOpen(false)
-                    void router.navigate({ to: '/profile' })
+                    void navigate({ to: '/profile' })
                   }}
                 >
                   <User className="h-4 w-4 text-slate-500" />
