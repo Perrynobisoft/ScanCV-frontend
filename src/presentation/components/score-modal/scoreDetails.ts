@@ -25,9 +25,9 @@ export function qualityDetails(cv: CvItem): ScoreDetail[] {
       reason: details?.work_experience?.reason,
     },
     {
-      title: 'Skills Specialities',
-      score: details?.skills_specialities?.score,
-      reason: details?.skills_specialities?.reason,
+      title: 'Skills Specialties',
+      score: details?.skills_specialties?.score,
+      reason: details?.skills_specialties?.reason,
     },
   ]
 }
