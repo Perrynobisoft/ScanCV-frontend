@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Table from '@/presentation/components/ui/table/table'
 import type { CvItem } from '@/domain/models/Cv'
 import type { TableColumn } from '@/presentation/components/ui/table/table.types'
-import ScoreModal from '@/presentation/components/ScoreModal'
+import { EvaluationScoreModal } from '@/presentation/components/score-modal'
 import useModal from '@/presentation/hooks/useModal'
 import { Button } from '@/presentation/components/ui/button'
 import { Download, Star } from 'lucide-react'
@@ -171,12 +171,10 @@ export default function CvTable({ data, loading, onRowClick }: Props) {
         onRowClick={onRowClick}
       />
       {selectedCv && (
-        <ScoreModal
+        <EvaluationScoreModal
           isOpen={scoreModal.isOpen}
           onClose={scoreModal.close}
-          score={selectedCv?.scores.offline_score}
-          reason={selectedCv?.reasons?.offline_reason}
-          fullName={selectedCv?.full_name}
+          cv={selectedCv}
         />
       )}
     </>

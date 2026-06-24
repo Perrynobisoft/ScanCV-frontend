@@ -5,7 +5,7 @@ import { Input } from '@/presentation/components/ui/input'
 import { useSearchCv } from '@/presentation/hooks/cv/useSearchCv'
 import { useState } from 'react'
 import CvDetail from './CvDetail'
-import ScoreModal from '@/presentation/components/ScoreModal'
+import { AppropriateScoreModal } from '@/presentation/components/score-modal'
 import type { CvItem } from '@/domain/models/Cv'
 import useModal from '@/presentation/hooks/useModal'
 import StatusBadge from '@/presentation/components/ui/StatusBadge'
@@ -173,15 +173,13 @@ export default function SmartSearchPage() {
         </div>
       </section>
       {selectedCvForScore && (
-        <ScoreModal
+        <AppropriateScoreModal
           isOpen={scoreModal.isOpen}
           onClose={() => {
             scoreModal.close()
             setSelectedCvForScore(null)
           }}
-          score={selectedCvForScore.scores.final_score}
-          reason={selectedCvForScore.reasons?.overall_conclusion}
-          fullName={selectedCvForScore.full_name}
+          cv={selectedCvForScore}
         />
       )}
     </main>

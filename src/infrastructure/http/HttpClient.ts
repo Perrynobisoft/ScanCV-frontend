@@ -33,7 +33,7 @@ class HttpClient {
       timeout: this.TIMEOUT,
       // withCredentials: true để browser tự đính kèm HttpOnly cookie (refreshToken)
       // khi gọi endpoint /auth/refresh. Các request khác dùng Authorization header.
-      withCredentials: true,
+      // withCredentials: true,
       headers: {
         'Content-Type': 'application/json',
         'x-custom-lang': getLocale(),

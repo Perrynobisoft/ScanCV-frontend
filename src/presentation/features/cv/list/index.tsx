@@ -7,44 +7,16 @@ import { m } from '@/paraglide/messages'
 import { Pagination } from '@/presentation/components/ui/pagination'
 import CvTable from './cv-table'
 import CvDetail from '../CvDetail'
-import { Search, Users } from 'lucide-react'
+import { RotateCcw, Search, Users } from 'lucide-react'
 import useDebounce from '@/presentation/hooks/useDebounce'
-
-const JOB_TITLE_OPTIONS = [
-  { label: 'Job Titles', value: '' },
-  { label: 'Software Engineer', value: 'software_engineer' },
-  { label: 'Data Scientist', value: 'data_scientist' },
-  { label: 'Product Manager', value: 'product_manager' },
-]
-
-const SKILL_OPTIONS = [
-  { label: 'Skills', value: '' },
-  { label: 'ReactJS', value: 'reactjs' },
-  { label: 'TypeScript', value: 'typescript' },
-  { label: 'Python', value: 'python' },
-]
-
-const YEARS_OF_EXPERIENCE_OPTIONS = [
-  { label: 'Years of Experience', value: 'All' },
-  { label: 'Under 1 year', value: 'Under 1y' },
-  { label: '1-3 years', value: '1-3y' },
-  { label: '3-5 years', value: '3-5y' },
-  { label: '5+ years', value: '5y+' },
-]
-
-const LOCATION_OPTIONS = [
-  { label: 'Locations', value: '' },
-  { label: 'New York', value: 'new_york' },
-  { label: 'San Francisco', value: 'san_francisco' },
-  { label: 'Remote', value: 'remote' },
-]
-
-const WORK_TYPE_OPTIONS = [
-  { label: 'Work Types', value: '' },
-  { label: 'Remote', value: 'remote' },
-  { label: 'Full-time', value: 'fulltime' },
-  { label: 'Part-time', value: 'parttime' },
-]
+import { Button } from '@/presentation/components/ui/button'
+import {
+  getSkillOptionsByJobTitle,
+  JOB_TITLE_OPTIONS,
+  LOCATION_OPTIONS,
+  WORK_TYPE_OPTIONS,
+  YEARS_OF_EXPERIENCE_OPTIONS,
+} from './filter-options'
 
 export default function CvListPage() {
   const [keywordInput, setKeywordInput] = useState('')
@@ -58,7 +30,7 @@ export default function CvListPage() {
   const [workTypeFilter, setWorkTypeFilter] = useState('')
 
   const keywordSearch = useCvList(keywordQuery, {
-    job_title: jobTitleFilter,
+    position: jobTitleFilter,
     location: locationFilter,
     experience: experienceFilter,
     skills: skillFilter,
@@ -66,10 +38,24 @@ export default function CvListPage() {
   })
   const { page, setPage, items, total, totalPages, isLoading } = keywordSearch
   const filteredCvs = useMemo(() => items as CvItem[], [items])
+  const skillOptions = useMemo(
+    () => getSkillOptionsByJobTitle(jobTitleFilter),
+    [jobTitleFilter],
+  )
   const [selectedCv, setSelectedCv] = useState<CvItem | null>(null)
 
   const handleInputChange = (value: string) => {
     setKeywordInput(value)
+  }
+
+  const handleClearFilters = () => {
+    setKeywordInput('')
+    setKeywordQuery(undefined)
+    setExperienceFilter('')
+    setJobTitleFilter('')
+    setSkillFilter('')
+    setLocationFilter('')
+    setWorkTypeFilter('')
   }
 
   const searchValue = keywordInput
@@ -79,6 +65,16 @@ export default function CvListPage() {
     // set undefined when empty to keep previous behavior
     setKeywordQuery(debouncedKeyword ? debouncedKeyword : undefined)
   }, [debouncedKeyword])
+
+  useEffect(() => {
+    const hasSelectedSkill = skillOptions.some(
+      (option) => option.value === skillFilter,
+    )
+
+    if (!hasSelectedSkill) {
+      setSkillFilter('')
+    }
+  }, [skillFilter, skillOptions])
 
   return (
     <main className="space-y-6 overflow-y-auto">
@@ -110,12 +106,14 @@ export default function CvListPage() {
               options={JOB_TITLE_OPTIONS}
               className="w-30 rounded-sm"
               value={jobTitleFilter}
+              // size={10}
               onChange={(e) => setJobTitleFilter(e.target.value)}
             />
             <Select
-              options={SKILL_OPTIONS}
+              options={skillOptions}
               className="w-30 rounded-sm"
               value={skillFilter}
+              // size={12}
               onChange={(e) => setSkillFilter(e.target.value)}
             />
             <Select
@@ -136,6 +134,14 @@ export default function CvListPage() {
               value={workTypeFilter}
               onChange={(e) => setWorkTypeFilter(e.target.value)}
             />
+            <Button
+              variant="default"
+              className="h-8 rounded-sm px-3 text-xs text-slate-600"
+              onClick={handleClearFilters}
+            >
+              <RotateCcw className="h-4 w-4" />
+              Clear
+            </Button>
           </div>
         </div>
       </section>

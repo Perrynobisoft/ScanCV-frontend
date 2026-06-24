@@ -40,6 +40,30 @@ export interface CvItem {
   tag?: 'new' | 'in-progress' | 'rejected' | 'hired' | 'contacted'
   is_marked?: boolean
   notes?: string
+  quality_score?: number
+  quality_reasons?: string
+  quality_details?: {
+    basic_information: {
+      score: number
+      reason: string
+    }
+    self_evaluation?: {
+      score: number
+      reason: string
+    }
+    skills_specialities?: {
+      score: number
+      reason: string
+    }
+    work_experience?: {
+      score: number
+      reason: string
+    }
+    education?: {
+      score: number
+      reason: string
+    }
+  }
   scores: {
     offline_score?: number
     matching_score?: number
