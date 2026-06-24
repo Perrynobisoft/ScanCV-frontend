@@ -51,7 +51,7 @@ export interface CvItem {
       score: number
       reason: string
     }
-    skills_specialities?: {
+    skills_specialties?: {
       score: number
       reason: string
     }
