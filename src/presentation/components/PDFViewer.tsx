@@ -61,6 +61,8 @@ export default function PdfViewer({ pdfUrl }: Props) {
             <Page
               pageNumber={index + 1}
               width={width ? Math.min(width - 40, 1000) : undefined}
+              renderTextLayer={false}
+              renderAnnotationLayer={false}
               // height={200}
             />
           </div>
