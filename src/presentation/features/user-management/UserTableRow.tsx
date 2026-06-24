@@ -4,11 +4,11 @@ import { formatLastActive } from './utils'
 import type { User } from 'src/domain/models/Auth'
 
 const roleStyles: Record<string, string> = {
-  Admin:
+  admin:
     'bg-amber-100 text-amber-700 border border-amber-300 font-semibold rounded-full px-3 py-1 text-sm',
-  Recruiter:
+  recruiter:
     'bg-emerald-100 text-emerald-700 border border-emerald-300 font-semibold rounded-full px-3 py-1 text-sm',
-  Interviewer:
+  interviewer:
     'bg-blue-100 text-blue-700 border border-blue-300 font-semibold rounded-full px-3 py-1 text-sm',
 }
 
@@ -28,7 +28,7 @@ export function UserTableRow({
   const fullName = user.fullName ?? ''
   const roleName = user.role ?? ''
   const statusName = user.status ?? ''
-  const isActive = statusName === 'Active'
+  const isActive = statusName === 'active'
 
   return (
     <tr className="hover:bg-gray-50 transition-colors">

@@ -12,17 +12,17 @@ import type { User } from 'src/domain/models/Auth'
 
 const ROLE_LEGEND = [
   {
-    role: 'Admin',
+    role: 'admin',
     color: 'text-amber-600 bg-amber-100 border border-amber-300',
     desc: 'Full access',
   },
   {
-    role: 'Recruiter',
+    role: 'recruiter',
     color: 'text-emerald-600 bg-emerald-100 border border-emerald-300',
     desc: 'Can manage CVs',
   },
   {
-    role: 'Interviewer',
+    role: 'interviewer',
     color: 'text-blue-600 bg-blue-100 border border-blue-300',
     desc: 'View & comment only',
   },
