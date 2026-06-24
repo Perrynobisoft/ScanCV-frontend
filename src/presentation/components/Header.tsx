@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 import { useAuth } from '@/presentation/provider/auth/auth-provider'
+import { useNavigate } from '@tanstack/react-router'
 import { useLogout } from '@/presentation/hooks/auth/useLogout'
 import { Button } from './ui/button'
 import { Upload, Bell, ChevronDown, User, LogOut } from 'lucide-react'
@@ -8,6 +9,7 @@ import Modal from './ui/Modal'
 import useModal from '@/presentation/hooks/useModal'
 
 export default function Header() {
+  const navigate = useNavigate()
   const { isOpen, open, close } = useModal()
   const { user } = useAuth()
   const { logout, isPending } = useLogout()
@@ -24,7 +26,7 @@ export default function Header() {
       .toUpperCase()
   })()
 
-  const displayName = user?.fullName || user?.email || 'User'
+  const displayName = user?.fullName || user?.email || 'HR'
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -94,7 +96,7 @@ export default function Header() {
                   className="flex w-full items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
                   onClick={() => {
                     setDropdownOpen(false)
-                    // TODO: navigate to profile page
+                    void navigate({ to: '/profile' })
                   }}
                 >
                   <User className="h-4 w-4 text-slate-500" />
@@ -105,7 +107,7 @@ export default function Header() {
 
                 {/* Log Out */}
                 <button
-                  className="flex w-full items-center gap-3 px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition-colors disabled:opacity-50"
+                  className="flex w-full items-center gap-3 px-4 py-3 text-sm text-red-500 hover:bg-slate-50 transition-colors disabled:opacity-50"
                   onClick={handleLogout}
                   disabled={isPending}
                 >

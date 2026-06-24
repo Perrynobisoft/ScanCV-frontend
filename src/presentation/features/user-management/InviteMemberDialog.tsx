@@ -3,7 +3,7 @@ import { X } from 'lucide-react'
 import { Input } from '@/presentation/components/ui/input'
 import { useCreateUsers } from '@/presentation/hooks/users/useCreateUsers'
 
-const ROLES = ['Admin', 'Recruiter', 'Interviewer'] as const
+const ROLES = ['admin', 'recruiter', 'interviewer'] as const
 type Role = (typeof ROLES)[number]
 
 interface InviteMemberDialogProps {
@@ -17,7 +17,7 @@ export function InviteMemberDialog({
 }: InviteMemberDialogProps) {
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
-  const [role, setRole] = useState<Role>('Recruiter')
+  const [role, setRole] = useState<Role>('recruiter')
 
   const { create, isPending } = useCreateUsers()
 
