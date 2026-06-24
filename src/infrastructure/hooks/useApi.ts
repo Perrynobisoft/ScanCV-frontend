@@ -107,17 +107,17 @@ const useMutationApi = <TRequest = void, TResponse = unknown>(
     endpoint,
     urlParams = {},
     queryParams = {},
-    buildUrlParams,
     buildQueryParams,
+    buildUrlParams,
     options = {},
   }: {
     endpoint: string
     urlParams?: Record<string, string | number>
     queryParams?: Record<string, string | number | boolean | undefined>
-    buildUrlParams?: (payload: TRequest) => Record<string, string | number>
     buildQueryParams?: (
       payload: TRequest,
     ) => Record<string, string | number | boolean | undefined>
+    buildUrlParams?: (payload: TRequest) => Record<string, string | number>
     options?: MutationOptions<
       TResponse,
       ApiError,
@@ -194,7 +194,9 @@ const useMutationApi = <TRequest = void, TResponse = unknown>(
 }
 export const usePostApi = <TRequest = void, TResponse = unknown>(props: {
   endpoint: string
+  urlParams?: Record<string, string | number>
   queryParams?: Record<string, string | number | boolean | undefined>
+  buildUrlParams?: (payload: TRequest) => Record<string, string | number>
   options?: MutationOptions<
     TResponse,
     ApiError,
@@ -205,7 +207,9 @@ export const usePostApi = <TRequest = void, TResponse = unknown>(props: {
 
 export const usePutApi = <TRequest = void, TResponse = unknown>(props: {
   endpoint: string
+  urlParams?: Record<string, string | number>
   queryParams?: Record<string, string | number | boolean | undefined>
+  buildUrlParams?: (payload: TRequest) => Record<string, string | number>
   options?: MutationOptions<
     TResponse,
     ApiError,
@@ -273,4 +277,45 @@ export const usePostFormApi = <TResponse = unknown>(props: {
       },
     },
   })
+}
+
+/**
+ * usePostQuery - Use POST request with useQuery hook
+ * Useful for endpoints that use POST for filtering/search but should be cached
+ * @example
+ * const { data, isLoading } = usePostQuery({
+ *   endpoint: '/api/cvs/search',
+ *   payload: { search: 'javascript' },
+ *   options: { enabled: !!searchQuery }
+ * })
+ */
+export const usePostQuery = <TRequest = void, TResponse = unknown>(props: {
+  endpoint: string
+  urlParams?: Record<string, string | number>
+  queryParams?: Record<string, string | number | boolean | undefined>
+  payload?: TRequest
+  options?: Omit<UseQueryOptions<TResponse, ApiError>, 'queryKey' | 'queryFn'>
+}) => {
+  const { axiosInstance, newAbortSignal } = useAxios()
+  const {
+    endpoint,
+    urlParams = {},
+    queryParams = {},
+    payload,
+    options = {},
+  } = props
+
+  /* eslint-disable @tanstack/query/exhaustive-deps */
+  return useQuery<TResponse, ApiError>({
+    queryKey: [endpoint, urlParams, queryParams, payload],
+    queryFn: async () => {
+      const url = buildUrl(endpoint, urlParams, queryParams)
+      const response = await axiosInstance.post<TResponse>(url, payload || {}, {
+        signal: newAbortSignal(),
+      })
+      return response.data
+    },
+    ...options,
+  })
+  /* eslint-enable @tanstack/query/exhaustive-deps */
 }

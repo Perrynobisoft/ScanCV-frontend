@@ -10,11 +10,20 @@ import { type DeleteCommonParams } from '@/domain/models/common/CommonParams'
 import {
   useDeleteApi,
   useGetApi,
+  usePatchApi,
   usePostApi,
+  usePostFormApi,
   usePutApi,
 } from '@/infrastructure/hooks/useApi'
 import { Endpoints } from '@/shared/endpoints'
-import { type CvRepository } from '@/application/repositories/CvRepository'
+import {
+  type BulkUploadStatusResponse,
+  type BulkUploadResponse,
+} from '@/domain/models/BulkUpload'
+import {
+  type CvRepository,
+  type MarkAsTalentRequest,
+} from '@/application/repositories/CvRepository'
 
 const normalizeQueryParams = (
   params?: any,
@@ -54,10 +63,40 @@ export const CvRepositoryImpl = (): CvRepository => ({
   update: () =>
     usePutApi<UpdateCvRequest, ResponseCommon<CvItem>>({
       endpoint: Endpoints.Cv.UPDATE,
+      buildUrlParams: (payload) => ({ id: payload.id }),
     }),
   delete: () =>
     useDeleteApi<DeleteCommonParams, ResponseCommon<boolean>>({
       endpoint: Endpoints.Cv.DELETE,
       buildQueryParams: (params) => normalizeQueryParams(params),
+    }),
+  bulkUpload: () =>
+    usePostFormApi<ResponseCommon<BulkUploadResponse>>({
+      endpoint: Endpoints.Cv.BULK_UPLOAD,
+    }),
+  getBulkUploadStatus: (params) =>
+    useGetApi<ResponseCommon<BulkUploadStatusResponse>>({
+      endpoint: Endpoints.Cv.BULK_UPLOAD_STATUS,
+      urlParams: { batchId: params.batchId },
+      options: { enabled: !!params.batchId },
+    }),
+  cancelBulkUpload: () =>
+    usePostApi<{ batchId: string }, ResponseCommon<unknown>>({
+      endpoint: Endpoints.Cv.CANCEL_BULK_UPLOAD,
+      buildUrlParams: (payload) => ({ batchId: payload.batchId }),
+    }),
+  getTalentPool: (_params, options) =>
+    usePostApi<
+      import('@/domain/models/Cv').GetAllCvRequest,
+      PaginatedResponse<CvItem>
+    >({
+      endpoint: Endpoints.Cv.GET_TALENT_POOL,
+      queryParams: normalizeQueryParams(_params),
+      options,
+    }),
+  markAsTalent: () =>
+    usePatchApi<MarkAsTalentRequest, ResponseCommon<CvItem>>({
+      endpoint: Endpoints.Cv.MARK_AS_TALENT,
+      buildUrlParams: (payload) => ({ id: payload.id }),
     }),
 })

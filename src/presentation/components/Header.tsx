@@ -4,9 +4,13 @@ import { useNavigate } from '@tanstack/react-router'
 import { useLogout } from '@/presentation/hooks/auth/useLogout'
 import { Button } from './ui/button'
 import { Upload, Bell, ChevronDown, User, LogOut } from 'lucide-react'
+import BulkUploadModal from './BulkUploadModal'
+import Modal from './ui/Modal'
+import useModal from '@/presentation/hooks/useModal'
 
 export default function Header() {
   const navigate = useNavigate()
+  const { isOpen, open, close } = useModal()
   const { user } = useAuth()
   const { logout, isPending } = useLogout()
   const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -55,6 +59,9 @@ export default function Header() {
             <Upload className="mr-2 h-4 w-4" />
             Upload CVs
           </Button>
+          <Modal isOpen={isOpen} onClose={close} keepMounted>
+            <BulkUploadModal onClose={close} />
+          </Modal>
 
           {/* Notification bell */}
           <button className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-transparent bg-white text-slate-600">

@@ -33,7 +33,7 @@ class HttpClient {
       timeout: this.TIMEOUT,
       // withCredentials: true để browser tự đính kèm HttpOnly cookie (refreshToken)
       // khi gọi endpoint /auth/refresh. Các request khác dùng Authorization header.
-      withCredentials: true,
+      // withCredentials: true,
       headers: {
         'Content-Type': 'application/json',
         'x-custom-lang': getLocale(),
@@ -158,6 +158,8 @@ class HttpClient {
 
   private handleLogout(): void {
     handleLogout(queryClient)
+    // Commented out to avoid forcing users back to the login page during development.
+    // window.location.assign('/auth/login')
   }
 
   private rejectRefreshQueue(error: unknown): void {

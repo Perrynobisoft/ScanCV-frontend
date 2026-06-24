@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
+import useAxios from '@/infrastructure/hooks/useAxios'
 
 export function usePdfBlob(pdfUrl?: string) {
   const [blob, setBlob] = useState<Blob>()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>()
+  const { axiosInstance } = useAxios()
 
   useEffect(() => {
     if (!pdfUrl) return
@@ -15,20 +17,26 @@ export function usePdfBlob(pdfUrl?: string) {
         setLoading(true)
         setError(undefined)
 
-        const response = await fetch(pdfUrl)
+        const response = await axiosInstance.get<Blob>(pdfUrl, {
+          responseType: 'blob',
+          headers: {
+            Accept: 'application/pdf',
+            'ngrok-skip-browser-warning': 'true', // bypass ngrok's browser warning for PDF files
+          },
+        })
 
-        if (!response.ok) {
-          throw new Error(`Failed to load PDF (${response.status})`)
-        }
-
-        const pdfBlob = await response.blob()
+        const pdfBlob = response.data as Blob
 
         if (mounted) {
           setBlob(pdfBlob)
         }
-      } catch (err) {
+      } catch (err: any) {
         if (mounted) {
-          setError(err instanceof Error ? err.message : 'Unknown error')
+          setError(
+            err?.response?.data?.error?.message ||
+              err?.message ||
+              'Unknown error',
+          )
         }
       } finally {
         if (mounted) {
@@ -42,7 +50,7 @@ export function usePdfBlob(pdfUrl?: string) {
     return () => {
       mounted = false
     }
-  }, [pdfUrl])
+  }, [pdfUrl, axiosInstance])
 
   return {
     blob,

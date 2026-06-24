@@ -10,67 +10,50 @@ const mockUsers = [
   {
     id: 1,
     email: 'admin@recruitai.io',
-    firstName: 'Nguyen Van',
-    lastName: 'Admin',
-    provider: 'email',
-    socialId: '',
+    fullName: 'Nguyen Van Admin',
     role: 'Admin',
     status: 'Active',
-    createdAt: '2026-01-01T00:00:00Z',
-    updatedAt: new Date(Date.now() - 1 * 60 * 1000).toISOString(),
-    deletedAt: null,
+    lastActive: new Date(Date.now() - 1 * 60 * 1000).toISOString(),
   },
   {
     id: 2,
     email: 'thi.recruiter@company.com',
-    firstName: 'Tran Thi',
-    lastName: 'Recruiter',
-    provider: 'email',
-    socialId: '',
+    fullName: 'Tran Thi Recruiter',
     role: 'Recruiter',
     status: 'Active',
-    createdAt: '2026-01-02T00:00:00Z',
-    updatedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-    deletedAt: null,
+    lastActive: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 6,
+    email: 'thi.recruiter@company.com',
+    fullName: 'Tran Thi Recruiter',
+    role: 'Recruiter',
+    status: 'Active',
+    lastActive: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
   },
   {
     id: 3,
     email: 'van.le@company.com',
-    firstName: 'Le Van',
-    lastName: 'Recruiter',
-    provider: 'email',
-    socialId: '',
+    fullName: 'Le Van Recruiter',
     role: 'Recruiter',
     status: 'Active',
-    createdAt: '2026-01-03T00:00:00Z',
-    updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-    deletedAt: null,
+    lastActive: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     id: 4,
     email: 'thi.pham@company.com',
-    firstName: 'Pham Thi',
-    lastName: 'Interviewer',
-    provider: 'email',
-    socialId: '',
+    fullName: 'Pham Thi Interviewer',
     role: 'Interviewer',
     status: 'Active',
-    createdAt: '2026-01-04T00:00:00Z',
-    updatedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-    deletedAt: null,
+    lastActive: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     id: 5,
     email: 'van.hoang@company.com',
-    firstName: 'Hoang Van',
-    lastName: 'Interviewer',
-    provider: 'email',
-    socialId: '',
+    fullName: 'Hoang Van Interviewer',
     role: 'Interviewer',
     status: 'Inactive',
-    createdAt: '2026-01-05T00:00:00Z',
-    updatedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-    deletedAt: null,
+    lastActive: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
   },
 ]
 
@@ -84,11 +67,11 @@ export const handlers = [
       data: {
         user: {
           id: user.id,
-          fullName: `${user.firstName} ${user.lastName}`,
+          fullName: user.fullName,
           email: user.email,
           role: user.role,
           status: user.status,
-          lastActive: user.updatedAt,
+          lastActive: user.lastActive,
         },
       },
     })
@@ -103,11 +86,11 @@ export const handlers = [
       data: {
         user: {
           id: user.id,
-          fullName: `${user.firstName} ${user.lastName}`,
+          fullName: user.fullName,
           email: user.email,
           role: user.role,
           status: user.status,
-          lastActive: user.updatedAt,
+          lastActive: user.lastActive,
         },
       },
     })
@@ -180,10 +163,10 @@ export const handlers = [
         user: {
           id: loginUser.id,
           email: loginUser.email,
-          fullName: `${loginUser.firstName} ${loginUser.lastName}`,
+          fullName: loginUser.fullName,
           role: loginUser.role,
           status: loginUser.status,
-          lastActive: loginUser.updatedAt,
+          lastActive: loginUser.lastActive,
         },
       },
     })
@@ -273,7 +256,8 @@ export const handlers = [
 
   http.get(`${API_URL}/${Endpoints.Cv.GET}`, async ({ request }) => {
     const id = Number(new URL(String(request.url)).searchParams.get('id'))
-    const result = cvMockData.find((item) => item.id === id) ?? cvMockData[0]
+    const result =
+      cvMockData.find((item) => item.cv_infos_id === id) ?? cvMockData[0]
 
     return HttpResponse.json({
       data: result,

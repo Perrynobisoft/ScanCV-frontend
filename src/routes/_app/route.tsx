@@ -2,13 +2,13 @@ import { createFileRoute, Outlet } from '@tanstack/react-router'
 import Header from '@/presentation/components/Header'
 import Sidebar from '@/presentation/components/Sidebar'
 import { useLocale } from '@/presentation/provider/locale/locale-provider'
-import { requireAuth } from '@/shared/route-guards'
+// import { requireAuth } from '@/shared/route-guards'
 
 export const Route = createFileRoute('/_app')({
   component: RouteComponent,
-  beforeLoad: ({ context, location }) => {
-    requireAuth({ auth: context.auth, location })
-  },
+  // beforeLoad: ({ context, location }) => {
+  //   requireAuth({ auth: context.auth, location })
+  // },
 })
 
 function RouteComponent() {
@@ -17,7 +17,7 @@ function RouteComponent() {
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900" lang={locale}>
       <div className="flex min-h-screen">
-        <div className="fixed w-72 h-full z-50">
+        <div className="fixed w-72 h-full z-30">
           <Sidebar />
         </div>
 

@@ -21,4 +21,22 @@ export const Constants = {
     DateTimeFormat: 'yyyy-MM-DD HH:mm:ss.SSSS',
     DateFormat: 'yyyy-MM-DD',
   },
+
+  BULK_UPLOAD_BATCH_ID_KEY: 'bulk_upload_batch_id',
+
+  CV_STATUS: {
+    REJECTED: 'rejected',
+    NEW: 'new',
+    IN_PROGRESS: 'in-progress',
+    CONTACTED: 'contacted',
+    HIRED: 'hired',
+  },
 }
+
+export const CV_STATUS_LABELS = {
+  rejected: { label: 'Rejected', color: 'bg-red-500' },
+  new: { label: 'New', color: 'bg-amber-500' },
+  'in-progress': { label: 'In-progress', color: 'bg-emerald-500' },
+  contacted: { label: 'Contacted', color: 'bg-cyan-500' },
+  hired: { label: 'Hired', color: 'bg-slate-600' },
+} as const

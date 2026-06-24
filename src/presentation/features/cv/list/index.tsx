@@ -7,54 +7,55 @@ import { m } from '@/paraglide/messages'
 import { Pagination } from '@/presentation/components/ui/pagination'
 import CvTable from './cv-table'
 import CvDetail from '../CvDetail'
-import { Search } from 'lucide-react'
+import { RotateCcw, Search, Users } from 'lucide-react'
 import useDebounce from '@/presentation/hooks/useDebounce'
-
-const SKILL_OPTIONS = [
-  { label: 'All Skills', value: '' },
-  { label: 'ReactJS', value: 'reactjs' },
-  { label: 'TypeScript', value: 'typescript' },
-  { label: 'Python', value: 'python' },
-]
-
-const POSITION_OPTIONS = [
-  { label: 'All Positions', value: '' },
-  { label: 'Frontend Developer', value: 'frontend' },
-  { label: 'Data Scientist', value: 'datascientist' },
-  { label: 'Product Manager', value: 'product' },
-]
-
-const STYLE_OPTIONS = [
-  { label: 'All Styles', value: '' },
-  { label: 'Remote', value: 'remote' },
-  { label: 'Full-time', value: 'fulltime' },
-  { label: 'Part-time', value: 'parttime' },
-]
-
-const EXPERIENCE_OPTIONS = ['All', 'Under 1y', '1-3y', '3-5y', '5y+']
+import { Button } from '@/presentation/components/ui/button'
+import {
+  getSkillOptionsByJobTitle,
+  JOB_TITLE_OPTIONS,
+  LOCATION_OPTIONS,
+  WORK_TYPE_OPTIONS,
+  YEARS_OF_EXPERIENCE_OPTIONS,
+} from './filter-options'
 
 export default function CvListPage() {
   const [keywordInput, setKeywordInput] = useState('')
   const [keywordQuery, setKeywordQuery] = useState<string | undefined>(
     undefined,
   )
-  const [experienceFilter, setExperienceFilter] = useState('All')
+  const [experienceFilter, setExperienceFilter] = useState('')
+  const [jobTitleFilter, setJobTitleFilter] = useState('')
   const [skillFilter, setSkillFilter] = useState('')
-  const [positionFilter, setPositionFilter] = useState('')
-  const [styleFilter, setStyleFilter] = useState('')
+  const [locationFilter, setLocationFilter] = useState('')
+  const [workTypeFilter, setWorkTypeFilter] = useState('')
 
   const keywordSearch = useCvList(keywordQuery, {
+    position: jobTitleFilter,
+    location: locationFilter,
     experience: experienceFilter,
     skills: skillFilter,
-    position: positionFilter,
-    style: styleFilter,
+    work_type: workTypeFilter,
   })
   const { page, setPage, items, total, totalPages, isLoading } = keywordSearch
   const filteredCvs = useMemo(() => items as CvItem[], [items])
+  const skillOptions = useMemo(
+    () => getSkillOptionsByJobTitle(jobTitleFilter),
+    [jobTitleFilter],
+  )
   const [selectedCv, setSelectedCv] = useState<CvItem | null>(null)
 
   const handleInputChange = (value: string) => {
     setKeywordInput(value)
+  }
+
+  const handleClearFilters = () => {
+    setKeywordInput('')
+    setKeywordQuery(undefined)
+    setExperienceFilter('')
+    setJobTitleFilter('')
+    setSkillFilter('')
+    setLocationFilter('')
+    setWorkTypeFilter('')
   }
 
   const searchValue = keywordInput
@@ -65,56 +66,82 @@ export default function CvListPage() {
     setKeywordQuery(debouncedKeyword ? debouncedKeyword : undefined)
   }, [debouncedKeyword])
 
+  useEffect(() => {
+    const hasSelectedSkill = skillOptions.some(
+      (option) => option.value === skillFilter,
+    )
+
+    if (!hasSelectedSkill) {
+      setSkillFilter('')
+    }
+  }, [skillFilter, skillOptions])
+
   return (
-    <main className="space-y-6 overflow-hidden">
+    <main className="space-y-6 overflow-y-auto">
       <section className="rounded-md border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="flex gap-4">
-          <div className="relative">
-            <Search className="w-4 h-4 absolute left-2 top-1/2 transform -translate-y-1/2 text-slate-400" />
-            <Input
-              placeholder="Search candidates, positions, skills..."
-              value={searchValue}
-              onChange={(e) => handleInputChange(e.target.value)}
-              className="w-80! rounded-sm pl-8 pr-3 py-2"
-            />
+        <div className="flex flex-col gap-3">
+          {/* Search Section */}
+          <div className="flex items-center gap-4">
+            <Users className="w-4 h-4 text-accent" />
+            <span className="text-md font-medium text-slate-700">
+              CV Directory
+            </span>
+            <span className="w-fit bg-[#CCFBF1] text-accent px-2 py-1 rounded-full text-[10px]">
+              {filteredCvs.length}
+            </span>
+
+            {/* Search Input */}
+            <div className="relative w-1/2">
+              <Search className="w-4 h-4 absolute left-2 top-1/2 transform -translate-y-1/2 text-slate-400" />
+              <Input
+                placeholder="Search candidates, positions, skills..."
+                value={searchValue}
+                onChange={(e) => handleInputChange(e.target.value)}
+                className="rounded-sm pl-8 pr-3 py-1! bg-gray-50! focus:bg-white! focus:ring-1 focus:accent! focus:border-accent! focus:outline-accent transition-colors duration-200!"
+              />
+            </div>
           </div>
-          <Select
-            options={SKILL_OPTIONS}
-            className="w-30 rounded-sm"
-            value={skillFilter}
-            onChange={(e) => setSkillFilter(e.target.value)}
-          />
-          <Select
-            options={POSITION_OPTIONS}
-            className="w-30 rounded-sm"
-            value={positionFilter}
-            onChange={(e) => setPositionFilter(e.target.value)}
-          />
-          <Select
-            options={STYLE_OPTIONS}
-            className="w-30 rounded-sm"
-            value={styleFilter}
-            onChange={(e) => setStyleFilter(e.target.value)}
-          />
-          <div className="flex items-center rounded-sm text-sm border border-slate-300 bg-white text-slate-600 overflow-hidden shadow-sm">
-            {EXPERIENCE_OPTIONS.map((option) => {
-              const isLast =
-                option === EXPERIENCE_OPTIONS[EXPERIENCE_OPTIONS.length - 1]
-              return (
-                <button
-                  key={option}
-                  type="button"
-                  onClick={() => setExperienceFilter(option)}
-                  className={`px-4 py-3 transition truncate border-slate-300 ${!isLast && 'border-r'} ${
-                    experienceFilter === option
-                      ? 'bg-cyan-50 text-accent'
-                      : 'text-slate-600 hover:border-slate-300 hover:bg-slate-50'
-                  }`}
-                >
-                  {option}
-                </button>
-              )
-            })}
+          <div className="flex gap-3 flex-wrap">
+            <Select
+              options={JOB_TITLE_OPTIONS}
+              className="w-30 rounded-sm"
+              value={jobTitleFilter}
+              // size={10}
+              onChange={(e) => setJobTitleFilter(e.target.value)}
+            />
+            <Select
+              options={skillOptions}
+              className="w-30 rounded-sm"
+              value={skillFilter}
+              // size={12}
+              onChange={(e) => setSkillFilter(e.target.value)}
+            />
+            <Select
+              options={YEARS_OF_EXPERIENCE_OPTIONS}
+              className="w-30 rounded-sm"
+              value={experienceFilter}
+              onChange={(e) => setExperienceFilter(e.target.value)}
+            />
+            <Select
+              options={LOCATION_OPTIONS}
+              className="w-30 rounded-sm"
+              value={locationFilter}
+              onChange={(e) => setLocationFilter(e.target.value)}
+            />
+            <Select
+              options={WORK_TYPE_OPTIONS}
+              className="w-30 rounded-sm"
+              value={workTypeFilter}
+              onChange={(e) => setWorkTypeFilter(e.target.value)}
+            />
+            <Button
+              variant="default"
+              className="h-8 rounded-sm px-3 text-xs text-slate-600"
+              onClick={handleClearFilters}
+            >
+              <RotateCcw className="h-4 w-4" />
+              Clear
+            </Button>
           </div>
         </div>
       </section>
@@ -143,7 +170,7 @@ export default function CvListPage() {
           {selectedCv && (
             <CvDetail
               cv={selectedCv}
-              pdfUrl={selectedCv?.file?.file_url ?? selectedCv?.pdf_url ?? ''}
+              pdfUrl={selectedCv?.cv_file?.file_url ?? ''}
               onClose={() => setSelectedCv(null)}
             />
           )}
