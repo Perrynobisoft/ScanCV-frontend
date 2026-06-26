@@ -3,8 +3,7 @@ import { X } from 'lucide-react'
 import { Input } from '@/presentation/components/ui/input'
 import { useCreateUsers } from '@/presentation/hooks/users/useCreateUsers'
 
-const ROLES = ['Admin', 'Recruiter', 'Interviewer'] as const
-type Role = (typeof ROLES)[number]
+const ROLES = ['Recruiter', 'Interviewer'] as const
 
 interface InviteMemberDialogProps {
   onClose: () => void
@@ -17,7 +16,7 @@ export function InviteMemberDialog({
 }: InviteMemberDialogProps) {
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
-  const [role, setRole] = useState<Role>('Recruiter')
+  const [role, setRole] = useState<string>('Interviewer')
 
   const { create, isPending } = useCreateUsers()
 
@@ -44,10 +43,10 @@ export function InviteMemberDialog({
         <div className="flex items-start justify-between px-6 pt-6 pb-4 border-b border-gray-100">
           <div>
             <h2 id="invite-title" className="text-lg font-bold text-slate-900">
-              Mời thành viên mới
+              Tạo tài khoản
             </h2>
             <p className="text-sm text-gray-500 mt-0.5">
-              Tạo tài khoản và phân quyền cho thành viên
+              Mật khẩu sẽ được gửi đến email được tạo
             </p>
           </div>
           <button
@@ -65,7 +64,7 @@ export function InviteMemberDialog({
           {/* Tên tài khoản */}
           <div>
             <label className="block text-sm font-semibold text-slate-800 mb-2">
-              Tên tài khoản
+              Họ và tên
             </label>
             <Input
               required
@@ -96,7 +95,7 @@ export function InviteMemberDialog({
             <label className="block text-sm font-semibold text-slate-800 mb-2">
               Vai trò
             </label>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-2">
               {ROLES.map((r) => (
                 <button
                   key={r}

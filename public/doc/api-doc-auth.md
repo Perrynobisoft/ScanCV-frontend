@@ -251,3 +251,41 @@ Authorization: Bearer <accessToken>
   }
 }
 ```
+
+# 6. Update Current User (Me)
+
+## PATCH /api/v1/auth/me
+
+> Chỉ cho phép cập nhật `fullName`. Các trường khác (`email`, `role`, `status`, ...) không thể thay đổi qua endpoint này.
+
+### Header
+
+```http
+Authorization: Bearer <accessToken>
+```
+
+### Request Body
+
+```json
+{
+  "fullName": "Nguyen Van B"
+}
+```
+
+### Response — Thành công
+
+```json
+{
+  "success": true,
+  "statusCode": 200,
+  "message": "Profile updated successfully",
+  "data": {
+    "id": 42,
+    "email": "user@example.com",
+    "fullName": "Nguyen Van B",
+    "role": "admin",
+    "status": "active",
+    "lastActive": "2026-06-22T10:00:00.000Z"
+  }
+}
+```

@@ -1,12 +1,28 @@
 import { http, HttpResponse } from 'msw'
 import { Endpoints } from '@/shared/endpoints'
 import { env } from '@/env'
-import { cvMockData } from './cv'
+import { cvMockData, talentPoolMockData } from './cv'
 import { smartSearchCvMockData } from './smartSearch'
 
 const API_URL = env.VITE_APP_API_URL
 
 const mockUsers = [
+  {
+    id: 10,
+    email: 'admin@recruitai.io',
+    fullName: 'Nguyen Van Admin',
+    role: 'Admin',
+    status: 'Active',
+    lastActive: new Date(Date.now() - 1 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 12,
+    email: 'thi.recruiter@company.com',
+    fullName: 'Tran Thi Recruiter',
+    role: 'Interviewer',
+    status: 'Active',
+    lastActive: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+  },
   {
     id: 1,
     email: 'admin@recruitai.io',
@@ -263,4 +279,82 @@ export const handlers = [
       data: result,
     })
   }),
+
+  // In-memory store so mark/unmark changes persist within a session
+  // We start with a copy of talentPoolMockData as mutable state
+  ...(() => {
+    // Mutable store for talent pool — keyed by cv_infos_id
+    const store = new Map(
+      talentPoolMockData.map((cv) => [cv.cv_infos_id, { ...cv }]),
+    )
+
+    return [
+      http.post(
+        `${API_URL}/${Endpoints.Cv.GET_TALENT_POOL}`,
+        async ({ request }) => {
+          const body = (await request.json()) as {
+            page?: number
+            limit?: number
+          }
+          const page = Math.max(1, Number(body?.page ?? 1))
+          const limit = Math.max(1, Number(body?.limit ?? 10))
+
+          const items = Array.from(store.values()).filter((cv) => cv.is_marked)
+          const total = items.length
+          const totalPages = Math.max(1, Math.ceil(total / limit))
+          const paged = items.slice((page - 1) * limit, page * limit)
+
+          return HttpResponse.json({
+            success: true,
+            statusCode: 200,
+            message: 'OK',
+            data: {
+              items: paged,
+              meta: { total, page, limit, totalPages },
+            },
+          })
+        },
+      ),
+
+      http.patch(
+        `${API_URL}/${Endpoints.Cv.MARK_AS_TALENT}`,
+        async ({ params, request }) => {
+          const id = Number(params.id)
+          const body = (await request.json()) as { is_marked: boolean }
+
+          // Look up across both stores: talent pool store + general cv data
+          const existing =
+            store.get(id) ?? cvMockData.find((cv) => cv.cv_infos_id === id)
+
+          if (!existing) {
+            return HttpResponse.json(
+              {
+                success: false,
+                statusCode: 404,
+                message: 'CV not found',
+                data: null,
+              },
+              { status: 404 },
+            )
+          }
+
+          const updated = {
+            ...existing,
+            is_marked: body.is_marked,
+            updated_at: new Date().toISOString(),
+          }
+          store.set(id, updated)
+
+          return HttpResponse.json({
+            success: true,
+            statusCode: 200,
+            message: body.is_marked
+              ? 'CV marked as talent successfully'
+              : 'CV removed from talent pool',
+            data: updated,
+          })
+        },
+      ),
+    ]
+  })(),
 ]

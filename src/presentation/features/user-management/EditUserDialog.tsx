@@ -4,11 +4,8 @@ import { Input } from '@/presentation/components/ui/input'
 import { useUpdateUsers } from '@/presentation/hooks/users/useUpdateUsers'
 import { type Users } from '@/domain/models/Users'
 
-const ROLES = ['Admin', 'Recruiter', 'Interviewer'] as const
-const STATUSES = ['Active', 'Inactive'] as const
-
-type Role = (typeof ROLES)[number]
-type Status = (typeof STATUSES)[number]
+const ROLES = ['Recruiter', 'Interviewer'] as const
+const STATUSES = ['active', 'inactive'] as const
 
 interface EditUserDialogProps {
   user: Users
@@ -22,10 +19,8 @@ export function EditUserDialog({
   onSuccess,
 }: EditUserDialogProps) {
   const [fullName, setFullName] = useState(user.fullName?.trim() ?? '')
-  const [role, setRole] = useState<Role>((user.role as Role) ?? 'Recruiter')
-  const [status, setStatus] = useState<Status>(
-    (user.status as Status) ?? 'Active',
-  )
+  const [role, setRole] = useState<string>(user.role ?? 'Interview')
+  const [status, setStatus] = useState<string>(user.status ?? 'Active')
 
   const { update, isPending } = useUpdateUsers()
 
@@ -55,10 +50,10 @@ export function EditUserDialog({
               id="edit-dialog-title"
               className="text-lg font-bold text-slate-900"
             >
-              Chỉnh sửa thành viên
+              Chỉnh sửa thông tin thành viên
             </h2>
             <p className="text-sm text-gray-500 mt-0.5">
-              Cập nhật thông tin và phân quyền thành viên
+              Cập nhật thông tin và phân quyền cho thành viên
             </p>
           </div>
           <button
@@ -75,7 +70,7 @@ export function EditUserDialog({
           {/* Tên tài khoản */}
           <div>
             <label className="block text-sm font-semibold text-slate-800 mb-2">
-              Tên tài khoản
+              Họ và tên
             </label>
             <Input
               required
@@ -103,7 +98,7 @@ export function EditUserDialog({
             <label className="block text-sm font-semibold text-slate-800 mb-2">
               Vai trò
             </label>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-2">
               {ROLES.map((r) => (
                 <button
                   key={r}
@@ -134,13 +129,13 @@ export function EditUserDialog({
                   onClick={() => setStatus(s)}
                   className={`rounded-xl border py-2.5 text-sm font-semibold transition-all ${
                     status === s
-                      ? s === 'Active'
+                      ? s === 'active'
                         ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
                         : 'border-gray-400 bg-gray-100 text-gray-700'
                       : 'border-gray-200 bg-white text-gray-500 hover:border-gray-300 hover:text-slate-700'
                   }`}
                 >
-                  {s === 'Active' ? 'Hoạt động' : 'Vô hiệu'}
+                  {s === 'active' ? 'Hoạt động' : 'Vô hiệu'}
                 </button>
               ))}
             </div>

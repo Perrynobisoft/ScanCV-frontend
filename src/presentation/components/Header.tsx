@@ -54,7 +54,7 @@ export default function Header() {
           <Button
             variant="accent"
             className="rounded-sm px-4 py-2"
-            onClick={() => void navigate({ to: '/cv' })}
+            onClick={open}
           >
             <Upload className="mr-2 h-4 w-4" />
             Upload CVs

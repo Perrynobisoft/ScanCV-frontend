@@ -26,8 +26,12 @@ export function UserTableRow({
   onDelete,
 }: UserTableRowProps) {
   const fullName = user.fullName ?? ''
-  const roleName = user.role ?? ''
-  const statusName = user.status ?? ''
+  const roleName = user.role
+    ? user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase()
+    : ''
+  const statusName = user.status
+    ? user.status.charAt(0).toUpperCase() + user.status.slice(1).toLowerCase()
+    : ''
   const isActive = statusName === 'Active'
 
   return (

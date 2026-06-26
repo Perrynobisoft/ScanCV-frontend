@@ -134,7 +134,7 @@ export default function ProfilePage() {
                   Vai trò
                 </p>
               </div>
-              <p className="text-base font-semibold text-slate-900">
+              <p className="text-base font-semibold capitalize text-slate-900">
                 {user?.role || '—'}
               </p>
             </div>
@@ -148,7 +148,7 @@ export default function ProfilePage() {
                 </p>
               </div>
               <p
-                className={`text-base font-semibold ${
+                className={`text-base font-semibold capitalize ${
                   user?.status?.toLowerCase() === 'active'
                     ? 'text-emerald-600'
                     : 'text-slate-900'
