@@ -158,7 +158,7 @@ docker build -t scancv-frontend .
 docker run -p 80:80 scancv-frontend
 ```
 
-## 🔎 Notes
+## 🔎 note
 
 - This repository is the frontend application only.
 - To run fully, point `VITE_APP_API_URL` to a backend service or enable mock mode with `VITE_APP_ENABLE_MSW=true`.

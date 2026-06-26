@@ -168,6 +168,7 @@ export default function SmartSearchPage() {
               cv={selectedCv}
               pdfUrl={selectedCv?.cv_file?.file_url ?? ''}
               onClose={() => setSelectedCv(null)}
+              onUpdated={(updated) => setSelectedCv(updated)}
             />
           )}
         </div>

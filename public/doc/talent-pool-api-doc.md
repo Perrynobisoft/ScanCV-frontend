@@ -58,7 +58,7 @@ interface CvItem {
   work_type?: string
   tag?: 'new' | 'in-progress' | 'rejected' | 'hired' | 'contacted'
   is_marked?: boolean // true = CV đã được đánh dấu vào Talent Pool
-  notes?: string
+  note?: string
   scores: {
     offline_score?: number
     matching_score?: number
@@ -144,7 +144,7 @@ Content-Type: application/json
         "certifications": ["AWS Cloud Practitioner"],
         "tag": "new",
         "is_marked": true,
-        "notes": "Ứng viên tiềm năng, đã qua vòng phỏng vấn kỹ thuật",
+        "note": "Ứng viên tiềm năng, đã qua vòng phỏng vấn kỹ thuật",
         "status": "active",
         "created_at": "2026-06-01T08:00:00.000Z",
         "updated_at": "2026-06-20T14:30:00.000Z",
@@ -279,7 +279,7 @@ Trả về toàn bộ CV object sau khi cập nhật:
     "certifications": ["AWS Cloud Practitioner"],
     "tag": "new",
     "is_marked": true,
-    "notes": "Ứng viên tiềm năng, đã qua vòng phỏng vấn kỹ thuật",
+    "note": "Ứng viên tiềm năng, đã qua vòng phỏng vấn kỹ thuật",
     "status": "active",
     "created_at": "2026-06-01T08:00:00.000Z",
     "updated_at": "2026-06-23T09:00:00.000Z",
@@ -341,7 +341,7 @@ Trả về toàn bộ CV object sau khi cập nhật:
 
 ---
 
-## Notes cho Backend
+## note cho Backend
 
 - Endpoint GET Talent Pool (`POST /api/v1/cvs/talent-pool`) chỉ trả về các CV có `is_marked = true`.
 - Response của cả hai endpoint nên trả về toàn bộ object `CvItem` để frontend cập nhật state mà không cần gọi thêm.

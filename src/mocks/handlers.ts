@@ -357,4 +357,28 @@ export const handlers = [
       ),
     ]
   })(),
+  http.put(`${API_URL}/${Endpoints.Cv.UPDATE}`, async ({ request, params }) => {
+    const id = Number(params.id)
+    const body = (await request.json()) as any
+    const cvIndex = cvMockData.findIndex((item) => item.cv_infos_id === id)
+    if (cvIndex !== -1) {
+      cvMockData[cvIndex] = {
+        ...cvMockData[cvIndex],
+        ...body,
+        updated_at: new Date().toISOString(),
+      }
+      return HttpResponse.json({
+        success: true,
+        message: 'CV updated successfully',
+        data: cvMockData[cvIndex],
+      })
+    }
+    return HttpResponse.json(
+      {
+        success: false,
+        message: 'CV not found',
+      },
+      { status: 404 },
+    )
+  }),
 ]

@@ -39,7 +39,7 @@ export interface CvItem {
   work_type?: string
   tag?: 'new' | 'in-progress' | 'rejected' | 'hired' | 'contacted'
   is_marked?: boolean
-  notes?: string
+  note?: string
   quality_score?: number
   quality_reasons?: string
   quality_details?: {
@@ -107,7 +107,7 @@ export interface CreateCvRequest {
   total_experience_years?: number
   summary?: string
   is_marked?: boolean
-  notes?: string
+  note?: string
   tag?: string
   educations?: string[]
   certifications?: string[]
