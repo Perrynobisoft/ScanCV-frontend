@@ -349,12 +349,9 @@ export default function CvDetail({
 
               {/* Favorites Section */}
               <div className="border-t border-slate-200 pt-4 mt-4">
-                <div className="text-xs text-slate-400 flex items-center justify-between gap-2">
-                  <span>ĐÁNH DẤU TALENT</span>
-                </div>
                 <Button
-                  variant={isMark ? 'accent' : 'ghost'}
-                  className="w-full flex items-center justify-center gap-2 mt-2"
+                  variant={isMark ? 'accent' : 'default'}
+                  className="w-full flex items-center justify-center gap-2 mt-2 !rounded-2xl"
                   disabled={isMarkingTalent}
                   onClick={() => {
                     const nextMark = !isMark

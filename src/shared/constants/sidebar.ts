@@ -9,7 +9,7 @@ export const NAVIGATION = [
     label: 'User Management',
     to: ROUTES.USER_MANAGEMENT,
     icon: UserCog,
-    adminOnly: false,
+    adminOnly: true,
   },
   // adminOnly: true to make it only visible for admin users
 ]
