@@ -1,4 +1,4 @@
-import { Link, useLocation } from '@tanstack/react-router'
+import { Link, useLocation, useNavigate } from '@tanstack/react-router'
 import { useAuth } from '@/presentation/provider/auth/auth-provider'
 import { Roles } from '@/shared/enums/Roles'
 import { NAVIGATION } from '@/shared/constants/sidebar'
@@ -6,15 +6,14 @@ import { Brain, Settings } from 'lucide-react'
 import { ROUTES } from '@/shared/constants/routes'
 import Avatar from './ui/avatar'
 
-const ADMIN = {
-  full_name: 'Admin',
-  email: 'admin@example.com',
-}
-
 export default function Sidebar() {
   const { user } = useAuth()
   const location = useLocation()
+  const navigate = useNavigate()
   const canAccessAdmin = user?.role === Roles.ADMIN
+
+  const displayName = user?.fullName || user?.email || 'User'
+  const displayEmail = user?.email ?? ''
 
   return (
     <aside className="flex h-full overflow-y-auto flex-col border-r border-slate-200 bg-primary px-6 py-8 z-30">
@@ -57,17 +56,18 @@ export default function Sidebar() {
 
       <div className="mt-auto flex w-full items-center gap-3 py-3 text-sm text-white">
         <div className="min-w-0 flex-1 flex gap-2">
-          <Avatar name={ADMIN.full_name} />
+          <Avatar name={displayName} />
           <div>
-            <p className="truncate text-sm font-medium">{ADMIN.full_name}</p>
-            <p className="truncate text-xs text-cyan-100">{ADMIN.email}</p>
+            <p className="truncate text-sm font-medium">{displayName}</p>
+            <p className="truncate text-xs text-cyan-100">{displayEmail}</p>
           </div>
         </div>
 
         <button
           type="button"
-          className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-cyan-100 hover:text-white"
+          className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-transparent text-cyan-100 hover:text-white"
           aria-label="settings"
+          onClick={() => void navigate({ to: '/profile' })}
         >
           <Settings className="h-4 w-4" />
         </button>

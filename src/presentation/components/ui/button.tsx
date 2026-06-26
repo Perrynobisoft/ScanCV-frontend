@@ -1,6 +1,12 @@
 import { type ButtonHTMLAttributes, forwardRef } from 'react'
 
-type ButtonVariant = 'default' | 'ghost' | 'primary' | 'accent' | 'login'
+type ButtonVariant =
+  | 'default'
+  | 'ghost'
+  | 'primary'
+  | 'accent'
+  | 'login'
+  | 'delete'
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: ButtonVariant
@@ -14,6 +20,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   accent: 'bg-accent rounded-sm text-white text-sm px-4 py-2 hover:bg-cyan-700',
   login:
     'w-full rounded-lg bg-[#0d9488] font-semibold text-white hover:bg-[#0b7c71] disabled:cursor-not-allowed disabled:opacity-60',
+  delete: 'bg-red-600 text-white text-sm px-4 py-2 hover:bg-red-700 border-0',
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(

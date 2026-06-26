@@ -15,12 +15,12 @@ export default function TalentPoolPage() {
   return (
     <main className="space-y-6 overflow-y-auto">
       {/* Page header */}
-      <div>
+      {/* <div>
         <h1 className="text-2xl font-bold text-slate-900">Talent Pool</h1>
         <p className="mt-1 text-sm text-gray-500">
           Danh sách ứng viên tiềm năng đã được đánh dấu
         </p>
-      </div>
+      </div> */}
 
       <section className="rounded-md border border-slate-200 bg-white p-6 shadow-sm">
         {/* Card header */}

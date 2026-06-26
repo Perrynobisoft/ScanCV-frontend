@@ -1,11 +1,11 @@
 import { useRepository } from '@/di/RepositoriesProvider'
 import { type ChangePasswordRequest } from '@/domain/models/Auth'
-import { useAuth } from '@/presentation/provider/auth/auth-provider'
 import { useRouter } from '@tanstack/react-router'
+import { useLogout } from './useLogout'
 
 export const useChangePassword = () => {
   const router = useRouter()
-  const auth = useAuth()
+  const { logout } = useLogout()
   const { authRepository } = useRepository()
   const { mutate: changePassword, ...rest } = authRepository.changePassword()
 
@@ -13,7 +13,7 @@ export const useChangePassword = () => {
     changePassword: (requestData: ChangePasswordRequest) => {
       changePassword(requestData, {
         onSuccess: () => {
-          auth.clearAuth()
+          logout()
           router.navigate({ to: '/' }) // Redirect sau khi đổi mật khẩu
         },
       })

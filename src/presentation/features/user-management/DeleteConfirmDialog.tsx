@@ -35,16 +35,18 @@ export function DeleteConfirmDialog({
       }}
     >
       <div className="relative w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl">
-        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
-          <Trash2 className="h-6 w-6 text-red-600" />
-        </div>
+        <div className="flex items-center">
+          <div className="mb-4 mr-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+            <Trash2 className="h-6 w-6 text-red-600" />
+          </div>
 
-        <h2
-          id="delete-dialog-title"
-          className="mb-2 text-lg font-semibold text-slate-900"
-        >
-          Remove member
-        </h2>
+          <h2
+            id="delete-dialog-title"
+            className="mb-2 text-lg font-semibold text-slate-900"
+          >
+            Remove member
+          </h2>
+        </div>
         <p className="mb-6 text-sm text-gray-500">
           Are you sure you want to remove{' '}
           <span className="font-semibold text-slate-800">{fullName}</span>? This
@@ -57,10 +59,9 @@ export function DeleteConfirmDialog({
           </Button>
           <Button
             type="button"
-            variant="primary"
+            variant="delete"
             disabled={isPending}
             onClick={handleDelete}
-            className="bg-red-600 text-white hover:bg-red-700 border-0"
           >
             {isPending ? 'Removing…' : 'Remove'}
           </Button>
