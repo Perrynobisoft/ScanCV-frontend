@@ -1,12 +1,19 @@
 import Avatar from '@/presentation/components/ui/avatar'
-import StatusBadge from '@/presentation/components/ui/StatusBadge'
 import { Button } from '@/presentation/components/ui/button'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/presentation/components/ui/select'
 import { Download, X, FileText, GraduationCap, Bookmark } from 'lucide-react'
 import PdfViewer from '@/presentation/components/PDFViewer'
 import { useState, useEffect } from 'react'
 import { useCvEdit } from '@/presentation/hooks/cv/useCvEdit'
 import { useMarkAsTalent } from '@/presentation/hooks/cv/useMarkAsTalent'
 import { type CvItem } from '@/domain/models/Cv'
+import { CV_STATUS_LABELS } from '@/shared/constants'
 
 export interface CVDetailProps {
   cv: CvItem
@@ -32,18 +39,26 @@ export default function CvDetail({
     phone: string
     address: string
     position: string
-    notes: string
+    note: string
     tag: string
     is_marked: boolean
+    date_of_birth: string
+    work_type: string
+    total_experience_years: string | number
+    summary: string
   }>({
-    full_name: cv.full_name,
-    email: cv.email,
-    phone: cv.phone,
-    address: cv.address,
-    position: cv.position,
-    notes: cv.notes ?? '',
+    full_name: cv.full_name || '',
+    email: cv.email || '',
+    phone: cv.phone || '',
+    address: cv.address || '',
+    position: cv.position || '',
+    note: cv.note ?? '',
     tag: cv.tag ?? '',
     is_marked: cv.is_marked ?? false,
+    date_of_birth: cv.date_of_birth ?? '',
+    work_type: cv.work_type ?? '',
+    total_experience_years: cv.total_experience_years ?? '',
+    summary: cv.summary ?? '',
   })
 
   // Close modal only when mutation is truly complete
@@ -56,33 +71,21 @@ export default function CvDetail({
 
   useEffect(() => {
     setFormState({
-      full_name: cv.full_name,
-      email: cv.email,
-      phone: cv.phone,
-      address: cv.address,
-      position: cv.position,
-      notes: cv.notes ?? '',
+      full_name: cv.full_name || '',
+      email: cv.email || '',
+      phone: cv.phone || '',
+      address: cv.address || '',
+      position: cv.position || '',
+      note: cv.note ?? '',
       tag: cv.tag ?? '',
       is_marked: cv.is_marked ?? false,
+      date_of_birth: cv.date_of_birth ?? '',
+      work_type: cv.work_type ?? '',
+      total_experience_years: cv.total_experience_years ?? '',
+      summary: cv.summary ?? '',
     })
     setIsMark(!!cv.is_marked)
   }, [cv])
-
-  const toggleEdit = (field: keyof typeof formState) => {
-    setEditMode((prev) => {
-      const nextState = !prev[field]
-      if (!nextState) {
-        setFormState((current) => ({
-          ...current,
-          [field]: cv[field] ?? current[field],
-        }))
-      }
-      return {
-        ...prev,
-        [field]: nextState,
-      }
-    })
-  }
 
   const handleChange = (
     field: keyof typeof formState,
@@ -92,6 +95,42 @@ export default function CvDetail({
       ...prev,
       [field]: value,
     }))
+  }
+
+  const handleTagChange = (newTag: string) => {
+    const payload = {
+      id: cv.cv_infos_id,
+      full_name: formState.full_name,
+      email: formState.email,
+      phone: formState.phone,
+      address: formState.address,
+      position: formState.position,
+      note: formState.note,
+      is_marked: formState.is_marked,
+      tag: newTag,
+      date_of_birth: formState.date_of_birth,
+      work_type: formState.work_type,
+      total_experience_years:
+        formState.total_experience_years === ''
+          ? undefined
+          : Number(formState.total_experience_years),
+      summary: formState.summary,
+    }
+
+    updateCv(
+      payload,
+      (response) => {
+        if (response?.data) {
+          onUpdated?.(response.data)
+        }
+      },
+      () => {
+        setFormState((prev) => ({
+          ...prev,
+          tag: cv.tag ?? '',
+        }))
+      },
+    )
   }
 
   const handleSave = () => {
@@ -104,8 +143,16 @@ export default function CvDetail({
       phone: formState.phone,
       address: formState.address,
       position: formState.position,
-      notes: formState.notes,
+      note: formState.note,
       is_marked: formState.is_marked,
+      tag: formState.tag,
+      date_of_birth: formState.date_of_birth,
+      work_type: formState.work_type,
+      total_experience_years:
+        formState.total_experience_years === ''
+          ? undefined
+          : Number(formState.total_experience_years),
+      summary: formState.summary,
     }
 
     updateCv(
@@ -124,23 +171,84 @@ export default function CvDetail({
   }
 
   const isDirty =
-    formState.full_name !== cv.full_name ||
-    formState.email !== cv.email ||
-    formState.phone !== cv.phone ||
-    formState.address !== cv.address ||
-    formState.position !== cv.position ||
-    formState.notes !== (cv.notes ?? '') ||
+    formState.full_name !== (cv.full_name || '') ||
+    formState.email !== (cv.email || '') ||
+    formState.phone !== (cv.phone || '') ||
+    formState.address !== (cv.address || '') ||
+    formState.position !== (cv.position || '') ||
+    formState.note !== (cv.note ?? '') ||
     formState.tag !== (cv.tag ?? '') ||
-    formState.is_marked !== (cv.is_marked ?? false)
+    formState.is_marked !== (cv.is_marked ?? false) ||
+    formState.date_of_birth !== (cv.date_of_birth ?? '') ||
+    formState.work_type !== (cv.work_type ?? '') ||
+    formState.total_experience_years !== (cv.total_experience_years ?? '') ||
+    formState.summary !== (cv.summary ?? '')
 
   const name = formState.full_name || 'Unknown'
   const title = formState.position || 'Candidate'
-  const email = formState.email || ''
-  const phone = formState.phone || ''
-  const location = formState.address || ''
-  // const education = Array.isArray(cv?.educations) ? cv?.educations.join(', ') : ''
   const skills: string[] = (cv?.skills as string[]) || []
   const certifications: string[] = cv?.certifications || []
+
+  const renderEditableField = (
+    label: string,
+    field: keyof typeof formState,
+    type: 'text' | 'number' | 'email' | 'textarea' = 'text',
+    placeholder: string = 'Chưa có thông tin',
+  ) => {
+    const isEditing = !!editMode[field]
+    const rawValue = formState[field]
+
+    const onFieldClick = () => {
+      setEditMode((prev) => ({ ...prev, [field]: true }))
+    }
+
+    const onFieldBlur = () => {
+      setEditMode((prev) => ({ ...prev, [field]: false }))
+    }
+
+    return (
+      <div className="mb-3">
+        <div className="text-xs text-slate-400 mb-1">{label}</div>
+        {isEditing ? (
+          type === 'textarea' ? (
+            <textarea
+              autoFocus
+              value={rawValue as string}
+              onChange={(e) => handleChange(field, e.target.value)}
+              onBlur={onFieldBlur}
+              placeholder={placeholder}
+              className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+              rows={3}
+            />
+          ) : (
+            <input
+              autoFocus
+              type={type}
+              value={rawValue as string}
+              onChange={(e) => handleChange(field, e.target.value)}
+              onBlur={onFieldBlur}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.currentTarget.blur()
+                }
+              }}
+              placeholder={placeholder}
+              className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+            />
+          )
+        ) : (
+          <div
+            onClick={onFieldClick}
+            className={`cursor-pointer rounded-md bg-slate-50 px-3 py-2 text-sm hover:bg-slate-100 transition-colors duration-150 border border-transparent hover:border-slate-200 min-h-[38px] flex items-center ${
+              !rawValue ? 'text-slate-400 italic' : 'text-slate-800'
+            }`}
+          >
+            {rawValue ? (rawValue as string) : placeholder}
+          </div>
+        )}
+      </div>
+    )
+  }
 
   return (
     <div className="h-full fixed inset-0 z-50 flex items-center justify-center">
@@ -157,8 +265,37 @@ export default function CvDetail({
             </div>
           </div>
 
-          <div className="flex shrink-0">
-            <StatusBadge status={(formState.tag || 'new') as any} />
+          <div className="flex shrink-0 items-center gap-2">
+            <Select
+              value={formState.tag || 'new'}
+              onValueChange={(newTag) => {
+                handleChange('tag', newTag)
+                handleTagChange(newTag)
+              }}
+              disabled={isUpdating}
+            >
+              <SelectTrigger
+                className={`h-8 min-w-[110px] border-none text-xs font-semibold text-white shadow-none focus:ring-2 focus:ring-white/30 text-${
+                  CV_STATUS_LABELS[
+                    (formState.tag || 'new') as keyof typeof CV_STATUS_LABELS
+                  ]?.color || 'slate-500'
+                } [&>svg]:text-slate-500`}
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="min-w-[130px]">
+                {Object.entries(CV_STATUS_LABELS).map(([key, config]) => (
+                  <SelectItem key={key} value={key}>
+                    <span className="flex items-center gap-2">
+                      <span
+                        className={`inline-block h-2 w-2 rounded-full bg-${config.color}`}
+                      />
+                      {config.label}
+                    </span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
             <Button variant="ghost" onClick={onClose}>
               <X className="h-4 w-4" />
@@ -202,101 +339,23 @@ export default function CvDetail({
 
             {/* Info Content */}
             <div className="p-5 bg-[#F1F5F9] overflow-y-auto flex-1">
-              <div className="mb-3">
-                <div className="text-xs text-slate-400 flex items-center justify-between gap-2">
-                  <span>Họ và tên</span>
-                  <button
-                    type="button"
-                    className="text-xs font-semibold text-accent cursor-pointer"
-                    onClick={() => toggleEdit('full_name')}
-                  >
-                    {editMode.full_name ? 'Hủy' : 'Sửa'}
-                  </button>
-                </div>
-                {editMode.full_name ? (
-                  <input
-                    value={formState.full_name}
-                    onChange={(e) => handleChange('full_name', e.target.value)}
-                    className="mt-1 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
-                  />
-                ) : (
-                  <div className="mt-1 rounded-md bg-slate-50 px-3 py-2 text-sm">
-                    {name}
-                  </div>
-                )}
-              </div>
-
-              <div className="mb-3">
-                <div className="text-xs text-slate-400 flex items-center justify-between gap-2">
-                  <span>Email</span>
-                  <button
-                    type="button"
-                    className="text-xs font-semibold text-accent cursor-pointer"
-                    onClick={() => toggleEdit('email')}
-                  >
-                    {editMode.email ? 'Hủy' : 'Sửa'}
-                  </button>
-                </div>
-                {editMode.email ? (
-                  <input
-                    value={formState.email}
-                    onChange={(e) => handleChange('email', e.target.value)}
-                    className="mt-1 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
-                  />
-                ) : (
-                  <div className="mt-1 rounded-md bg-slate-50 px-3 py-2 text-sm">
-                    {email}
-                  </div>
-                )}
-              </div>
-
-              <div className="mb-3">
-                <div className="text-xs text-slate-400 flex items-center justify-between gap-2">
-                  <span>Số điện thoại</span>
-                  <button
-                    type="button"
-                    className="text-xs font-semibold text-accent cursor-pointer"
-                    onClick={() => toggleEdit('phone')}
-                  >
-                    {editMode.phone ? 'Hủy' : 'Sửa'}
-                  </button>
-                </div>
-                {editMode.phone ? (
-                  <input
-                    value={formState.phone}
-                    onChange={(e) => handleChange('phone', e.target.value)}
-                    className="mt-1 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
-                  />
-                ) : (
-                  <div className="mt-1 rounded-md bg-slate-50 px-3 py-2 text-sm">
-                    {phone}
-                  </div>
-                )}
-              </div>
-
-              <div className="mb-3">
-                <div className="text-xs text-slate-400 flex items-center justify-between gap-2">
-                  <span>Địa điểm</span>
-                  <button
-                    type="button"
-                    className="text-xs font-semibold text-accent cursor-pointer"
-                    onClick={() => toggleEdit('address')}
-                  >
-                    {editMode.address ? 'Hủy' : 'Sửa'}
-                  </button>
-                </div>
-                {editMode.address ? (
-                  <input
-                    value={formState.address}
-                    onChange={(e) => handleChange('address', e.target.value)}
-                    className="mt-1 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
-                  />
-                ) : (
-                  <div className="mt-1 rounded-md bg-slate-50 px-3 py-2 text-sm">
-                    {location}
-                  </div>
-                )}
-              </div>
+              {renderEditableField('Họ và tên', 'full_name')}
+              {renderEditableField('Vị trí', 'position')}
+              {renderEditableField('Email', 'email', 'email')}
+              {renderEditableField('Số điện thoại', 'phone')}
+              {renderEditableField('Ngày sinh', 'date_of_birth')}
+              {renderEditableField('Địa điểm', 'address')}
+              {renderEditableField('Hình thức làm việc', 'work_type')}
+              {renderEditableField(
+                'Số năm kinh nghiệm',
+                'total_experience_years',
+                'number',
+              )}
+              {renderEditableField(
+                'Giới thiệu / Tóm tắt',
+                'summary',
+                'textarea',
+              )}
 
               {cv?.educations && (
                 <div className="mb-3">
@@ -382,27 +441,37 @@ export default function CvDetail({
                 </Button>
               </div>
 
-              {/* Notes Section */}
+              {/* note Section */}
               <div className="border-t border-slate-200 pt-4 mt-4">
                 <div className="text-xs text-slate-400 flex items-center justify-between gap-2">
                   <span>GHI CHÚ</span>
                 </div>
-                <textarea
-                  value={formState.notes}
-                  onChange={(e) => handleChange('notes', e.target.value)}
-                  onClick={() => {
-                    if (!editMode.notes) {
-                      setEditMode((prev) => ({ ...prev, notes: true }))
+                {editMode.note ? (
+                  <textarea
+                    autoFocus
+                    value={formState.note}
+                    onChange={(e) => handleChange('note', e.target.value)}
+                    onBlur={() =>
+                      setEditMode((prev) => ({ ...prev, note: false }))
                     }
-                  }}
-                  readOnly={!editMode.notes}
-                  placeholder="Nhập nhận xét, đánh giá hoặc lưu ý về ứng viên này..."
-                  className={`w-full h-24 p-3 border border-slate-200 rounded-sm text-sm resize-none ${
-                    editMode.notes
-                      ? 'focus:outline-none focus:ring-2 focus:ring-accent bg-white'
-                      : 'bg-slate-50'
-                  }`}
-                />
+                    placeholder="Nhập nhận xét, đánh giá hoặc lưu ý về ứng viên này..."
+                    className="w-full h-24 p-3 border border-slate-200 rounded-md text-sm resize-none focus:outline-none focus:ring-2 focus:ring-accent bg-white mt-1"
+                  />
+                ) : (
+                  <div
+                    onClick={() =>
+                      setEditMode((prev) => ({ ...prev, note: true }))
+                    }
+                    className={`cursor-pointer rounded-md bg-slate-50 p-3 text-sm min-h-24 hover:bg-slate-100 transition-colors duration-150 border border-transparent hover:border-slate-200 whitespace-pre-wrap mt-1 ${
+                      !formState.note
+                        ? 'text-slate-400 italic'
+                        : 'text-slate-800'
+                    }`}
+                  >
+                    {formState.note ||
+                      'Nhập nhận xét, đánh giá hoặc lưu ý về ứng viên này...'}
+                  </div>
+                )}
               </div>
 
               <div className="mt-4 flex gap-3">
@@ -419,14 +488,18 @@ export default function CvDetail({
                   className="flex-1"
                   onClick={() => {
                     setFormState({
-                      full_name: cv.full_name,
-                      email: cv.email,
-                      phone: cv.phone,
-                      address: cv.address,
-                      position: cv.position,
-                      notes: cv.notes ?? '',
+                      full_name: cv.full_name || '',
+                      email: cv.email || '',
+                      phone: cv.phone || '',
+                      address: cv.address || '',
+                      position: cv.position || '',
+                      note: cv.note ?? '',
                       tag: cv.tag ?? '',
                       is_marked: cv.is_marked ?? false,
+                      date_of_birth: cv.date_of_birth ?? '',
+                      work_type: cv.work_type ?? '',
+                      total_experience_years: cv.total_experience_years ?? '',
+                      summary: cv.summary ?? '',
                     })
                     setEditMode({})
                   }}

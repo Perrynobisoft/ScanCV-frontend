@@ -151,13 +151,15 @@ export default function CvTable({
       ),
     },
     {
-      key: 'workType',
-      title: 'WORK TYPE',
-      width: 'w-24',
+      key: 'summary',
+      title: 'SUMMARY',
+      width: 'w-72',
       render: (cv: CvItem) =>
-        cv.work_type ? (
-          <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 truncate inline-block">
-            {cv.work_type}
+        cv.summary ? (
+          <span className="text-sm truncate inline-block text-wrap">
+            {cv.summary.length < 300
+              ? cv.summary
+              : cv.summary.substring(0, 300) + '...'}
           </span>
         ) : (
           '—'

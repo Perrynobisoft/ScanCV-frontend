@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { usePostQuery } from '@/infrastructure/hooks/useApi'
 import { type GetAllCvRequest } from '@/domain/models/Cv'
 import {
@@ -33,6 +33,18 @@ export const useCvList = (
   const [page, setPage] = useState(DEFAULT_PAGE)
   const [limit] = useState(DEFAULT_LIMIT)
 
+  // Reset to page 1 whenever search query or any filter changes
+  useEffect(() => {
+    setPage(DEFAULT_PAGE)
+  }, [
+    searchQuery,
+    filter?.experience,
+    filter?.skills,
+    filter?.position,
+    filter?.location,
+    filter?.work_type,
+  ])
+
   // Build query payload with memoization
   const queryPayload = useMemo<GetAllCvRequest>(
     () => ({
@@ -65,6 +77,8 @@ export const useCvList = (
   const {
     data: response,
     isLoading,
+    isFetching,
+    isError,
     error: queryError,
     refetch,
   } = usePostQuery<GetAllCvRequest, PaginatedResponse<any>>({
@@ -76,8 +90,12 @@ export const useCvList = (
   const normalizedData = useMemo<PaginatedData<any> | undefined>(() => {
     if (!response) return undefined
 
-    // If response has 'data' property, it's wrapped
-    if ('data' in response && response.data) {
+    // If response has 'data' property containing items, it's wrapped
+    if (
+      'data' in response &&
+      response.data != null &&
+      'items' in (response.data as any)
+    ) {
       return response.data
     }
 
@@ -111,6 +129,8 @@ export const useCvList = (
     total,
     totalPages,
     isLoading,
+    isFetching,
+    isError,
     errorMessage,
     searchQuery,
     refetch,

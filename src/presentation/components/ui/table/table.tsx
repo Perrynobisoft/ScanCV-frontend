@@ -47,7 +47,7 @@ export default function Table<T>({
         style={maxHeight ? { maxHeight } : undefined}
       >
         <table className={`w-full border-collapse ${tableClassName ?? ''}`}>
-          <thead className="border-b border-slate-200 bg-slate-50">
+          <thead className="sticky top-0 z-10 border-b border-slate-200 bg-slate-50">
             <tr>
               {columns.map((column) => (
                 <th

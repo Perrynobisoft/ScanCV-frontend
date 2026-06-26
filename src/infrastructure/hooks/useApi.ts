@@ -50,17 +50,16 @@ export const useGetApi = <TResponse>({
   queryParams?: Record<string, string | number | boolean | undefined>
   options?: Omit<UseQueryOptions<TResponse, ApiError>, 'queryKey' | 'queryFn'>
 }) => {
-  const { axiosInstance, newAbortSignal } = useAxios()
+  const { axiosInstance } = useAxios()
 
   /* eslint-disable @tanstack/query/exhaustive-deps */
   return useQuery<TResponse, ApiError>({
-    // `axiosInstance` and `newAbortSignal` are stable values from the Axios hook.
-    // They should not be part of the query key for request caching.
+    // `axiosInstance` is a stable value from the Axios hook.
+    // It should not be part of the query key for request caching.
     queryKey: [endpoint, urlParams, queryParams],
     queryFn: async () => {
       const response = await axiosInstance.get<TResponse>(
         buildUrl(endpoint, urlParams, queryParams),
-        { signal: newAbortSignal() },
       )
       return response.data
     },
@@ -296,7 +295,7 @@ export const usePostQuery = <TRequest = void, TResponse = unknown>(props: {
   payload?: TRequest
   options?: Omit<UseQueryOptions<TResponse, ApiError>, 'queryKey' | 'queryFn'>
 }) => {
-  const { axiosInstance, newAbortSignal } = useAxios()
+  const { axiosInstance } = useAxios()
   const {
     endpoint,
     urlParams = {},
@@ -310,9 +309,7 @@ export const usePostQuery = <TRequest = void, TResponse = unknown>(props: {
     queryKey: [endpoint, urlParams, queryParams, payload],
     queryFn: async () => {
       const url = buildUrl(endpoint, urlParams, queryParams)
-      const response = await axiosInstance.post<TResponse>(url, payload || {}, {
-        signal: newAbortSignal(),
-      })
+      const response = await axiosInstance.post<TResponse>(url, payload || {})
       return response.data
     },
     ...options,

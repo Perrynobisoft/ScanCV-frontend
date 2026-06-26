@@ -20,6 +20,9 @@ RUN pnpm install --frozen-lockfile
 # Copy source code
 COPY . .
 
+# Fix format before build
+RUN pnpm fix:format
+
 # Build the application
 RUN pnpm build
 
