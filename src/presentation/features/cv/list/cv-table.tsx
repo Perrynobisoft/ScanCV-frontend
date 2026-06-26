@@ -5,18 +5,50 @@ import type { TableColumn } from '@/presentation/components/ui/table/table.types
 import { EvaluationScoreModal } from '@/presentation/components/score-modal'
 import useModal from '@/presentation/hooks/useModal'
 import { Button } from '@/presentation/components/ui/button'
-import { Download, Star } from 'lucide-react'
+import { Bookmark, Download } from 'lucide-react'
 import toast from 'react-hot-toast'
+import { useMarkAsTalent } from '@/presentation/hooks/cv/useMarkAsTalent'
 
 type Props = {
   data: CvItem[]
   loading?: boolean
   onRowClick?: (cv: CvItem) => void
+  onMarkChange?: (updatedCv: CvItem) => void
 }
 
-export default function CvTable({ data, loading, onRowClick }: Props) {
+export default function CvTable({
+  data,
+  loading,
+  onRowClick,
+  onMarkChange,
+}: Props) {
   const scoreModal = useModal()
   const [selectedCv, setSelectedCv] = useState<CvItem | null>(null)
+  const { markAsTalent, isPending: isMarkingTalent } = useMarkAsTalent()
+  // Track optimistic mark state per cv_infos_id
+  const [markOverrides, setMarkOverrides] = useState<Record<number, boolean>>(
+    {},
+  )
+
+  const handleBookmarkClick = (e: React.MouseEvent, cv: CvItem) => {
+    e.stopPropagation()
+    const currentMark = markOverrides[cv.cv_infos_id] ?? cv.is_marked ?? false
+    const nextMark = !currentMark
+    // Optimistic update
+    setMarkOverrides((prev) => ({ ...prev, [cv.cv_infos_id]: nextMark }))
+    markAsTalent(
+      cv.cv_infos_id,
+      nextMark,
+      (response) => {
+        if (response?.data) onMarkChange?.(response.data)
+      },
+      () => {
+        // Revert on error
+        setMarkOverrides((prev) => ({ ...prev, [cv.cv_infos_id]: currentMark }))
+        toast.error('Không thể cập nhật trạng thái bookmark')
+      },
+    )
+  }
 
   const handleScoreClick = (e: React.MouseEvent, cv: CvItem) => {
     e.stopPropagation()
@@ -136,13 +168,18 @@ export default function CvTable({ data, loading, onRowClick }: Props) {
       title: 'ACTIONS',
       width: 'w-20',
       render: (cv: CvItem) => {
+        const isMarked = markOverrides[cv.cv_infos_id] ?? cv.is_marked ?? false
         return (
           <div className="flex gap-1.5 whitespace-nowrap">
             <Button
-              variant="default"
-              className="h-8 px-2 text-xs rounded-sm! text-accent!"
+              variant={isMarked ? 'accent' : 'default'}
+              className="h-8 px-2 text-xs rounded-sm!"
+              disabled={isMarkingTalent}
+              onClick={(e) => handleBookmarkClick(e, cv)}
             >
-              <Star className="h-4 w-4" />
+              <Bookmark
+                className={`h-4 w-4 ${isMarked ? 'fill-white text-white' : 'fill-white text-accent'}`}
+              />
             </Button>
 
             <Button
