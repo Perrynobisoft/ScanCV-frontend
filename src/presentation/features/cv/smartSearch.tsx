@@ -2,6 +2,7 @@ import { Search, Sparkles } from 'lucide-react'
 import Avatar from '@/presentation/components/ui/avatar'
 import { Button } from '@/presentation/components/ui/button'
 import { Input } from '@/presentation/components/ui/input'
+import { Pagination } from '@/presentation/components/ui/pagination'
 import { useSearchCv } from '@/presentation/hooks/cv/useSearchCv'
 import { useState } from 'react'
 import CvDetail from './CvDetail'
@@ -9,6 +10,43 @@ import { AppropriateScoreModal } from '@/presentation/components/score-modal'
 import type { CvItem } from '@/domain/models/Cv'
 import useModal from '@/presentation/hooks/useModal'
 import StatusBadge from '@/presentation/components/ui/StatusBadge'
+import { Skeleton } from '@/presentation/components/ui/skeleton'
+
+// Skeleton card that mirrors the exact layout of a real result card
+function SmartSearchCardSkeleton() {
+  return (
+    <div className="rounded-md border border-slate-200 bg-slate-50 px-5 py-5 shadow-sm">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        {/* Avatar */}
+        <Skeleton className="h-10 w-10 rounded-full shrink-0" />
+
+        {/* Left: name + skills + summary */}
+        <div className="flex flex-1 flex-col gap-3 min-w-0">
+          <div className="flex flex-col gap-2">
+            <Skeleton className="h-5 w-40" />
+            <Skeleton className="h-3.5 w-56" />
+          </div>
+          {/* Skill tags */}
+          <div className="flex flex-wrap gap-2">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className="h-6 w-20 rounded-full" />
+            ))}
+          </div>
+          {/* AI summary */}
+          <div className="flex gap-2 items-center">
+            <Skeleton className="h-3.5 w-20" />
+            <Skeleton className="h-3.5 w-64" />
+          </div>
+        </div>
+
+        {/* Right: score badge */}
+        <div className="flex flex-none flex-col items-end gap-3">
+          <Skeleton className="h-9 w-12 rounded-full" />
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function SmartSearchPage() {
   const {
@@ -17,6 +55,10 @@ export default function SmartSearchPage() {
     handleSearch,
     items,
     total,
+    totalPages,
+    page,
+    setPage,
+    limit,
     isLoading,
     hasSearched,
   } = useSearchCv<CvItem>()
@@ -77,7 +119,7 @@ export default function SmartSearchPage() {
         <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm text-slate-500">
-              {hasSearched
+              {hasSearched && total > 0
                 ? `Tìm thấy ${total} ứng viên — sắp xếp theo điểm AI`
                 : 'Nhập từ khóa và nhấn Search để tìm ứng viên bằng AI.'}
             </p>
@@ -86,12 +128,14 @@ export default function SmartSearchPage() {
 
         <div className="space-y-4">
           {isLoading && (
-            <div className="rounded-[22px] border border-dashed border-slate-200 p-8 text-center text-slate-500">
-              Loading candidate profiles...
+            <div className="space-y-4">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <SmartSearchCardSkeleton key={i} />
+              ))}
             </div>
           )}
 
-          {!isLoading && items.length === 0 && (
+          {!isLoading && items.length === 0 && hasSearched && (
             <div className="rounded-[22px] border border-dashed border-slate-200 p-8 text-center text-slate-500">
               Không tìm thấy ứng viên nào.
             </div>
@@ -168,10 +212,29 @@ export default function SmartSearchPage() {
               cv={selectedCv}
               pdfUrl={selectedCv?.cv_file?.file_url ?? ''}
               onClose={() => setSelectedCv(null)}
-              onUpdated={(updated) => setSelectedCv(updated)}
+              onUpdated={(updatedCv) =>
+                setSelectedCv((prev: any) =>
+                  prev
+                    ? { ...prev, ...updatedCv, cv_file: prev.cv_file }
+                    : updatedCv,
+                )
+              }
             />
           )}
         </div>
+
+        {totalPages > 1 && (
+          <div className="mt-6">
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              onPageChange={setPage}
+              total={total}
+              limit={limit}
+              itemLabel="ứng viên"
+            />
+          </div>
+        )}
       </section>
       {selectedCvForScore && (
         <AppropriateScoreModal

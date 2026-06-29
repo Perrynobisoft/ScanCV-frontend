@@ -1,46 +1,55 @@
-import { useEffect, useState } from 'react'
-import { useRepository } from '@/di/RepositoriesProvider'
-import { type PaginatedData } from '@/application/dto/response/PaginatedResponse'
+import { useMemo, useState } from 'react'
+import { usePostQuery } from '@/infrastructure/hooks/useApi'
+import { type GetAllCvRequest } from '@/domain/models/Cv'
+import {
+  type PaginatedData,
+  type PaginatedResponse,
+} from '@/application/dto/response/PaginatedResponse'
+import { Endpoints } from '@/shared/endpoints'
+import { Constants } from '@/shared/constants'
 
 const DEFAULT_PAGE = 1
-const DEFAULT_LIMIT = 10
+const DEFAULT_LIMIT = Constants.PaginationConfigs.TalentPoolSize
 
 export const useTalentPool = () => {
-  const { cvRepository } = useRepository()
   const [page, setPage] = useState(DEFAULT_PAGE)
   const [limit] = useState(DEFAULT_LIMIT)
 
-  const mutation = cvRepository.getTalentPool()
-  const { mutateAsync } = mutation
+  const queryPayload = useMemo<GetAllCvRequest>(
+    () => ({ page, limit }),
+    [page, limit],
+  )
 
-  useEffect(() => {
-    void mutateAsync({ page, limit })
-  }, [mutateAsync, page, limit])
+  const {
+    data: response,
+    isLoading,
+    refetch,
+  } = usePostQuery<GetAllCvRequest, PaginatedResponse<any>>({
+    endpoint: Endpoints.Cv.GET_TALENT_POOL,
+    payload: queryPayload,
+  })
 
-  const normalizeResponse = (
-    response:
-      | PaginatedData<unknown>
-      | { data?: PaginatedData<unknown> }
-      | undefined,
-  ): PaginatedData<unknown> | undefined => {
+  const normalizedData = useMemo<PaginatedData<any> | undefined>(() => {
     if (!response) return undefined
     if ('data' in response && response.data) return response.data
-    return response as PaginatedData<unknown>
-  }
+    if ('items' in response && 'meta' in response)
+      return response as unknown as PaginatedData<any>
+    return undefined
+  }, [response])
 
-  const listResponse = normalizeResponse(mutation.data)
-  const items = listResponse?.items ?? []
-  const total = listResponse?.meta?.total ?? 0
+  const items = normalizedData?.items ?? []
+  const total = normalizedData?.meta?.total ?? 0
   const totalPages =
-    listResponse?.meta?.totalPages ?? Math.max(1, Math.ceil(total / limit))
+    normalizedData?.meta?.totalPages ?? Math.max(1, Math.ceil(total / limit))
 
   return {
     page,
     setPage,
+    limit,
     items,
     total,
     totalPages,
-    isLoading: mutation.status === 'pending',
-    refetch: () => void mutateAsync({ page, limit }),
+    isLoading,
+    refetch,
   }
 }

@@ -36,7 +36,7 @@ export const requireRoles = ({
   auth: AuthContext
   allowedRoles: string[]
 }) => {
-  const role = auth.user?.role ?? undefined
+  const role = auth.user?.role.toLocaleLowerCase() ?? undefined
 
   if (!hasRequiredRole(role, allowedRoles)) {
     throw redirect({

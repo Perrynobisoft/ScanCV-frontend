@@ -25,9 +25,10 @@ export default function Table<T>({
   rowKey,
   loading,
   emptyText = 'No data',
+  minRows,
   className,
   tableClassName,
-  maxHeight,
+  height,
   onRowClick,
 }: TableProps<T>) {
   if (loading) {
@@ -42,10 +43,7 @@ export default function Table<T>({
     <div
       className={`rounded-xl border border-slate-200 bg-white ${className ?? ''}`}
     >
-      <div
-        className="overflow-y-auto"
-        style={maxHeight ? { maxHeight } : undefined}
-      >
+      <div className="overflow-y-auto" style={height ? { height } : undefined}>
         <table className={`w-full border-collapse ${tableClassName ?? ''}`}>
           <thead className="sticky top-0 z-10 border-b border-slate-200 bg-slate-50">
             <tr>
@@ -77,30 +75,41 @@ export default function Table<T>({
                 </td>
               </tr>
             ) : (
-              data.map((row, index) => (
-                <tr
-                  key={getRowKey(row, rowKey)}
-                  onClick={() => onRowClick?.(row)}
-                  className={`
-                    transition-colors
-                    hover:bg-slate-50
-                    ${onRowClick ? 'cursor-pointer' : ''}
-                  `}
-                >
-                  {columns.map((column) => (
-                    <td
-                      key={column.key}
-                      className={`
-                        px-2 py-5 align-top
-                        ${getAlignClass(column.align)}
-                        ${column.cellClassName ?? ''}
-                      `}
-                    >
-                      {column.render?.(row, index)}
-                    </td>
+              <>
+                {data.map((row, index) => (
+                  <tr
+                    key={getRowKey(row, rowKey)}
+                    onClick={() => onRowClick?.(row)}
+                    className={`
+                      transition-colors
+                      hover:bg-slate-50
+                      ${onRowClick ? 'cursor-pointer' : ''}
+                    `}
+                  >
+                    {columns.map((column) => (
+                      <td
+                        key={column.key}
+                        className={`
+                          px-2 py-5 align-middle
+                          ${getAlignClass(column.align)}
+                          ${column.cellClassName ?? ''}
+                        `}
+                      >
+                        {column.render?.(row, index)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+                {/* Pad to always show minRows rows, keeping table height stable */}
+                {minRows !== undefined &&
+                  Array.from({
+                    length: Math.max(0, minRows - data.length),
+                  }).map((_, i) => (
+                    <tr key={`empty-${i}`} className="h-[60px]">
+                      <td colSpan={columns.length} />
+                    </tr>
                   ))}
-                </tr>
-              ))
+              </>
             )}
           </tbody>
         </table>

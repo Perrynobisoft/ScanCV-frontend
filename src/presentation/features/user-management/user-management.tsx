@@ -10,6 +10,7 @@ import { InviteMemberDialog } from './InviteMemberDialog'
 import { EditUserDialog } from './EditUserDialog'
 import { DeleteConfirmDialog } from './DeleteConfirmDialog'
 import type { User } from 'src/domain/models/Auth'
+import { Constants } from '@/shared/constants'
 
 const ROLE_LEGEND = [
   {
@@ -29,7 +30,7 @@ const ROLE_LEGEND = [
   },
 ]
 
-const LIMIT = import.meta.env.VITE_LIMIT
+const LIMIT = Constants.PaginationConfigs.UserListSize
 
 export default function UserManagementPage() {
   const { user: currentUser } = useAuth()
@@ -138,17 +139,15 @@ export default function UserManagementPage() {
 
         {/* Footer / Pagination */}
         {totalPages > 1 && (
-          <div className="relative flex items-center border-t border-gray-100 px-6 py-4">
-            <p className="text-sm text-gray-500">
-              Showing {users.length} of {totalItems} members
-            </p>
-            <div className="absolute left-1/2 -translate-x-1/2">
-              <Pagination
-                currentPage={page}
-                totalPages={totalPages}
-                onPageChange={setPage}
-              />
-            </div>
+          <div className="border-t border-gray-100 px-6 py-4">
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              onPageChange={setPage}
+              total={totalItems}
+              limit={LIMIT}
+              itemLabel="thành viên"
+            />
           </div>
         )}
       </section>

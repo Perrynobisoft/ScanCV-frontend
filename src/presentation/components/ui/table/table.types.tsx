@@ -21,9 +21,12 @@ export type TableProps<T> = {
   loading?: boolean
   emptyText?: ReactNode
 
+  /** Pad with empty rows to always show at least this many rows, keeping table height stable */
+  minRows?: number
+
   className?: string
   tableClassName?: string
-  maxHeight?: string
+  height?: string
 
   onRowClick?: (row: T) => void
 }
