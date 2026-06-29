@@ -24,6 +24,10 @@ import { useMarkAsTalent } from '@/presentation/hooks/cv/useMarkAsTalent'
 import { type CvItem } from '@/domain/models/Cv'
 import { CV_STATUS_LABELS } from '@/shared/constants'
 
+const MIN_SCALE = 1.0
+const MAX_SCALE = 2.5
+const ZOOM_STEP = 0.25
+
 export interface CVDetailProps {
   cv: CvItem
   pdfUrl?: string
@@ -41,6 +45,16 @@ export default function CvDetail({
   const { markAsTalent, isPending: isMarkingTalent } = useMarkAsTalent()
   const [isMark, setIsMark] = useState(!!cv.is_marked)
   const [isEditMode, setIsEditMode] = useState(false)
+  const [scale, setScale] = useState(1.5)
+
+  const zoomIn = () =>
+    setScale((prev) =>
+      Math.min(parseFloat((prev + ZOOM_STEP).toFixed(2)), MAX_SCALE),
+    )
+  const zoomOut = () =>
+    setScale((prev) =>
+      Math.max(parseFloat((prev - ZOOM_STEP).toFixed(2)), MIN_SCALE),
+    )
   const [formState, setFormState] = useState<{
     full_name: string
     email: string
@@ -310,17 +324,42 @@ export default function CvDetail({
                 <FileText className="h-4 w-4 text-accent" />
                 <span>CV Preview — {name}</span>
               </div>
-              <a
-                href={pdfUrl}
-                download
-                className="flex items-center gap-1.5 py-1 px-2.5 text-sm text-accent rounded-md border border-slate-200 bg-white hover:bg-slate-50 transition"
-              >
-                <Download className="h-3.5 w-3.5" />
-                Tải xuống
-              </a>
+              <div className="flex items-center gap-2">
+                {/* Zoom controls */}
+                <div className="flex items-center gap-1 rounded-md border border-slate-200 bg-white px-1.5 py-1">
+                  <button
+                    onClick={zoomOut}
+                    disabled={scale <= MIN_SCALE}
+                    aria-label="Zoom out"
+                    className="flex h-5 w-5 items-center justify-center rounded text-xs text-slate-600 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    −
+                  </button>
+                  <span className="w-9 text-center text-xs font-medium tabular-nums text-slate-600">
+                    {Math.round(scale * 100)}%
+                  </span>
+                  <button
+                    onClick={zoomIn}
+                    disabled={scale >= MAX_SCALE}
+                    aria-label="Zoom in"
+                    className="flex h-5 w-5 items-center justify-center rounded text-xs text-slate-600 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    +
+                  </button>
+                </div>
+
+                <a
+                  href={pdfUrl}
+                  download
+                  className="flex items-center gap-1.5 py-1 px-2.5 text-sm text-accent rounded-md border border-slate-200 bg-white hover:bg-slate-50 transition"
+                >
+                  <Download className="h-3.5 w-3.5" />
+                  Tải xuống
+                </a>
+              </div>
             </div>
             <div className="min-h-0 flex-1">
-              <PdfViewer pdfUrl={pdfUrl} />
+              <PdfViewer pdfUrl={pdfUrl} scale={scale} />
             </div>
           </div>
 
