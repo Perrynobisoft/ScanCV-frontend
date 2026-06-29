@@ -10,6 +10,7 @@ import CvDetail from '../CvDetail'
 import { RotateCcw, Search, Users } from 'lucide-react'
 import useDebounce from '@/presentation/hooks/useDebounce'
 import { Button } from '@/presentation/components/ui/button'
+import { SkeletonTable } from '@/presentation/components/ui/skeleton'
 import {
   getSkillOptionsByJobTitle,
   JOB_TITLE_OPTIONS,
@@ -51,7 +52,6 @@ export default function CvListPage() {
     items,
     total,
     totalPages,
-    isLoading,
     isFetching,
     isError,
     errorMessage,
@@ -322,11 +322,7 @@ export default function CvListPage() {
 
       <section className="rounded-md border border-slate-200 bg-white p-6 shadow-sm">
         <div className="space-y-4">
-          {isFetching && (
-            <div className="rounded-[22px] border border-dashed border-slate-200 p-8 text-center text-slate-500">
-              Loading candidate profiles...
-            </div>
-          )}
+          {isFetching && <SkeletonTable rows={8} cols={7} />}
 
           {!isFetching && isError && (
             <div className="rounded-[22px] border border-dashed border-red-200 p-8 text-center text-red-500">
@@ -343,8 +339,9 @@ export default function CvListPage() {
           {!isFetching && !isError && filteredCvs.length > 0 && (
             <CvTable
               data={filteredCvs}
-              loading={isLoading}
+              loading={false}
               onRowClick={(cv) => setSelectedCv(cv as CvItem)}
+              height="45vh"
             />
           )}
           {selectedCv && (
@@ -352,19 +349,25 @@ export default function CvListPage() {
               cv={selectedCv}
               pdfUrl={selectedCv?.cv_file?.file_url ?? ''}
               onClose={() => setSelectedCv(null)}
-              onUpdated={(updated) => setSelectedCv(updated)}
+              onUpdated={(updated) =>
+                setSelectedCv((prev) =>
+                  prev
+                    ? { ...prev, ...updated, cv_file: prev.cv_file }
+                    : updated,
+                )
+              }
             />
           )}
         </div>
 
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-slate-500">
-            Showing {filteredCvs.length} of {total} candidates
-          </p>
+        <div className="mt-6">
           <Pagination
             currentPage={page}
             totalPages={totalPages}
             onPageChange={setPage}
+            total={total}
+            limit={keywordSearch.limit}
+            itemLabel="ứng viên"
           />
         </div>
       </section>

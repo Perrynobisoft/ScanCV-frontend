@@ -12,6 +12,7 @@ import { useMarkAsTalent } from '@/presentation/hooks/cv/useMarkAsTalent'
 type Props = {
   data: CvItem[]
   loading?: boolean
+  height: string
   onRowClick?: (cv: CvItem) => void
   onMarkChange?: (updatedCv: CvItem) => void
 }
@@ -19,6 +20,7 @@ type Props = {
 export default function CvTable({
   data,
   loading,
+  height,
   onRowClick,
   onMarkChange,
 }: Props) {
@@ -93,7 +95,9 @@ export default function CvTable({
           onClick={(e) => handleScoreClick(e as React.MouseEvent, cv)}
           className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-100 text-accent font-semibold cursor-pointer hover:bg-emerald-200 transition-colors"
         >
-          {cv.scores.offline_score ?? '-'}
+          {cv.scores.offline_score ?? (
+            <span className="text-xs text-slate-400">None</span>
+          )}
         </div>
       ),
     },
@@ -103,7 +107,9 @@ export default function CvTable({
       width: 'w-32',
       render: (cv: CvItem) => (
         <span className="text-sm font-semibold text-slate-900 truncate">
-          {cv.full_name}
+          {cv.full_name || (
+            <span className="font-normal text-slate-400 italic">Unknown</span>
+          )}
         </span>
       ),
     },
@@ -111,11 +117,12 @@ export default function CvTable({
       key: 'position',
       title: 'JOB TITLE',
       width: 'w-28',
-      render: (cv: CvItem) => (
-        <span className="text-sm text-slate-700 truncate">
-          {cv.position ?? '—'}
-        </span>
-      ),
+      render: (cv: CvItem) =>
+        cv.position ? (
+          <span className="text-sm text-slate-700 truncate">{cv.position}</span>
+        ) : (
+          <span className="text-sm text-slate-400 italic">No title</span>
+        ),
     },
     {
       key: 'skills',
@@ -144,11 +151,12 @@ export default function CvTable({
       key: 'exp',
       title: 'EXP',
       width: 'w-12',
-      render: (cv: CvItem) => (
-        <span className="text-sm">
-          {cv.total_experience_years ? `${cv.total_experience_years}y` : '—'}
-        </span>
-      ),
+      render: (cv: CvItem) =>
+        cv.total_experience_years ? (
+          <span className="text-sm">{cv.total_experience_years}y</span>
+        ) : (
+          <span className="text-sm text-slate-400">None</span>
+        ),
     },
     {
       key: 'summary',
@@ -162,7 +170,7 @@ export default function CvTable({
               : cv.summary.substring(0, 300) + '...'}
           </span>
         ) : (
-          '—'
+          <span className="text-sm text-slate-400 italic">No summary</span>
         ),
     },
     {
@@ -206,7 +214,8 @@ export default function CvTable({
         loading={loading}
         emptyText="No CV found"
         tableClassName="w-full"
-        maxHeight="45vh"
+        height={height}
+        minRows={5}
         onRowClick={onRowClick}
       />
       {selectedCv && (

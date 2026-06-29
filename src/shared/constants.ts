@@ -1,13 +1,16 @@
 export const Constants = {
   PaginationConfigs: {
-    Size: 10,
+    DefaultSize: 10,
+    UserListSize: 6,
+    TalentPoolSize: 5,
     PageSizeList: [
       { label: '10 Result', value: 10 },
-      { label: '20 Result', value: 20 },
+      { label: '25 Result', value: 25 },
       { label: '50 Result', value: 50 },
       { label: '100 Result', value: 100 },
     ],
   },
+
   API_USER_STORAGE: 'API_APP_USER',
   API_TOKEN_STORAGE: 'API_APP_AT',
   API_REFRESH_TOKEN_STORAGE: 'API_APP_RT',
@@ -36,7 +39,7 @@ export const Constants = {
 export const CV_STATUS_LABELS = {
   rejected: { label: 'Rejected', color: 'red-500' },
   new: { label: 'New', color: 'amber-500' },
-  'in-progress': { label: 'In-progress', color: 'emerald-500' },
+  'in-process': { label: 'In-progress', color: 'emerald-500' },
   contacted: { label: 'Contacted', color: 'cyan-500' },
   hired: { label: 'Hired', color: 'slate-600' },
 } as const

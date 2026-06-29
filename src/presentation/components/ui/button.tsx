@@ -7,6 +7,8 @@ type ButtonVariant =
   | 'accent'
   | 'login'
   | 'delete'
+  | 'outline-accent'
+  | 'subtle'
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: ButtonVariant
@@ -22,6 +24,10 @@ const variantStyles: Record<ButtonVariant, string> = {
   login:
     'w-full rounded-lg bg-[#0d9488] font-semibold text-white hover:bg-[#0b7c71] disabled:cursor-not-allowed disabled:opacity-60',
   delete: 'bg-red-600 text-white text-sm px-4 py-2 hover:bg-red-700 border-0',
+  'outline-accent':
+    'bg-transparent border border-accent text-accent text-sm px-3 py-1.5 hover:bg-accent/10 disabled:opacity-50 disabled:cursor-not-allowed',
+  subtle:
+    'bg-transparent text-slate-500 text-sm px-3 py-1.5 hover:text-slate-800 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed',
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(

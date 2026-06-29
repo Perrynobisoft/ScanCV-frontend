@@ -5,9 +5,11 @@ import { type CvItem } from '@/domain/models/Cv'
 import { Pagination } from '@/presentation/components/ui/pagination'
 import CvTable from '@/presentation/features/cv/list/cv-table'
 import CvDetail from '@/presentation/features/cv/CvDetail'
+import { SkeletonTable } from '@/presentation/components/ui/skeleton'
 
 export default function TalentPoolPage() {
-  const { items, total, totalPages, page, setPage, isLoading } = useTalentPool()
+  const { items, total, totalPages, page, setPage, limit, isLoading } =
+    useTalentPool()
   const [selectedCv, setSelectedCv] = useState<CvItem | null>(null)
 
   const cvs = items as CvItem[]
@@ -35,11 +37,7 @@ export default function TalentPoolPage() {
         </div>
 
         {/* Table */}
-        {isLoading && (
-          <div className="rounded-[22px] border border-dashed border-slate-200 p-8 text-center text-slate-500">
-            Đang tải danh sách...
-          </div>
-        )}
+        {isLoading && <SkeletonTable rows={8} cols={7} />}
 
         {!isLoading && cvs.length === 0 && (
           <div className="rounded-[22px] border border-dashed border-slate-200 p-8 text-center text-slate-500">
@@ -52,22 +50,22 @@ export default function TalentPoolPage() {
             data={cvs}
             loading={isLoading}
             onRowClick={(cv) => setSelectedCv(cv as CvItem)}
+            height={'63vh'}
           />
         )}
 
         {/* Pagination */}
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-slate-500">
-            Hiển thị {cvs.length} / {total} ứng viên
-          </p>
-          {totalPages > 1 && (
+        {totalPages > 1 && (
+          <div className="mt-6">
             <Pagination
               currentPage={page}
               totalPages={totalPages}
               onPageChange={setPage}
+              total={total}
+              limit={limit}
             />
-          )}
-        </div>
+          </div>
+        )}
       </section>
 
       {/* CV Detail modal */}
@@ -77,7 +75,9 @@ export default function TalentPoolPage() {
           pdfUrl={selectedCv?.cv_file?.file_url ?? ''}
           onClose={() => setSelectedCv(null)}
           onUpdated={(updated) => {
-            setSelectedCv(updated)
+            setSelectedCv((prev) =>
+              prev ? { ...prev, ...updated, cv_file: prev.cv_file } : updated,
+            )
           }}
         />
       )}
