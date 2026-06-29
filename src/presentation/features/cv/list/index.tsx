@@ -351,9 +351,7 @@ export default function CvListPage() {
               onClose={() => setSelectedCv(null)}
               onUpdated={(updated) =>
                 setSelectedCv((prev) =>
-                  prev
-                    ? { ...prev, ...updated, cv_file: prev.cv_file }
-                    : updated,
+                  prev ? { ...prev, ...updated, cv_file: prev.cv_file } : updated,
                 )
               }
             />

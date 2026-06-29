@@ -75,7 +75,9 @@ export default function TalentPoolPage() {
           pdfUrl={selectedCv?.cv_file?.file_url ?? ''}
           onClose={() => setSelectedCv(null)}
           onUpdated={(updated) => {
-            setSelectedCv(updated)
+            setSelectedCv((prev) =>
+              prev ? { ...prev, ...updated, cv_file: prev.cv_file } : updated,
+            )
           }}
         />
       )}
