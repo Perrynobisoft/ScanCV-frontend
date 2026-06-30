@@ -3,9 +3,27 @@ import {
   getLocale as paraglideGetLocale,
   setLocale as paraglideSetLocale,
   locales as paraglideLocales,
+  isLocale,
 } from '@/paraglide/runtime.js'
 
 type Locale = (typeof paraglideLocales)[number]
+
+const STORAGE_KEY = 'PARAGLIDE_LOCALE'
+
+/** Read persisted locale from localStorage, fall back to paraglide runtime */
+function getInitialLocale(): Locale {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY)
+    if (stored && isLocale(stored)) return stored as Locale
+  } catch {
+    // localStorage not available (SSR / private mode)
+  }
+  try {
+    return paraglideGetLocale()
+  } catch {
+    return 'en'
+  }
+}
 
 type LocaleContextType = {
   locale: Locale
@@ -16,66 +34,71 @@ type LocaleContextType = {
 const LocaleContext = createContext<LocaleContextType | undefined>(undefined)
 
 export const LocaleProvider = ({ children }: { children: React.ReactNode }) => {
-  const [locale, setLocaleState] = useState<Locale>(() => {
-    try {
-      return paraglideGetLocale()
-    } catch {
-      return 'en'
-    }
-  })
+  const [locale, setLocaleState] = useState<Locale>(getInitialLocale)
 
-  const changeLocale = (newLocale: Locale) => {
-    const result = paraglideSetLocale(newLocale, { reload: false })
-    if (result instanceof Promise) {
-      return result.then(() => setLocaleState(newLocale))
-    }
-    setLocaleState(newLocale)
+  // Sync paraglide runtime to the initial locale read from localStorage
+  useEffect(() => {
     try {
-      // update document lang for a11y and external libs
-      if (typeof document !== 'undefined' && document.documentElement) {
-        document.documentElement.lang = newLocale
-      }
-      // notify other listeners in the app (components not using the provider)
-      window.dispatchEvent(
-        new CustomEvent('paraglide:localechange', {
-          detail: { locale: newLocale },
-        }),
-      )
-      // also write to localStorage to allow cross-tab updates
-      try {
-        localStorage.setItem('PARAGLIDE_LOCALE', newLocale)
-      } catch {
-        // ignore
+      paraglideSetLocale(locale, { reload: false })
+      if (document.documentElement) {
+        document.documentElement.lang = locale
       }
     } catch {
       // ignore
     }
-    return
-  }
+    // Only run once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-  useEffect(() => {
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === 'PARAGLIDE_LOCALE') {
-        try {
-          setLocaleState(paraglideGetLocale())
-        } catch {
-          // ignore
-        }
-      }
+  const changeLocale = (newLocale: Locale) => {
+    // Persist to localStorage so it survives page reload
+    try {
+      localStorage.setItem(STORAGE_KEY, newLocale)
+    } catch {
+      // ignore
     }
-    const onGlobal = () => {
+
+    // Tell paraglide runtime (sets cookie + globalVariable, reload: false = no page reload)
+    const result = paraglideSetLocale(newLocale, { reload: false })
+
+    const apply = () => {
+      setLocaleState(newLocale)
       try {
-        setLocaleState(paraglideGetLocale())
+        if (document.documentElement) {
+          document.documentElement.lang = newLocale
+        }
+        window.dispatchEvent(
+          new CustomEvent('paraglide:localechange', {
+            detail: { locale: newLocale },
+          }),
+        )
       } catch {
         // ignore
       }
     }
-    window.addEventListener('storage', onStorage)
-    window.addEventListener('paraglide:localechange', onGlobal)
-    return () => {
-      window.removeEventListener('storage', onStorage)
-      window.removeEventListener('paraglide:localechange', onGlobal)
+
+    if (result instanceof Promise) {
+      return result.then(apply)
     }
+    apply()
+    return
+  }
+
+  // Keep in sync across tabs
+  useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === STORAGE_KEY && e.newValue && isLocale(e.newValue)) {
+        const newLocale = e.newValue as Locale
+        try {
+          paraglideSetLocale(newLocale, { reload: false })
+        } catch {
+          // ignore
+        }
+        setLocaleState(newLocale)
+      }
+    }
+    window.addEventListener('storage', onStorage)
+    return () => window.removeEventListener('storage', onStorage)
   }, [])
 
   return (

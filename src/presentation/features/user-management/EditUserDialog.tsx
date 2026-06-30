@@ -5,7 +5,7 @@ import { useUpdateUsers } from '@/presentation/hooks/users/useUpdateUsers'
 import { type Users } from '@/domain/models/Users'
 import { m } from '@/paraglide/messages'
 
-const ROLES = ['Recruiter', 'Interviewer'] as const
+const ROLES = ['recruiter', 'interviewer'] as const
 const STATUSES = ['active', 'inactive'] as const
 
 interface EditUserDialogProps {
@@ -27,7 +27,7 @@ export function EditUserDialog({
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault()
-    update({ id: user.id, email: user.email, fullname: fullName, role }, () => {
+    update({ id: user.id, fullname: fullName, role, status }, () => {
       onSuccess()
       onClose()
     })
@@ -111,7 +111,7 @@ export function EditUserDialog({
                       : 'border-gray-200 bg-white text-gray-500 hover:border-gray-300 hover:text-slate-700'
                   }`}
                 >
-                  {r}
+                  {r.charAt(0).toUpperCase() + r.slice(1)}
                 </button>
               ))}
             </div>

@@ -6,8 +6,10 @@ import { Brain, Settings } from 'lucide-react'
 import { ROUTES } from '@/shared/constants/routes'
 import Avatar from './ui/avatar'
 import { m } from '@/paraglide/messages'
+import { useLocale } from '@/presentation/provider/locale/locale-provider'
 
 export default function Sidebar() {
+  useLocale() // subscribe to locale changes so m.xxx() calls re-render
   const { user } = useAuth()
   const location = useLocation()
   const navigate = useNavigate()

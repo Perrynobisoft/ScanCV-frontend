@@ -7,6 +7,7 @@ import {
   Pencil,
   Check,
   X,
+  Languages,
 } from 'lucide-react'
 import { useAuth } from '@/presentation/provider/auth/auth-provider'
 import { useUpdateMe } from '@/presentation/hooks/auth/useUpdateMe'
@@ -15,10 +16,18 @@ import { Button } from '@/presentation/components/ui/button'
 import Avatar from '@/presentation/components/ui/avatar'
 import { ChangePasswordDialog } from './ChangePasswordDialog'
 import { m } from '@/paraglide/messages'
+import { useLocale } from '@/presentation/provider/locale/locale-provider'
+
+const LOCALE_NAMES: Record<string, string> = {
+  en: 'English',
+  vi: 'Tiếng Việt',
+  de: 'Deutsch',
+}
 
 export default function ProfilePage() {
   const { user, setAuthenticated } = useAuth()
   const { updateMe, isPending: isUpdating } = useUpdateMe()
+  const { locale, setLocale, locales } = useLocale()
 
   const [showChangePassword, setShowChangePassword] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
@@ -66,7 +75,7 @@ export default function ProfilePage() {
       {/* Profile card — banner + info/edit merged */}
       <section className="rounded-2xl border border-gray-200 bg-white shadow-sm mb-5 overflow-hidden">
         {/* Dark banner */}
-        <div className=" px-8 py-8">
+        <div className="px-8 py-8">
           <div className="flex items-center gap-5">
             <Avatar name={user?.fullName} />
             <div className="min-w-0">
@@ -93,7 +102,7 @@ export default function ProfilePage() {
                   <button
                     type="button"
                     onClick={handleEdit}
-                    className="flex items-center gap-1 text-xs text-black hover:text-accent transition-colors"
+                    className="flex items-center gap-1 text-xs text-black hover:text-accent transition-colors cursor-pointer"
                     aria-label={m.profile_edit_aria()}
                   >
                     <Pencil className="h-3 w-3" />
@@ -231,6 +240,39 @@ export default function ProfilePage() {
       {showChangePassword && (
         <ChangePasswordDialog onClose={() => setShowChangePassword(false)} />
       )}
+
+      {/* Language preference */}
+      <section className="rounded-2xl border border-gray-200 bg-white shadow-sm mt-5">
+        <div className="flex items-center justify-between px-6 py-5">
+          <div className="flex items-center gap-3">
+            <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100">
+              <Languages className="h-5 w-5 text-slate-600" />
+            </div>
+            <div>
+              <p className="font-semibold text-slate-800">
+                {m.profile_language_label()}
+              </p>
+              <p className="text-xs text-gray-500 mt-0.5">
+                {m.profile_language_desc()}
+              </p>
+            </div>
+          </div>
+
+          {/* Language buttons */}
+          <div className="flex items-center gap-2">
+            {locales.map((loc) => (
+              <Button
+                key={loc}
+                variant={loc === locale ? 'lang-active' : 'lang'}
+                onClick={() => setLocale(loc)}
+                aria-pressed={loc === locale}
+              >
+                {LOCALE_NAMES[loc] ?? loc}
+              </Button>
+            ))}
+          </div>
+        </div>
+      </section>
     </main>
   )
 }
