@@ -1,3 +1,5 @@
+import { m } from '@/paraglide/messages'
+
 type FilterOption = {
   label: string
   value: string
@@ -19,6 +21,38 @@ const createOptions = (
   ...values.map(createOption),
 ]
 
+export function getJobTitleOptions(): FilterOption[] {
+  return [
+    { label: m.cv_hub_filter_job_titles(), value: '' },
+
+    { label: 'Backend Developer', value: 'Backend Developer' },
+    { label: 'Frontend Developer', value: 'Frontend Developer' },
+    { label: 'Fullstack Developer', value: 'Fullstack Developer' },
+    { label: 'Tech Lead', value: 'Tech Lead' },
+
+    { label: 'Data Analyst', value: 'Data Analyst' },
+    { label: 'Data Engineer', value: 'Data Engineer' },
+    { label: 'BI Developer', value: 'BI Developer' },
+
+    { label: 'DevOps Engineer', value: 'DevOps Engineer' },
+    { label: 'SRE', value: 'SRE' },
+    { label: 'Cloud Engineer', value: 'Cloud Engineer' },
+    { label: 'Network Engineer', value: 'Network Engineer' },
+
+    { label: 'UI/UX Designer', value: 'UI/UX Designer' },
+    { label: 'UX Researcher', value: 'UX Researcher' },
+
+    { label: 'QA Engineer', value: 'QA Engineer' },
+    { label: 'QA Lead', value: 'QA Lead' },
+    { label: 'Automation Tester', value: 'Automation Tester' },
+
+    { label: 'Business Analyst (BA)', value: 'Business Analyst (BA)' },
+    { label: 'Product Owner (PO)', value: 'Product Owner (PO)' },
+    { label: 'Project Manager (IT)', value: 'Project Manager (IT)' },
+  ]
+}
+
+/** Keep backward-compat static export for Fuse.js initialization (labels don't need i18n there) */
 export const JOB_TITLE_OPTIONS: FilterOption[] = [
   { label: 'Job Titles', value: '' },
 
@@ -274,8 +308,35 @@ export const ALL_SKILL_OPTIONS: FilterOption[] = [
   ).map(createOption),
 ]
 
-export function getSkillOptionsByJobTitle(jobTitle: string) {
-  return SKILL_OPTIONS_BY_JOB_TITLE[jobTitle] ?? ALL_SKILL_OPTIONS
+export function getAllSkillOptions(): FilterOption[] {
+  return [
+    { label: m.cv_hub_filter_skills(), value: '' },
+    ...Array.from(
+      new Set(
+        Object.values(SKILL_OPTIONS_BY_JOB_TITLE)
+          .flat()
+          .map((item) => item.value)
+          .filter(Boolean),
+      ),
+    ).map(createOption),
+  ]
+}
+
+export function getSkillOptionsByJobTitle(jobTitle: string): FilterOption[] {
+  const raw = SKILL_OPTIONS_BY_JOB_TITLE[jobTitle]
+  if (!raw) return getAllSkillOptions()
+  // Replace the static 'Skills' placeholder with the translated one
+  return [{ label: m.cv_hub_filter_skills(), value: '' }, ...raw.slice(1)]
+}
+
+export function getYearsOfExperienceOptions(): FilterOption[] {
+  return [
+    { label: m.cv_hub_filter_experience(), value: '' },
+    { label: 'Under 1 year', value: 'Under 1 year' },
+    { label: '1-3 years', value: '1-3 years' },
+    { label: '3-5 years', value: '3-5 years' },
+    { label: '5+ years', value: '5+ years' },
+  ]
 }
 
 export const YEARS_OF_EXPERIENCE_OPTIONS: FilterOption[] = [
@@ -300,6 +361,15 @@ export const YEARS_OF_EXPERIENCE_OPTIONS: FilterOption[] = [
     value: '5+ years',
   },
 ]
+
+export function getLocationOptions(): FilterOption[] {
+  return [
+    { label: m.cv_hub_filter_location(), value: '' },
+    { label: 'Hà Nội', value: 'Hà Nội' },
+    { label: 'Đà Nẵng', value: 'Đà Nẵng' },
+    { label: 'TP. HCM', value: 'TP. HCM' },
+  ]
+}
 
 export const LOCATION_OPTIONS: FilterOption[] = [
   {
@@ -338,3 +408,12 @@ export const WORK_TYPE_OPTIONS: FilterOption[] = [
     value: 'In-house',
   },
 ]
+
+export function getWorkTypeOptions(): FilterOption[] {
+  return [
+    { label: m.cv_hub_filter_work_type(), value: '' },
+    { label: 'Remote', value: 'Remote' },
+    { label: 'Onsite', value: 'Onsite' },
+    { label: 'In-house', value: 'In-house' },
+  ]
+}

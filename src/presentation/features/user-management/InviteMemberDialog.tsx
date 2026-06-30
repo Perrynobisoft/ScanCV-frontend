@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { X } from 'lucide-react'
 import { Input } from '@/presentation/components/ui/input'
 import { useCreateUsers } from '@/presentation/hooks/users/useCreateUsers'
+import { m } from '@/paraglide/messages'
 
 const ROLES = ['Recruiter', 'Interviewer'] as const
 
@@ -43,15 +44,15 @@ export function InviteMemberDialog({
         <div className="flex items-start justify-between px-6 pt-6 pb-4 border-b border-gray-100">
           <div>
             <h2 id="invite-title" className="text-lg font-bold text-slate-900">
-              Tạo tài khoản
+              {m.invite_dialog_title()}
             </h2>
             <p className="text-sm text-gray-500 mt-0.5">
-              Mật khẩu sẽ được gửi đến email được tạo
+              {m.invite_dialog_subtitle()}
             </p>
           </div>
           <button
             type="button"
-            aria-label="Đóng"
+            aria-label={m.common_close()}
             onClick={onClose}
             className="ml-4 mt-0.5 rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-slate-700 transition-colors"
           >
@@ -61,10 +62,10 @@ export function InviteMemberDialog({
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="px-6 py-5 flex flex-col gap-5">
-          {/* Tên tài khoản */}
+          {/* Họ tên */}
           <div>
             <label className="block text-sm font-semibold text-slate-800 mb-2">
-              Họ và tên
+              {m.invite_dialog_field_full_name()}
             </label>
             <Input
               required
@@ -78,7 +79,7 @@ export function InviteMemberDialog({
           {/* Email */}
           <div>
             <label className="block text-sm font-semibold text-slate-800 mb-2">
-              Email
+              {m.invite_dialog_field_email()}
             </label>
             <Input
               required
@@ -93,7 +94,7 @@ export function InviteMemberDialog({
           {/* Vai trò */}
           <div>
             <label className="block text-sm font-semibold text-slate-800 mb-2">
-              Vai trò
+              {m.invite_dialog_field_role()}
             </label>
             <div className="grid grid-cols-2 gap-2">
               {ROLES.map((r) => (
@@ -120,14 +121,16 @@ export function InviteMemberDialog({
               onClick={onClose}
               className="flex-1 rounded-xl border border-gray-200 py-3 text-sm font-semibold text-slate-700 hover:bg-gray-50 transition-colors"
             >
-              Hủy
+              {m.invite_dialog_btn_cancel()}
             </button>
             <button
               type="submit"
               disabled={isPending}
               className="flex-1 rounded-xl bg-emerald-700 py-3 text-sm font-semibold text-white hover:bg-emerald-800 disabled:opacity-50 transition-colors"
             >
-              {isPending ? 'Đang xử lý…' : 'Xác nhận'}
+              {isPending
+                ? m.invite_dialog_btn_submitting()
+                : m.invite_dialog_btn_submit()}
             </button>
           </div>
         </form>

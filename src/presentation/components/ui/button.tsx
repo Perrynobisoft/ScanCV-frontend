@@ -9,6 +9,8 @@ type ButtonVariant =
   | 'delete'
   | 'outline-accent'
   | 'subtle'
+  | 'lang'
+  | 'lang-active'
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: ButtonVariant
@@ -28,6 +30,9 @@ const variantStyles: Record<ButtonVariant, string> = {
     'bg-transparent border border-accent text-accent text-sm px-3 py-1.5 hover:bg-accent/10 disabled:opacity-50 disabled:cursor-not-allowed',
   subtle:
     'bg-transparent text-slate-500 text-sm px-3 py-1.5 hover:text-slate-800 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed',
+  lang: 'bg-white border border-slate-200 text-slate-600 text-sm px-3 py-1.5 hover:bg-slate-50 hover:border-slate-300',
+  'lang-active':
+    'bg-accent/10 border border-accent/30 text-accent text-sm px-3 py-1.5 hover:bg-accent/15',
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(

@@ -5,6 +5,7 @@ import { useState, type FormEvent } from 'react'
 import { ArrowRight, Eye, EyeOff, Lock, Mail } from 'lucide-react'
 import { Button } from '@/presentation/components/ui/button'
 import { Input } from '@/presentation/components/ui/input'
+import { m } from '@/paraglide/messages'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -23,7 +24,7 @@ export default function LoginPage() {
     const result = await login({ email, password })
 
     if (!result) {
-      setError('Invalid email or password. Please try again.')
+      setError(m.login_error_generic())
       return
     }
 
@@ -49,11 +50,9 @@ export default function LoginPage() {
         {/* Heading */}
         <div className="mb-10">
           <h1 className="text-[44px] font-bold leading-tight text-slate-900">
-            Welcome back
+            {m.login_title()}
           </h1>
-          <p className="mt-2 text-base text-slate-500">
-            Sign in to your RecruitAI account
-          </p>
+          <p className="mt-2 text-base text-slate-500">{m.login_subtitle()}</p>
         </div>
 
         {/* Login Form */}
@@ -64,7 +63,7 @@ export default function LoginPage() {
               className="mb-2 block text-base font-semibold text-slate-700"
               htmlFor="email"
             >
-              Email address
+              {m.login_email_label()}
             </label>
             <div className="relative">
               <Mail
@@ -77,7 +76,7 @@ export default function LoginPage() {
                 id="email"
                 name="email"
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@company.com"
+                placeholder={m.login_email_placeholder()}
                 required
                 type="email"
                 value={email}
@@ -92,13 +91,13 @@ export default function LoginPage() {
                 className="text-base font-semibold text-slate-700"
                 htmlFor="password"
               >
-                Password
+                {m.login_password_label()}
               </label>
               <a
                 className="text-sm font-semibold text-[#0d9488] hover:text-[#0b7c71]"
                 href="#"
               >
-                Forgot password?
+                {m.login_forgot_password()}
               </a>
             </div>
             <div className="relative">
@@ -112,13 +111,17 @@ export default function LoginPage() {
                 id="password"
                 name="password"
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
+                placeholder={m.login_password_placeholder()}
                 required
                 type={showPassword ? 'text' : 'password'}
                 value={password}
               />
               <button
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                aria-label={
+                  showPassword
+                    ? m.login_hide_password()
+                    : m.login_show_password()
+                }
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
                 onClick={() => setShowPassword((v) => !v)}
                 type="button"
@@ -161,11 +164,11 @@ export default function LoginPage() {
                     fill="currentColor"
                   />
                 </svg>
-                Signing in...
+                {m.login_submit_loading()}
               </>
             ) : (
               <>
-                Sign In <ArrowRight size={20} />
+                {m.login_submit()} <ArrowRight size={20} />
               </>
             )}
           </Button>

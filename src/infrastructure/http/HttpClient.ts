@@ -109,12 +109,23 @@ class HttpClient {
   }
 
   private async handle401Error(error: AxiosError): Promise<any> {
-    const originalRequest = error.config
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean
+    }
     if (!originalRequest) return Promise.reject(error)
 
     // Nếu chính /auth/refresh trả 401 → refreshToken hết hạn, logout luôn
     if (originalRequest.url === Endpoints.Auth.REFRESH_TOKEN) {
       this.loggerService.error('Refresh token expired or invalid')
+      return this.handleLogout()
+    }
+
+    // Nếu request này đã được retry sau khi refresh rồi mà vẫn 401
+    // → token mới vẫn bị reject bởi backend, không thể làm gì thêm → logout
+    if (originalRequest._retry) {
+      this.loggerService.error(
+        'Request returned 401 after token refresh — logging out',
+      )
       return this.handleLogout()
     }
 
@@ -132,6 +143,7 @@ class HttpClient {
     }
 
     this.isRefreshing = true
+    originalRequest._retry = true
 
     try {
       // refreshToken HttpOnly cookie được browser tự đính kèm nhờ withCredentials: true

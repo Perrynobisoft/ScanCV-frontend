@@ -1,4 +1,6 @@
 import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react'
+import { m } from '@/paraglide/messages'
+import { useLocale } from '@/presentation/provider/locale/locale-provider'
 
 interface PaginationProps {
   currentPage: number
@@ -15,8 +17,9 @@ export function Pagination({
   onPageChange,
   total,
   limit,
-  itemLabel = 'ứng viên',
+  itemLabel,
 }: PaginationProps) {
+  useLocale() // re-render on locale change
   if (totalPages <= 1) return null
 
   // Tính số item đang hiển thị ở trang hiện tại
@@ -60,7 +63,11 @@ export function Pagination({
       <div className="flex-1">
         {currentCount != null && total != null && (
           <p className="text-sm text-slate-500">
-            Hiển thị {currentCount} / {total} {itemLabel}
+            {m.pagination_showing({
+              current: currentCount,
+              total,
+              label: itemLabel ?? m.pagination_item_label_candidate(),
+            })}
           </p>
         )}
       </div>

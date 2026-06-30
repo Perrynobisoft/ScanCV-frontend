@@ -4,6 +4,7 @@ import ScoreCircle from './ScoreCircle'
 import ScoreModalBase from './ScoreModalBase'
 import { appropriateDetails } from './scoreDetails'
 import type { AppropriateScoreModalProps } from './types'
+import { m } from '@/paraglide/messages'
 
 export default function AppropriateScoreModal({
   isOpen,
@@ -17,7 +18,7 @@ export default function AppropriateScoreModal({
     <ScoreModalBase
       isOpen={isOpen}
       onClose={onClose}
-      title="Chấm điểm CV"
+      title={m.score_appropriate_title()}
       headerMode="icon"
       className="h-[80vh] w-full max-w-md"
     >

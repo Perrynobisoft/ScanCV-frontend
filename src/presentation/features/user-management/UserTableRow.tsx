@@ -2,6 +2,7 @@ import { Pencil, Trash2 } from 'lucide-react'
 import Avatar from '@/presentation/components/ui/avatar'
 import { formatLastActive } from './utils'
 import type { User } from 'src/domain/models/Auth'
+import { m } from '@/paraglide/messages'
 
 const roleStyles: Record<string, string> = {
   Admin:
@@ -80,7 +81,7 @@ export function UserTableRow({
         <div className="flex items-center gap-2">
           <button
             type="button"
-            aria-label={`Edit ${fullName}`}
+            aria-label={`${m.common_edit()} ${fullName}`}
             onClick={() => onEdit(user)}
             className="p-1.5 rounded-md text-gray-400 hover:text-slate-700 hover:bg-gray-100 transition-colors"
           >
@@ -89,7 +90,7 @@ export function UserTableRow({
           {!isCurrentUser && (
             <button
               type="button"
-              aria-label={`Delete ${fullName}`}
+              aria-label={`${m.common_delete()} ${fullName}`}
               onClick={() => onDelete(user)}
               className="p-1.5 rounded-md text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
             >

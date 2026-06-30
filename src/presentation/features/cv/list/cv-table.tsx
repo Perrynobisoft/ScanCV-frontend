@@ -8,6 +8,7 @@ import { Button } from '@/presentation/components/ui/button'
 import { Bookmark, Download } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useMarkAsTalent } from '@/presentation/hooks/cv/useMarkAsTalent'
+import { m } from '@/paraglide/messages'
 
 type Props = {
   data: CvItem[]
@@ -47,7 +48,7 @@ export default function CvTable({
       () => {
         // Revert on error
         setMarkOverrides((prev) => ({ ...prev, [cv.cv_infos_id]: currentMark }))
-        toast.error('Không thể cập nhật trạng thái bookmark')
+        toast.error(m.cv_table_bookmark_error())
       },
     )
   }
@@ -66,7 +67,7 @@ export default function CvTable({
     try {
       const pdfUrl = cv.cv_file?.file_url ?? ''
       if (!pdfUrl) {
-        toast.error('No PDF URL available for this CV')
+        toast.error(m.cv_table_no_pdf())
         return
       }
       const response = await fetch(pdfUrl)
@@ -80,15 +81,14 @@ export default function CvTable({
       window.URL.revokeObjectURL(url)
       document.body.removeChild(a)
     } catch {
-      toast.error('Failed to download CV')
+      toast.error(m.cv_table_download_error())
     }
   }
 
-  // Create columns dynamically to access state
   const columns: TableColumn<CvItem>[] = [
     {
       key: 'score',
-      title: 'SCORE',
+      title: m.cv_table_col_score(),
       width: 'w-14',
       render: (cv: CvItem) => (
         <div
@@ -96,37 +96,41 @@ export default function CvTable({
           className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-100 text-accent font-semibold cursor-pointer hover:bg-emerald-200 transition-colors"
         >
           {cv.scores.offline_score ?? (
-            <span className="text-xs text-slate-400">None</span>
+            <span className="text-xs text-slate-400">{m.common_none()}</span>
           )}
         </div>
       ),
     },
     {
       key: 'candidate',
-      title: 'NAME',
+      title: m.cv_table_col_name(),
       width: 'w-32',
       render: (cv: CvItem) => (
         <span className="text-sm font-semibold text-slate-900 truncate">
           {cv.full_name || (
-            <span className="font-normal text-slate-400 italic">Unknown</span>
+            <span className="font-normal text-slate-400 italic">
+              {m.common_unknown()}
+            </span>
           )}
         </span>
       ),
     },
     {
       key: 'position',
-      title: 'JOB TITLE',
+      title: m.cv_table_col_job_title(),
       width: 'w-28',
       render: (cv: CvItem) =>
         cv.position ? (
           <span className="text-sm text-slate-700 truncate">{cv.position}</span>
         ) : (
-          <span className="text-sm text-slate-400 italic">No title</span>
+          <span className="text-sm text-slate-400 italic">
+            {m.common_no_title()}
+          </span>
         ),
     },
     {
       key: 'skills',
-      title: 'SKILLS',
+      title: m.cv_table_col_skills(),
       width: 'w-40',
       render: (cv: CvItem) => (
         <div className="flex flex-wrap gap-1">
@@ -149,18 +153,18 @@ export default function CvTable({
     },
     {
       key: 'exp',
-      title: 'EXP',
+      title: m.cv_table_col_exp(),
       width: 'w-12',
       render: (cv: CvItem) =>
         cv.total_experience_years ? (
           <span className="text-sm">{cv.total_experience_years}y</span>
         ) : (
-          <span className="text-sm text-slate-400">None</span>
+          <span className="text-sm text-slate-400">{m.common_none()}</span>
         ),
     },
     {
       key: 'summary',
-      title: 'SUMMARY',
+      title: m.cv_table_col_summary(),
       width: 'w-72',
       render: (cv: CvItem) =>
         cv.summary ? (
@@ -170,12 +174,14 @@ export default function CvTable({
               : cv.summary.substring(0, 300) + '...'}
           </span>
         ) : (
-          <span className="text-sm text-slate-400 italic">No summary</span>
+          <span className="text-sm text-slate-400 italic">
+            {m.common_no_summary()}
+          </span>
         ),
     },
     {
       key: 'actions',
-      title: 'ACTIONS',
+      title: m.cv_table_col_actions(),
       width: 'w-20',
       render: (cv: CvItem) => {
         const isMarked = markOverrides[cv.cv_infos_id] ?? cv.is_marked ?? false
@@ -212,7 +218,7 @@ export default function CvTable({
         columns={columns}
         rowKey="cv_file_id"
         loading={loading}
-        emptyText="No CV found"
+        emptyText={m.cv_table_empty()}
         tableClassName="w-full"
         height={height}
         minRows={5}

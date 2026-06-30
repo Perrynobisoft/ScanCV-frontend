@@ -6,6 +6,7 @@ import { Pagination } from '@/presentation/components/ui/pagination'
 import CvTable from '@/presentation/features/cv/list/cv-table'
 import CvDetail from '@/presentation/features/cv/CvDetail'
 import { SkeletonTable } from '@/presentation/components/ui/skeleton'
+import { m } from '@/paraglide/messages'
 
 export default function TalentPoolPage() {
   const { items, total, totalPages, page, setPage, limit, isLoading } =
@@ -29,7 +30,7 @@ export default function TalentPoolPage() {
         <div className="flex items-center gap-3 mb-5">
           <BookmarkCheck className="h-4 w-4 text-accent" />
           <span className="text-md font-medium text-slate-700">
-            Ứng viên tiềm năng
+            {m.talent_pool_title()}
           </span>
           <span className="w-fit bg-[#CCFBF1] text-accent px-2 py-1 rounded-full text-[10px]">
             {total}
@@ -41,7 +42,7 @@ export default function TalentPoolPage() {
 
         {!isLoading && cvs.length === 0 && (
           <div className="rounded-[22px] border border-dashed border-slate-200 p-8 text-center text-slate-500">
-            Chưa có ứng viên nào được đánh dấu là Talent.
+            {m.talent_pool_empty()}
           </div>
         )}
 

@@ -13,9 +13,10 @@ import { Button } from '@/presentation/components/ui/button'
 import { SkeletonTable } from '@/presentation/components/ui/skeleton'
 import {
   getSkillOptionsByJobTitle,
+  getJobTitleOptions,
+  getLocationOptions,
+  getYearsOfExperienceOptions,
   JOB_TITLE_OPTIONS,
-  LOCATION_OPTIONS,
-  YEARS_OF_EXPERIENCE_OPTIONS,
   ALL_SKILL_OPTIONS,
 } from './filter-options'
 import Fuse from 'fuse.js'
@@ -237,7 +238,7 @@ export default function CvListPage() {
           <div className="flex items-center gap-4">
             <Users className="w-4 h-4 text-accent" />
             <span className="text-md font-medium text-slate-700">
-              CV Directory
+              {m.cv_hub_title()}
             </span>
             <span className="w-fit bg-[#CCFBF1] text-accent px-2 py-1 rounded-full text-[10px]">
               {filteredCvs.length}
@@ -248,7 +249,7 @@ export default function CvListPage() {
               <div ref={suggestionsRef} className="relative flex-1">
                 <Search className="w-4 h-4 absolute left-2 top-1/2 transform -translate-y-1/2 text-slate-400" />
                 <Input
-                  placeholder="Search candidates, positions, skills..."
+                  placeholder={m.cv_hub_search_placeholder()}
                   value={searchValue}
                   onChange={(e) => handleInputChange(e.target.value)}
                   onFocus={() => {
@@ -275,13 +276,13 @@ export default function CvListPage() {
                 className="h-8 text-xs font-semibold px-4 cursor-pointer"
               >
                 <Search className="w-3.5 h-3.5" />
-                Search
+                {m.common_search()}
               </Button>
             </div>
           </div>
           <div className="flex gap-3 flex-wrap">
             <SimpleSelect
-              options={JOB_TITLE_OPTIONS}
+              options={getJobTitleOptions()}
               className="w-fit"
               value={jobTitleFilter}
               onChange={setJobTitleFilter}
@@ -295,14 +296,14 @@ export default function CvListPage() {
               size="sm"
             />
             <SimpleSelect
-              options={YEARS_OF_EXPERIENCE_OPTIONS}
+              options={getYearsOfExperienceOptions()}
               className="w-fit"
               value={experienceFilter}
               onChange={setExperienceFilter}
               size="sm"
             />
             <SimpleSelect
-              options={LOCATION_OPTIONS}
+              options={getLocationOptions()}
               className="w-fit"
               value={locationFilter}
               onChange={setLocationFilter}
@@ -314,7 +315,7 @@ export default function CvListPage() {
               onClick={handleClearFilters}
             >
               <RotateCcw className="h-4 w-4" />
-              Clear
+              {m.common_clear()}
             </Button>
           </div>
         </div>
@@ -326,13 +327,13 @@ export default function CvListPage() {
 
           {!isFetching && isError && (
             <div className="rounded-[22px] border border-dashed border-red-200 p-8 text-center text-red-500">
-              {errorMessage ?? 'Failed to load candidates. Please try again.'}
+              {errorMessage ?? m.cv_hub_error_load()}
             </div>
           )}
 
           {!isFetching && !isError && filteredCvs.length === 0 && (
             <div className="rounded-[22px] border border-dashed border-slate-200 p-8 text-center text-slate-500">
-              {m.cv_no_match()}
+              {m.cv_hub_no_match()}
             </div>
           )}
 
@@ -367,7 +368,7 @@ export default function CvListPage() {
             onPageChange={setPage}
             total={total}
             limit={keywordSearch.limit}
-            itemLabel="ứng viên"
+            itemLabel={m.pagination_item_label_candidate()}
           />
         </div>
       </section>

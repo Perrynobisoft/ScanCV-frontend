@@ -2,6 +2,7 @@ import { Trash2 } from 'lucide-react'
 import { Button } from '@/presentation/components/ui/button'
 import { useDeleteUsers } from '@/presentation/hooks/users/useDeleteUsers'
 import { type Users } from '@/domain/models/Users'
+import { m } from '@/paraglide/messages'
 
 interface DeleteConfirmDialogProps {
   user: Users
@@ -39,23 +40,20 @@ export function DeleteConfirmDialog({
           <div className="mb-4 mr-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
             <Trash2 className="h-6 w-6 text-red-600" />
           </div>
-
           <h2
             id="delete-dialog-title"
             className="mb-2 text-lg font-semibold text-slate-900"
           >
-            Remove member
+            {m.delete_user_dialog_title()}
           </h2>
         </div>
         <p className="mb-6 text-sm text-gray-500">
-          Are you sure you want to remove{' '}
-          <span className="font-semibold text-slate-800">{fullName}</span>? This
-          action cannot be undone.
+          {m.delete_user_dialog_message({ name: fullName })}
         </p>
 
         <div className="flex justify-end gap-2">
           <Button type="button" variant="default" onClick={onClose}>
-            Cancel
+            {m.delete_user_dialog_btn_cancel()}
           </Button>
           <Button
             type="button"
@@ -63,7 +61,9 @@ export function DeleteConfirmDialog({
             disabled={isPending}
             onClick={handleDelete}
           >
-            {isPending ? 'Removing…' : 'Remove'}
+            {isPending
+              ? m.delete_user_dialog_btn_loading()
+              : m.delete_user_dialog_btn_confirm()}
           </Button>
         </div>
       </div>

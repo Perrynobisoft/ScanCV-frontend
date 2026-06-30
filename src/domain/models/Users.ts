@@ -17,7 +17,7 @@ export interface CreateUsersRequest {
 
 export interface UpdateUsersRequest {
   id: number
-  email: string
   fullname: string
   role: string
+  status: string
 }
