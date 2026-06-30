@@ -3,6 +3,7 @@ import { X } from 'lucide-react'
 import { Input } from '@/presentation/components/ui/input'
 import { useUpdateUsers } from '@/presentation/hooks/users/useUpdateUsers'
 import { type Users } from '@/domain/models/Users'
+import { m } from '@/paraglide/messages'
 
 const ROLES = ['Recruiter', 'Interviewer'] as const
 const STATUSES = ['active', 'inactive'] as const
@@ -50,15 +51,15 @@ export function EditUserDialog({
               id="edit-dialog-title"
               className="text-lg font-bold text-slate-900"
             >
-              Chỉnh sửa thông tin thành viên
+              {m.edit_user_dialog_title()}
             </h2>
             <p className="text-sm text-gray-500 mt-0.5">
-              Cập nhật thông tin và phân quyền cho thành viên
+              {m.edit_user_dialog_subtitle()}
             </p>
           </div>
           <button
             type="button"
-            aria-label="Đóng"
+            aria-label={m.common_close()}
             onClick={onClose}
             className="ml-4 mt-0.5 rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-slate-700 transition-colors"
           >
@@ -67,10 +68,10 @@ export function EditUserDialog({
         </div>
 
         <form onSubmit={handleSubmit} className="px-6 py-5 flex flex-col gap-5">
-          {/* Tên tài khoản */}
+          {/* Họ tên */}
           <div>
             <label className="block text-sm font-semibold text-slate-800 mb-2">
-              Họ và tên
+              {m.edit_user_dialog_field_full_name()}
             </label>
             <Input
               required
@@ -84,7 +85,7 @@ export function EditUserDialog({
           {/* Email (read-only) */}
           <div>
             <label className="block text-sm font-semibold text-slate-800 mb-2">
-              Email
+              {m.edit_user_dialog_field_email()}
             </label>
             <Input
               readOnly
@@ -96,7 +97,7 @@ export function EditUserDialog({
           {/* Vai trò */}
           <div>
             <label className="block text-sm font-semibold text-slate-800 mb-2">
-              Vai trò
+              {m.edit_user_dialog_field_role()}
             </label>
             <div className="grid grid-cols-2 gap-2">
               {ROLES.map((r) => (
@@ -119,7 +120,7 @@ export function EditUserDialog({
           {/* Trạng thái */}
           <div>
             <label className="block text-sm font-semibold text-slate-800 mb-2">
-              Trạng thái
+              {m.edit_user_dialog_field_status()}
             </label>
             <div className="grid grid-cols-2 gap-2">
               {STATUSES.map((s) => (
@@ -135,7 +136,9 @@ export function EditUserDialog({
                       : 'border-gray-200 bg-white text-gray-500 hover:border-gray-300 hover:text-slate-700'
                   }`}
                 >
-                  {s === 'active' ? 'Hoạt động' : 'Vô hiệu'}
+                  {s === 'active'
+                    ? m.edit_user_dialog_status_active()
+                    : m.edit_user_dialog_status_inactive()}
                 </button>
               ))}
             </div>
@@ -148,14 +151,16 @@ export function EditUserDialog({
               onClick={onClose}
               className="flex-1 rounded-xl border border-gray-200 py-3 text-sm font-semibold text-slate-700 hover:bg-gray-50 transition-colors"
             >
-              Hủy
+              {m.edit_user_dialog_btn_cancel()}
             </button>
             <button
               type="submit"
               disabled={isPending}
               className="flex-1 rounded-xl bg-emerald-700 py-3 text-sm font-semibold text-white hover:bg-emerald-800 disabled:opacity-50 transition-colors"
             >
-              {isPending ? 'Đang lưu…' : 'Xác nhận'}
+              {isPending
+                ? m.edit_user_dialog_btn_submitting()
+                : m.edit_user_dialog_btn_submit()}
             </button>
           </div>
         </form>

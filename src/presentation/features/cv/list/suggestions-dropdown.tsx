@@ -1,4 +1,5 @@
 import { Briefcase, Tag } from 'lucide-react'
+import { m } from '@/paraglide/messages'
 
 type FilterOption = {
   label: string
@@ -40,7 +41,7 @@ export function SuggestionsDropdown({
         <div>
           <div className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-semibold tracking-wider text-slate-400 uppercase select-none bg-slate-50/50">
             <Briefcase className="w-3.5 h-3.5 text-slate-400" />
-            Job Titles
+            {m.suggestions_job_titles_label()}
           </div>
           <div className="py-0.5">
             {matchingJobTitles.map((item, idx) => {
@@ -73,7 +74,7 @@ export function SuggestionsDropdown({
         >
           <div className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-semibold tracking-wider text-slate-400 uppercase select-none bg-slate-50/50">
             <Tag className="w-3.5 h-3.5 text-slate-400" />
-            Skills
+            {m.suggestions_skills_label()}
           </div>
           <div className="py-0.5">
             {matchingSkills.map((item, idx) => {

@@ -15,6 +15,7 @@ import {
   type BatchCompletedEvent,
   type BatchCancelledEvent,
 } from '@/domain/models/BulkUpload'
+import { m } from '@/paraglide/messages'
 
 export default function BulkUploadModal({ onClose }: { onClose: () => void }) {
   const { cvRepository } = useRepository()
@@ -286,10 +287,8 @@ export default function BulkUploadModal({ onClose }: { onClose: () => void }) {
             <Upload className="h-4 w-4" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold">Bulk CV Upload</h3>
-            <p className="text-sm text-slate-500">
-              Upload multiple CVs — AI will parse and auto-tag each one.
-            </p>
+            <h3 className="text-lg font-semibold">{m.bulk_upload_title()}</h3>
+            <p className="text-sm text-slate-500">{m.bulk_upload_subtitle()}</p>
           </div>
         </div>
       </div>
@@ -314,10 +313,10 @@ export default function BulkUploadModal({ onClose }: { onClose: () => void }) {
             <Upload className="h-6 w-6" />
           </div>
           <p className="text-base font-semibold text-slate-700">
-            Drag & drop CV files
+            {m.bulk_upload_dropzone_title()}
           </p>
           <p className="text-sm text-slate-500">
-            or click to browse — PDF, DOCX, DOC
+            {m.bulk_upload_dropzone_subtitle()}
           </p>
           <div className="mt-4 flex flex-wrap justify-center gap-2 text-xs text-slate-500">
             <span className="rounded-full border border-slate-300 bg-white px-3 py-1">
@@ -337,10 +336,10 @@ export default function BulkUploadModal({ onClose }: { onClose: () => void }) {
           <div className="flex items-center justify-between gap-3">
             <div>
               <div className="text-sm font-semibold text-slate-900">
-                AI Parsing & Auto-Tagging in Progress
+                {m.bulk_upload_progress_title()}
               </div>
               <div className="text-xs text-slate-500">
-                Uploads are sent in batches and processed by backend workers.
+                {m.bulk_upload_progress_subtitle()}
               </div>
             </div>
             <div className="text-sm font-semibold text-slate-900">
@@ -357,23 +356,23 @@ export default function BulkUploadModal({ onClose }: { onClose: () => void }) {
           </div>
           <div className="flex flex-wrap gap-2 text-xs text-slate-600">
             <div className="rounded-full bg-emerald-100 px-3 py-1 text-emerald-700">
-              Parsed{' '}
+              {m.bulk_upload_status_parsed()}{' '}
               {batchProgress
                 ? batchProgress.completed_files
                 : statusCounts.completed}
             </div>
             <div className="rounded-full bg-amber-100 px-3 py-1 text-amber-700">
-              Parsing{' '}
+              {m.bulk_upload_status_parsing()}{' '}
               {batchProgress
                 ? batchProgress.processing_files
                 : statusCounts.processing}
             </div>
             <div className="rounded-full bg-rose-100 px-3 py-1 text-rose-700">
-              Failed{' '}
+              {m.bulk_upload_status_failed()}{' '}
               {batchProgress ? batchProgress.failed_files : statusCounts.failed}
             </div>
             <div className="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
-              Queued{' '}
+              {m.bulk_upload_status_queued()}{' '}
               {batchProgress
                 ? batchProgress.pending_files
                 : statusCounts.queued}
@@ -386,7 +385,9 @@ export default function BulkUploadModal({ onClose }: { onClose: () => void }) {
       <div className="flex flex-col flex-1 min-h-0 rounded-md border border-slate-200 bg-white">
         <div className="flex items-center justify-between px-4 py-2 bg-slate-100 text-slate-500 rounded-tl-md rounded-tr-md">
           <div>
-            <div className="text-sm font-semibold">FILES ({items.length})</div>
+            <div className="text-sm font-semibold">
+              {m.bulk_upload_files_header({ count: items.length })}
+            </div>
             <div className="text-xs text-slate-500">
               {(totalSize / 1024 / 1024).toFixed(2)} MB total
             </div>
@@ -396,7 +397,7 @@ export default function BulkUploadModal({ onClose }: { onClose: () => void }) {
         <div className="max-h-80 overflow-y-auto">
           {items.length === 0 && (
             <div className="flex items-center justify-center rounded-md h-full p-4 text-center text-slate-500">
-              No files selected
+              {m.bulk_upload_no_files()}
             </div>
           )}
 
@@ -431,10 +432,13 @@ export default function BulkUploadModal({ onClose }: { onClose: () => void }) {
                   }`}
                 >
                   {it.status === FileUploadStatus.COMPLETED &&
-                    'Parsed & Tagged'}
-                  {it.status === FileUploadStatus.PROCESSING && 'AI Parsing...'}
-                  {it.status === FileUploadStatus.FAILED && 'Failed'}
-                  {it.status === FileUploadStatus.QUEUED && 'Queued'}
+                    m.bulk_upload_file_status_parsed()}
+                  {it.status === FileUploadStatus.PROCESSING &&
+                    m.bulk_upload_file_status_parsing()}
+                  {it.status === FileUploadStatus.FAILED &&
+                    m.bulk_upload_file_status_failed()}
+                  {it.status === FileUploadStatus.QUEUED &&
+                    m.bulk_upload_file_status_queued()}
                 </span>
                 <button
                   onClick={() => removeItem(it.id)}
@@ -454,14 +458,14 @@ export default function BulkUploadModal({ onClose }: { onClose: () => void }) {
             onClick={clearAll}
             className="rounded-sm border border-slate-200 bg-slate-50 py-2 px-3 text-sm font-medium text-slate-700 hover:bg-slate-100"
           >
-            Clear
+            {m.bulk_upload_btn_clear()}
           </button>
           <button
             onClick={cancel}
             disabled={!isProcessing}
             className="rounded-sm border border-rose-200 bg-rose-50 py-2 px-3 text-sm font-medium text-rose-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Cancel
+            {m.bulk_upload_btn_cancel()}
           </button>
         </div>
         <div className="flex items-center gap-3">
@@ -473,7 +477,7 @@ export default function BulkUploadModal({ onClose }: { onClose: () => void }) {
             }
             className="rounded-sm bg-accent px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Upload & Parse All
+            {m.bulk_upload_btn_upload()}
           </button>
         </div>
       </div>

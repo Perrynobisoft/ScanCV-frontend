@@ -14,6 +14,7 @@ import { Input } from '@/presentation/components/ui/input'
 import { Button } from '@/presentation/components/ui/button'
 import Avatar from '@/presentation/components/ui/avatar'
 import { ChangePasswordDialog } from './ChangePasswordDialog'
+import { m } from '@/paraglide/messages'
 
 export default function ProfilePage() {
   const { user, setAuthenticated } = useAuth()
@@ -54,9 +55,11 @@ export default function ProfilePage() {
     <main className="">
       {/* Page Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">Hồ sơ cá nhân</h1>
+        <h1 className="text-2xl font-bold text-slate-900">
+          {m.profile_page_title()}
+        </h1>
         <p className="mt-1 text-sm text-gray-500">
-          Xem và cập nhật thông tin tài khoản của bạn
+          {m.profile_page_subtitle()}
         </p>
       </div>
 
@@ -80,21 +83,21 @@ export default function ProfilePage() {
         {/* Info + editable fields */}
         <form onSubmit={handleSave}>
           <div className="grid gap-px bg-gray-100 sm:grid-cols-2">
-            {/* Họ và tên — editable */}
+            {/* Full name — editable */}
             <div className="bg-white px-6 py-5">
               <div className="flex items-center justify-between mb-1.5">
                 <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                  Họ và tên
+                  {m.profile_field_full_name()}
                 </p>
                 {!isEditing && (
                   <button
                     type="button"
                     onClick={handleEdit}
                     className="flex items-center gap-1 text-xs text-black hover:text-accent transition-colors"
-                    aria-label="Chỉnh sửa tên"
+                    aria-label={m.profile_edit_aria()}
                   >
                     <Pencil className="h-3 w-3" />
-                    Sửa
+                    {m.profile_edit_btn()}
                   </button>
                 )}
               </div>
@@ -118,7 +121,7 @@ export default function ProfilePage() {
               <div className="flex items-center gap-2 mb-1.5">
                 <Mail className="h-4 w-4 text-slate-400" />
                 <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                  Email
+                  {m.profile_field_email()}
                 </p>
               </div>
               <p className="text-base font-semibold text-slate-900">
@@ -126,12 +129,12 @@ export default function ProfilePage() {
               </p>
             </div>
 
-            {/* Vai trò — read-only */}
+            {/* Role — read-only */}
             <div className="bg-white px-6 py-5">
               <div className="flex items-center gap-2 mb-1.5">
                 <Shield className="h-4 w-4 text-slate-400" />
                 <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                  Vai trò
+                  {m.profile_field_role()}
                 </p>
               </div>
               <p className="text-base font-semibold capitalize text-slate-900">
@@ -139,12 +142,12 @@ export default function ProfilePage() {
               </p>
             </div>
 
-            {/* Trạng thái — read-only */}
+            {/* Status — read-only */}
             <div className="bg-white px-6 py-5">
               <div className="flex items-center gap-2 mb-1.5">
                 <Activity className="h-4 w-4 text-slate-400" />
                 <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                  Trạng thái
+                  {m.profile_field_status()}
                 </p>
               </div>
               <p
@@ -174,7 +177,7 @@ export default function ProfilePage() {
                   className="flex items-center gap-1.5 rounded-xl border border-gray-200 px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-gray-50"
                 >
                   <X className="h-4 w-4" />
-                  Hủy
+                  {m.profile_cancel_btn()}
                 </button>
                 <button
                   type="submit"
@@ -182,7 +185,7 @@ export default function ProfilePage() {
                   className="flex items-center gap-1.5 rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-accent/90 disabled:opacity-50"
                 >
                   <Check className="h-4 w-4" />
-                  {isUpdating ? 'Đang lưu…' : 'Lưu thay đổi'}
+                  {isUpdating ? m.profile_saving_btn() : m.profile_save_btn()}
                 </button>
               </div>
             </div>
@@ -193,7 +196,7 @@ export default function ProfilePage() {
         {saveSuccess && (
           <div className="border-t border-emerald-100 bg-emerald-50 px-6 py-3">
             <p className="text-sm text-emerald-700 font-medium">
-              Cập nhật thành công!
+              {m.profile_update_success()}
             </p>
           </div>
         )}
@@ -207,9 +210,11 @@ export default function ProfilePage() {
               <KeyRound className="h-5 w-5 text-slate-600" />
             </div>
             <div>
-              <p className="font-semibold text-slate-800">Mật khẩu</p>
+              <p className="font-semibold text-slate-800">
+                {m.profile_password_label()}
+              </p>
               <p className="text-xs text-gray-500 mt-0.5">
-                Đổi mật khẩu để bảo vệ tài khoản
+                {m.profile_password_desc()}
               </p>
             </div>
           </div>
@@ -218,7 +223,7 @@ export default function ProfilePage() {
             className="text-sm"
             onClick={() => setShowChangePassword(true)}
           >
-            Đổi mật khẩu
+            {m.profile_change_password_btn()}
           </Button>
         </div>
       </section>

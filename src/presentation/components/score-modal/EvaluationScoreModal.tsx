@@ -7,6 +7,7 @@ import ScoreModalBase from './ScoreModalBase'
 import { qualityDetails } from './scoreDetails'
 import type { EvaluationScoreModalProps } from './types'
 import { FALLBACK_REASON, initials } from './utils'
+import { m } from '@/paraglide/messages'
 
 export default function EvaluationScoreModal({
   isOpen,
@@ -29,7 +30,7 @@ export default function EvaluationScoreModal({
     <ScoreModalBase
       isOpen={isOpen}
       onClose={onClose}
-      title="Overall - CV Evaluation Score"
+      title={m.score_modal_quality_title()}
       headerMode="avatar"
       headerInitials={initials(cv.full_name)}
       className="h-[85vh] w-full max-w-5xl"
@@ -41,19 +42,21 @@ export default function EvaluationScoreModal({
           </div>
 
           <div className="rounded-sm bg-slate-100 px-4 py-3 text-sm text-slate-700">
-            <h3 className="mb-1 font-bold text-slate-900">Lý do chấm điểm</h3>
+            <h3 className="mb-1 font-bold text-slate-900">
+              {m.score_modal_score_reason_title()}
+            </h3>
             <p className="leading-6">{reason || FALLBACK_REASON}</p>
           </div>
 
           <div className="flex min-h-45 flex-1 flex-col overflow-hidden rounded-sm border border-slate-200">
             <div className="bg-slate-100 px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-500">
-              Yêu cầu chấm lại
+              {m.score_modal_rescore_label()}
             </div>
             <textarea
               value={request}
               onChange={(event) => setRequest(event.target.value)}
               className="min-h-0 flex-1 resize-none px-4 py-3 text-sm text-slate-700 outline-none"
-              placeholder="Nhập yêu cầu chấm lại điểm..."
+              placeholder={m.score_modal_rescore_placeholder()}
             />
           </div>
 
@@ -63,14 +66,14 @@ export default function EvaluationScoreModal({
               className="min-w-20 rounded-sm!"
               onClick={onClose}
             >
-              Lưu
+              {m.score_modal_btn_save()}
             </Button>
             <Button
               variant="accent"
               className="min-w-20 rounded-sm!"
               onClick={handleSubmit}
             >
-              Gửi
+              {m.score_modal_btn_submit()}
             </Button>
           </div>
         </section>
@@ -78,7 +81,7 @@ export default function EvaluationScoreModal({
         <section className="min-h-0 overflow-y-auto p-4">
           <div className="mb-5 w-fit border-b-2 border-accent px-1 pb-3 text-sm font-bold text-slate-700">
             <FileText className="mr-2 inline h-4 w-4 text-accent" />
-            Assessment Rubrics ({details.length})
+            {m.score_modal_assessment_rubrics({ count: details.length })}
           </div>
           <div className="space-y-3">
             {details.map((item, index) => (

@@ -7,6 +7,7 @@ import { Upload, Bell, ChevronDown, User, LogOut } from 'lucide-react'
 import BulkUploadModal from './BulkUploadModal'
 import Modal from './ui/Modal'
 import useModal from '@/presentation/hooks/useModal'
+import { m } from '@/paraglide/messages'
 
 export default function Header() {
   const navigate = useNavigate()
@@ -57,7 +58,7 @@ export default function Header() {
             onClick={open}
           >
             <Upload className="mr-2 h-4 w-4" />
-            Upload CVs
+            {m.header_upload_cvs()}
           </Button>
           <Modal isOpen={isOpen} onClose={close} keepMounted>
             <BulkUploadModal onClose={close} />
@@ -100,7 +101,7 @@ export default function Header() {
                   }}
                 >
                   <User className="h-4 w-4 text-slate-500" />
-                  <span>View Profile</span>
+                  <span>{m.header_view_profile()}</span>
                 </button>
 
                 <div className="border-t border-slate-100" />
@@ -112,7 +113,9 @@ export default function Header() {
                   disabled={isPending}
                 >
                   <LogOut className="h-4 w-4" />
-                  <span>{isPending ? 'Logging out…' : 'Log Out'}</span>
+                  <span>
+                    {isPending ? m.header_logout_loading() : m.header_logout()}
+                  </span>
                 </button>
               </div>
             )}

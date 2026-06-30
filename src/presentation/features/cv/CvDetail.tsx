@@ -23,6 +23,7 @@ import { useCvEdit } from '@/presentation/hooks/cv/useCvEdit'
 import { useMarkAsTalent } from '@/presentation/hooks/cv/useMarkAsTalent'
 import { type CvItem } from '@/domain/models/Cv'
 import { CV_STATUS_LABELS } from '@/shared/constants'
+import { m } from '@/paraglide/messages'
 
 const MIN_SCALE = 1.0
 const MAX_SCALE = 2.5
@@ -208,15 +209,28 @@ export default function CvDetail({
   }
 
   const fields: FieldConfig[] = [
-    { label: 'Vị trí ứng tuyển', field: 'position', colSpan: 'full' },
-    { label: 'Họ và tên', field: 'full_name', colSpan: 'full' },
-    { label: 'Email', field: 'email', colSpan: 'full', type: 'email' },
-    { label: 'Số điện thoại', field: 'phone', colSpan: 'half' },
-    { label: 'Địa điểm', field: 'address', colSpan: 'half' },
-    { label: 'Ngày sinh', field: 'date_of_birth', colSpan: 'half' },
-    { label: 'Hình thức', field: 'work_type', colSpan: 'half' },
+    { label: m.cv_detail_field_position(), field: 'position', colSpan: 'full' },
     {
-      label: 'Số năm kinh nghiệm',
+      label: m.cv_detail_field_full_name(),
+      field: 'full_name',
+      colSpan: 'full',
+    },
+    {
+      label: m.cv_detail_field_email(),
+      field: 'email',
+      colSpan: 'full',
+      type: 'email',
+    },
+    { label: m.cv_detail_field_phone(), field: 'phone', colSpan: 'half' },
+    { label: m.cv_detail_field_address(), field: 'address', colSpan: 'half' },
+    { label: m.cv_detail_field_dob(), field: 'date_of_birth', colSpan: 'half' },
+    {
+      label: m.cv_detail_field_work_type(),
+      field: 'work_type',
+      colSpan: 'half',
+    },
+    {
+      label: m.cv_detail_field_experience(),
       field: 'total_experience_years',
       colSpan: 'half',
       type: 'number',
@@ -237,7 +251,7 @@ export default function CvDetail({
                 {name}
               </div>
               <div className="text-sm text-slate-500">
-                {formState.position || 'Candidate'}
+                {formState.position || m.common_candidate()}
               </div>
             </div>
           </div>
@@ -267,7 +281,9 @@ export default function CvDetail({
               <Bookmark
                 className={`h-3.5 w-3.5 ${isMark ? 'fill-white' : ''}`}
               />
-              {isMarkingTalent ? 'Đang lưu…' : 'Talent'}
+              {isMarkingTalent
+                ? m.cv_detail_talent_saving()
+                : m.cv_detail_talent_button()}
             </Button>
 
             <Select
@@ -322,7 +338,7 @@ export default function CvDetail({
             <div className="px-3 py-2 border-b border-slate-200 flex items-center justify-between bg-slate-50">
               <div className="flex gap-2 items-center text-sm font-semibold text-slate-600">
                 <FileText className="h-4 w-4 text-accent" />
-                <span>CV Preview — {name}</span>
+                <span>{m.cv_detail_preview_label({ name })}</span>
               </div>
               <div className="flex items-center gap-2">
                 {/* Zoom controls */}
@@ -354,7 +370,7 @@ export default function CvDetail({
                   className="flex items-center gap-1.5 py-1 px-2.5 text-sm text-accent rounded-md border border-slate-200 bg-white hover:bg-slate-50 transition"
                 >
                   <Download className="h-3.5 w-3.5" />
-                  Tải xuống
+                  {m.cv_detail_download()}
                 </a>
               </div>
             </div>
@@ -369,7 +385,7 @@ export default function CvDetail({
             <div className="px-4 py-2.5 border-b border-slate-200 flex items-center justify-between bg-white shrink-0">
               <div className="flex items-center gap-1.5 text-sm font-semibold text-slate-700">
                 <User className="h-4 w-4 text-accent" />
-                Thông tin ứng viên
+                {m.cv_detail_info_panel_title()}
               </div>
 
               {!isEditMode ? (
@@ -379,7 +395,7 @@ export default function CvDetail({
                   onClick={() => setIsEditMode(true)}
                 >
                   <Pencil className="h-3 w-3" />
-                  Chỉnh sửa
+                  {m.cv_detail_edit()}
                 </Button>
               ) : (
                 <div className="flex items-center gap-1.5">
@@ -389,7 +405,7 @@ export default function CvDetail({
                     onClick={handleCancelEdit}
                     disabled={isUpdating}
                   >
-                    Hủy
+                    {m.cv_detail_cancel()}
                   </Button>
                   <Button
                     variant="accent"
@@ -398,7 +414,7 @@ export default function CvDetail({
                     disabled={isUpdating}
                   >
                     <Check className="h-3 w-3" />
-                    {isUpdating ? 'Đang lưu...' : 'Lưu thay đổi'}
+                    {isUpdating ? m.cv_detail_saving() : m.cv_detail_save()}
                     {isDirty && !isUpdating && (
                       <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-yellow-400 animate-pulse" />
                     )}
@@ -448,14 +464,14 @@ export default function CvDetail({
               {(isEditMode || formState.summary) && (
                 <div>
                   <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
-                    Summary
+                    {m.cv_detail_section_summary()}
                   </div>
                   {isEditMode ? (
                     <textarea
                       value={formState.summary}
                       onChange={(e) => handleChange('summary', e.target.value)}
                       rows={4}
-                      placeholder="Nhập giới thiệu hoặc tóm tắt..."
+                      placeholder={m.cv_detail_summary_placeholder()}
                       className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-accent resize-none"
                     />
                   ) : (
@@ -472,7 +488,7 @@ export default function CvDetail({
               {cv?.educations && cv.educations.length > 0 && (
                 <div>
                   <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">
-                    Học vấn
+                    {m.cv_detail_section_education()}
                   </div>
                   <div className="flex flex-col gap-1.5">
                     {cv.educations.map((edu, index) => (
@@ -495,7 +511,7 @@ export default function CvDetail({
               {skills.length > 0 && (
                 <div>
                   <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">
-                    Kỹ năng
+                    {m.cv_detail_section_skills()}
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {skills.map((s) => (
@@ -514,7 +530,7 @@ export default function CvDetail({
               {certifications.length > 0 && (
                 <div>
                   <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">
-                    Chứng chỉ
+                    {m.cv_detail_section_certifications()}
                   </div>
                   <div className="flex flex-col gap-1.5">
                     {certifications.map((c: string) => (
@@ -532,7 +548,7 @@ export default function CvDetail({
               {/* Ghi chú */}
               <div>
                 <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">
-                  Ghi chú
+                  {m.cv_detail_section_notes()}
                 </div>
                 <textarea
                   value={formState.note}
@@ -540,8 +556,8 @@ export default function CvDetail({
                   readOnly={!isEditMode}
                   placeholder={
                     isEditMode
-                      ? 'Nhập nhận xét, đánh giá hoặc lưu ý...'
-                      : 'Chưa có ghi chú'
+                      ? m.cv_detail_notes_placeholder_edit()
+                      : m.cv_detail_notes_placeholder_readonly()
                   }
                   className={`w-full h-24 p-3 rounded-lg text-sm resize-none transition-colors ${
                     isEditMode

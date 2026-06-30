@@ -11,6 +11,7 @@ import type { CvItem } from '@/domain/models/Cv'
 import useModal from '@/presentation/hooks/useModal'
 import StatusBadge from '@/presentation/components/ui/StatusBadge'
 import { Skeleton } from '@/presentation/components/ui/skeleton'
+import { m } from '@/paraglide/messages'
 
 // Skeleton card that mirrors the exact layout of a real result card
 function SmartSearchCardSkeleton() {
@@ -82,10 +83,10 @@ export default function SmartSearchPage() {
           <div className="flex gap-2 items-center">
             <Sparkles className="h-5 w-5 text-accent" />
             <div className="text-md font-semibold text-slate-950">
-              AI Semantic Search
+              {m.smart_search_title()}
             </div>
             <div className="inline-flex items-center gap-2 rounded-full bg-cyan-50 px-4 py-2 text-xs font-semibold text-accent">
-              Powered by AI
+              {m.smart_search_powered_by()}
             </div>
           </div>
         </div>
@@ -101,7 +102,7 @@ export default function SmartSearchPage() {
                   handleSearch()
                 }
               }}
-              placeholder="Search candidates by skill, experience, role..."
+              placeholder={m.smart_search_placeholder()}
               className="pl-12 pr-36 py-4 rounded-sm!"
             />
             <Button
@@ -109,7 +110,7 @@ export default function SmartSearchPage() {
               className="absolute right-2 top-1/2 -translate-y-1/2 rounded-sm px-6 py-3"
               onClick={() => handleSearch()}
             >
-              Search
+              {m.smart_search_btn()}
             </Button>
           </div>
         </div>
@@ -120,8 +121,8 @@ export default function SmartSearchPage() {
           <div>
             <p className="text-sm text-slate-500">
               {hasSearched && total > 0
-                ? `Tìm thấy ${total} ứng viên — sắp xếp theo điểm AI`
-                : 'Nhập từ khóa và nhấn Search để tìm ứng viên bằng AI.'}
+                ? m.smart_search_results({ count: total })
+                : m.smart_search_hint()}
             </p>
           </div>
         </div>
@@ -137,7 +138,7 @@ export default function SmartSearchPage() {
 
           {!isLoading && items.length === 0 && hasSearched && (
             <div className="rounded-[22px] border border-dashed border-slate-200 p-8 text-center text-slate-500">
-              Không tìm thấy ứng viên nào.
+              {m.smart_search_no_results()}
             </div>
           )}
 
@@ -156,10 +157,10 @@ export default function SmartSearchPage() {
                     <div className="flex items-center gap-4">
                       <div className="flex flex-col gap-2">
                         <h3 className="text-lg font-semibold text-slate-950 flex gap-2">
-                          {item.full_name || 'Unknown'}
+                          {item.full_name || m.common_unknown()}
                         </h3>
                         <p className="text-sm text-slate-500">
-                          {item.position || 'Candidate'} •{' '}
+                          {item.position || m.common_candidate()} •{' '}
                           {item.total_experience_years || 'N/A'}
                         </p>
                       </div>
@@ -184,7 +185,7 @@ export default function SmartSearchPage() {
 
                     <div className="flex gap-2">
                       <span className="text-sm font-medium text-accent">
-                        AI Summary{' '}
+                        {m.smart_search_ai_summary_label()}{' '}
                       </span>
                       <p className="text-sm text-accent">
                         {item.reasons?.overall_conclusion || '-'}
@@ -231,7 +232,7 @@ export default function SmartSearchPage() {
               onPageChange={setPage}
               total={total}
               limit={limit}
-              itemLabel="ứng viên"
+              itemLabel={m.pagination_item_label_candidate()}
             />
           </div>
         )}

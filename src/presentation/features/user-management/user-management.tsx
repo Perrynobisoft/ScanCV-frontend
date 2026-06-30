@@ -11,22 +11,23 @@ import { EditUserDialog } from './EditUserDialog'
 import { DeleteConfirmDialog } from './DeleteConfirmDialog'
 import type { User } from 'src/domain/models/Auth'
 import { Constants } from '@/shared/constants'
+import { m } from '@/paraglide/messages'
 
 const ROLE_LEGEND = [
   {
     role: 'Admin',
     color: 'text-amber-600 bg-amber-100 border border-amber-300',
-    desc: 'Full access',
+    descKey: 'user_management_role_admin_desc' as const,
   },
   {
     role: 'Recruiter',
     color: 'text-emerald-600 bg-emerald-100 border border-emerald-300',
-    desc: 'Can manage CVs',
+    descKey: 'user_management_role_recruiter_desc' as const,
   },
   {
     role: 'Interviewer',
     color: 'text-blue-600 bg-blue-100 border border-blue-300',
-    desc: 'View & comment only',
+    descKey: 'user_management_role_interviewer_desc' as const,
   },
 ]
 
@@ -55,7 +56,7 @@ export default function UserManagementPage() {
           <div className="flex items-center gap-2">
             <UsersIcon className="h-4 w-4 text-gray-500" />
             <span className="font-semibold text-xl text-slate-800">
-              Team Members
+              {m.user_management_title()}
             </span>
             <span className="ml-1 inline-flex h-6 min-w-6 items-center justify-center rounded-full bg-green-100 px-1.5 text-xs font-semibold text-gray-600">
               {totalItems}
@@ -63,20 +64,20 @@ export default function UserManagementPage() {
           </div>
           <Button variant="accent" onClick={() => setShowInvite(true)}>
             <Plus className="h-4 w-4" />
-            Invite Member
+            {m.user_management_invite_btn()}
           </Button>
         </div>
 
         {/* Role legend */}
         <div className="flex flex-wrap items-center gap-4 px-6 py-3 border-b border-gray-100 bg-gray-50/50">
-          {ROLE_LEGEND.map(({ role, color, desc }) => (
+          {ROLE_LEGEND.map(({ role, color, descKey }) => (
             <div key={role} className="flex items-center gap-2">
               <span
                 className={`rounded-full px-2.5 py-0.5 text-base font-semibold ${color}`}
               >
                 {role}
               </span>
-              <span className="text-sm text-gray-500">{desc}</span>
+              <span className="text-sm text-gray-500">{m[descKey]()}</span>
             </div>
           ))}
         </div>
@@ -85,12 +86,15 @@ export default function UserManagementPage() {
         <div className="overflow-x-auto">
           {isLoading ? (
             <div className="flex h-[360px] items-center justify-center">
-              <PageLoader variant="dots" message="Đang tải thành viên…" />
+              <PageLoader
+                variant="dots"
+                message={m.user_management_loading()}
+              />
             </div>
           ) : users.length === 0 ? (
             <div className="flex h-[360px] items-center justify-center">
               <p className="text-base font-semibold text-slate-500">
-                No members found.
+                {m.user_management_empty()}
               </p>
             </div>
           ) : (
@@ -98,19 +102,19 @@ export default function UserManagementPage() {
               <thead>
                 <tr className="border-b border-gray-100">
                   <th className="px-4 py-3 text-left text-base font-semibold uppercase tracking-wider text-gray-500">
-                    Member
+                    {m.user_management_col_member()}
                   </th>
                   <th className="px-4 py-3 text-left text-base font-semibold uppercase tracking-wider text-gray-500">
-                    Role
+                    {m.user_management_col_role()}
                   </th>
                   <th className="px-4 py-3 text-left text-base font-semibold uppercase tracking-wider text-gray-500">
-                    Status
+                    {m.user_management_col_status()}
                   </th>
                   <th className="px-4 py-3 text-left text-base font-semibold uppercase tracking-wider text-gray-500">
-                    Last Active
+                    {m.user_management_col_last_active()}
                   </th>
                   <th className="px-4 py-3 text-left text-base font-semibold uppercase tracking-wider text-gray-500">
-                    Actions
+                    {m.user_management_col_actions()}
                   </th>
                 </tr>
               </thead>
@@ -146,7 +150,7 @@ export default function UserManagementPage() {
               onPageChange={setPage}
               total={totalItems}
               limit={LIMIT}
-              itemLabel="thành viên"
+              itemLabel={m.pagination_item_label_member()}
             />
           </div>
         )}

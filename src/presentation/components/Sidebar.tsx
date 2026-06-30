@@ -5,6 +5,7 @@ import { NAVIGATION } from '@/shared/constants/sidebar'
 import { Brain, Settings } from 'lucide-react'
 import { ROUTES } from '@/shared/constants/routes'
 import Avatar from './ui/avatar'
+import { m } from '@/paraglide/messages'
 
 export default function Sidebar() {
   const { user } = useAuth()
@@ -28,8 +29,8 @@ export default function Sidebar() {
           </div>
           {/* Brand Name */}
           <div>
-            <span className="text-white">RecruitAI</span>
-            <p className="text-sm text-accent">CV management.</p>
+            <span className="text-white">{m.sidebar_brand()}</span>
+            <p className="text-sm text-accent">{m.sidebar_brand_tagline()}</p>
           </div>
         </Link>
       </div>
@@ -48,7 +49,7 @@ export default function Sidebar() {
               to={item.to}
             >
               {item.icon && <item.icon className="h-5 w-5" />}
-              {item.label}
+              {item.label()}
             </Link>
           )
         })}

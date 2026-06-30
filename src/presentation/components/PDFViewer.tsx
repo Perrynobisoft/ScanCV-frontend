@@ -1,6 +1,7 @@
 import { Document, Page } from 'react-pdf'
 import { useRef, useState, useCallback } from 'react'
 import { usePdfBlob } from '@/presentation/hooks/usePdfBlob'
+import { m } from '@/paraglide/messages'
 
 interface Props {
   pdfUrl?: string
@@ -56,12 +57,18 @@ export default function PdfViewer({ pdfUrl, scale = 1.0 }: Props) {
   }, [])
 
   if (!pdfUrl) {
-    return <div className="flex h-full items-center justify-center">No PDF</div>
+    return (
+      <div className="flex h-full items-center justify-center">
+        {m.pdf_viewer_no_pdf()}
+      </div>
+    )
   }
 
   if (loading) {
     return (
-      <div className="flex h-full items-center justify-center">Loading...</div>
+      <div className="flex h-full items-center justify-center">
+        {m.pdf_viewer_loading()}
+      </div>
     )
   }
 

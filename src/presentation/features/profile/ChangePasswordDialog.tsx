@@ -3,6 +3,7 @@ import { X, Eye, EyeOff } from 'lucide-react'
 import { Input } from '@/presentation/components/ui/input'
 import { useChangePassword } from '@/presentation/hooks/auth/useChangePassword'
 import { type ChangePasswordRequest } from '@/domain/models/Auth'
+import { m } from '@/paraglide/messages'
 
 interface ChangePasswordDialogProps {
   onClose: () => void
@@ -28,11 +29,11 @@ export function ChangePasswordDialog({ onClose }: ChangePasswordDialogProps) {
     setError(null)
 
     if (form.newPassword !== form.confirmPassword) {
-      setError('Mật khẩu xác nhận không khớp.')
+      setError(m.change_password_error_mismatch())
       return
     }
     if (form.newPassword.length < 6) {
-      setError('Mật khẩu mới phải có ít nhất 6 ký tự.')
+      setError(m.change_password_error_min_length())
       return
     }
 
@@ -65,7 +66,11 @@ export function ChangePasswordDialog({ onClose }: ChangePasswordDialogProps) {
           onClick={() =>
             setShow((prev) => ({ ...prev, [showKey]: !prev[showKey] }))
           }
-          aria-label={show[showKey] ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+          aria-label={
+            show[showKey]
+              ? m.change_password_hide_aria()
+              : m.change_password_show_aria()
+          }
         >
           {show[showKey] ? (
             <EyeOff className="h-4 w-4" />
@@ -95,15 +100,15 @@ export function ChangePasswordDialog({ onClose }: ChangePasswordDialogProps) {
               id="change-password-title"
               className="text-lg font-bold text-slate-900"
             >
-              Đổi mật khẩu
+              {m.change_password_title()}
             </h2>
             <p className="mt-0.5 text-sm text-gray-500">
-              Sau khi đổi bạn sẽ được đăng xuất và đăng nhập lại.
+              {m.change_password_subtitle()}
             </p>
           </div>
           <button
             type="button"
-            aria-label="Đóng"
+            aria-label={m.change_password_close_aria()}
             onClick={onClose}
             className="ml-4 mt-0.5 rounded-md p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-slate-700"
           >
@@ -112,9 +117,17 @@ export function ChangePasswordDialog({ onClose }: ChangePasswordDialogProps) {
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5 px-6 py-5">
-          {renderField('currentPassword', 'Mật khẩu hiện tại', 'current')}
-          {renderField('newPassword', 'Mật khẩu mới', 'next')}
-          {renderField('confirmPassword', 'Xác nhận mật khẩu mới', 'confirm')}
+          {renderField(
+            'currentPassword',
+            m.change_password_current_label(),
+            'current',
+          )}
+          {renderField('newPassword', m.change_password_new_label(), 'next')}
+          {renderField(
+            'confirmPassword',
+            m.change_password_confirm_label(),
+            'confirm',
+          )}
 
           {error && (
             <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-600">
@@ -128,14 +141,16 @@ export function ChangePasswordDialog({ onClose }: ChangePasswordDialogProps) {
               onClick={onClose}
               className="flex-1 rounded-xl border border-gray-200 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-gray-50"
             >
-              Hủy
+              {m.change_password_cancel_btn()}
             </button>
             <button
               type="submit"
               disabled={isPending}
               className="flex-1 rounded-xl bg-accent py-3 text-sm font-semibold text-white transition-colors hover:bg-accent/90 disabled:opacity-50"
             >
-              {isPending ? 'Đang lưu…' : 'Xác nhận'}
+              {isPending
+                ? m.change_password_saving_btn()
+                : m.change_password_confirm_btn()}
             </button>
           </div>
         </form>

@@ -1,3 +1,5 @@
+import { m } from '@/paraglide/messages'
+
 type AuthLayoutProps = {
   children: React.ReactNode
 }
@@ -28,20 +30,19 @@ export function AuthLayout({ children }: AuthLayoutProps) {
             </div>
             <div>
               <p className="text-lg font-bold leading-tight text-white">
-                RecruitAI
+                {m.auth_layout_brand()}
               </p>
               <p className="text-sm leading-tight text-[#0d9488]">
-                CV Management Platform
+                {m.auth_layout_tagline()}
               </p>
             </div>
           </div>
 
           <h2 className="mb-6 text-[38px] font-bold leading-snug text-white">
-            Hire smarter with AI-powered recruitment
+            {m.auth_layout_headline()}
           </h2>
           <p className="mb-14 text-base leading-relaxed text-slate-400">
-            Parse thousands of CVs in minutes, rank candidates by AI match
-            score, and discover top talent instantly using semantic search.
+            {m.auth_layout_description()}
           </p>
 
           {/* Stats */}
@@ -49,24 +50,26 @@ export function AuthLayout({ children }: AuthLayoutProps) {
             <div className="flex items-baseline gap-4">
               <span className="text-4xl font-bold text-[#0d9488]">10x</span>
               <span className="text-base text-slate-400">
-                Faster CV screening
+                {m.auth_layout_stat_speed()}
               </span>
             </div>
             <div className="flex items-baseline gap-4">
               <span className="text-4xl font-bold text-[#0d9488]">95%</span>
-              <span className="text-base text-slate-400">Parsing accuracy</span>
+              <span className="text-base text-slate-400">
+                {m.auth_layout_stat_accuracy()}
+              </span>
             </div>
             <div className="flex items-baseline gap-4">
               <span className="text-4xl font-bold text-[#0d9488]">3M+</span>
-              <span className="text-base text-slate-400">CVs processed</span>
+              <span className="text-base text-slate-400">
+                {m.auth_layout_stat_processed()}
+              </span>
             </div>
           </div>
         </div>
 
         {/* Footer */}
-        <p className="text-sm text-slate-600">
-          © 2026 RecruitAI. All rights reserved.
-        </p>
+        <p className="text-sm text-slate-600">© {m.auth_layout_copyright()}</p>
       </div>
 
       {/* Right panel — form area */}
