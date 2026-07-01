@@ -473,6 +473,8 @@ export default function BulkUploadModal({ onClose }: { onClose: () => void }) {
             onClick={startUpload}
             disabled={
               isUploadPending ||
+              isProcessing ||
+              items.length === 0 ||
               items.every((item) => item.status === FileUploadStatus.COMPLETED)
             }
             className="rounded-sm bg-accent px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
