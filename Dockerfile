@@ -41,6 +41,20 @@ RUN echo 'server { \
     location / { \
         try_files $uri $uri/ /index.html; \
     } \
+    location /api/ { \
+        proxy_pass http://backend:5226; \
+        proxy_set_header Host $host; \
+        proxy_set_header X-Real-IP $remote_addr; \
+    } \
+    location /files/ { \
+        proxy_pass http://backend:5226; \
+        proxy_set_header Host $host; \
+        proxy_set_header X-Real-IP $remote_addr; \
+    } \
+    # Allow .mjs files to be served as JavaScript (required for PDF.js worker) \
+    types { \
+        application/javascript mjs; \
+    } \
     # Gzip compression \
     gzip on; \
     gzip_vary on; \

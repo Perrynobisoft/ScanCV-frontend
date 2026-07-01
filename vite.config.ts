@@ -3,6 +3,7 @@ import { defineConfig, loadEnv, type Plugin } from 'vite'
 import tailwindcss from '@tailwindcss/vite'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import react from '@vitejs/plugin-react-swc'
+import basicSsl from '@vitejs/plugin-basic-ssl'
 import { ensureFileHasDefautCode } from './plugins/defaultFeatureFileContent'
 import path from 'path'
 import { defaultCodeFeature } from './plugins/default-code'
@@ -42,6 +43,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [
+      basicSsl(),
       paraglideVitePlugin({
         project: './project.inlang',
         outdir: './src/paraglide',
@@ -72,6 +74,14 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           secure: false,
           // ngrok requires this header to bypass browser warning
+          headers: {
+            'ngrok-skip-browser-warning': 'true',
+          },
+        },
+        '/files': {
+          target: apiUrl,
+          changeOrigin: true,
+          secure: false,
           headers: {
             'ngrok-skip-browser-warning': 'true',
           },

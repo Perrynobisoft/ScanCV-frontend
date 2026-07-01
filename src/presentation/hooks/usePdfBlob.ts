@@ -1,6 +1,22 @@
 import { useEffect, useState } from 'react'
 import useAxios from '@/infrastructure/hooks/useAxios'
 
+/**
+ * Rewrite absolute backend file URLs to relative paths so the request
+ * goes through the Vite dev proxy (or nginx proxy in production),
+ * avoiding mixed-content / SSL errors when the backend serves HTTP.
+ *
+ * e.g. "http://14.9.0.21:5226/files/foo.pdf" → "/files/foo.pdf"
+ */
+function toProxiedUrl(url: string): string {
+  try {
+    const { pathname } = new URL(url)
+    return pathname
+  } catch {
+    return url // already a relative path or invalid — leave as-is
+  }
+}
+
 export function usePdfBlob(pdfUrl?: string) {
   const [blob, setBlob] = useState<Blob>()
   const [loading, setLoading] = useState(false)
@@ -17,7 +33,7 @@ export function usePdfBlob(pdfUrl?: string) {
         setLoading(true)
         setError(undefined)
 
-        const response = await axiosInstance.get<Blob>(pdfUrl, {
+        const response = await axiosInstance.get<Blob>(toProxiedUrl(pdfUrl), {
           responseType: 'blob',
           headers: {
             Accept: 'application/pdf',
