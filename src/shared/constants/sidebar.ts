@@ -1,5 +1,5 @@
 import { ROUTES } from './routes'
-import { LayoutGrid, Sparkles, UserCog } from 'lucide-react'
+import { LayoutGrid, Sparkles, UserCog, Users } from 'lucide-react'
 import { m } from '@/paraglide/messages'
 
 export const NAVIGATION = [
@@ -12,7 +12,7 @@ export const NAVIGATION = [
   {
     label: () => m.sidebar_nav_talent_pool(),
     to: ROUTES.TALENT_POOL,
-    icon: UserCog,
+    icon: Users,
   },
   {
     label: () => m.sidebar_nav_user_management(),

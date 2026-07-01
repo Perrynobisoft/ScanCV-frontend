@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import toast from 'react-hot-toast'
+import ReactCountryFlag from 'react-country-flag'
 import {
   Mail,
   Shield,
@@ -21,7 +23,11 @@ import { useLocale } from '@/presentation/provider/locale/locale-provider'
 const LOCALE_NAMES: Record<string, string> = {
   en: 'English',
   vi: 'Tiếng Việt',
-  de: 'Deutsch',
+}
+
+const LOCALE_COUNTRY_CODES: Record<string, string> = {
+  en: 'GB',
+  vi: 'VN',
 }
 
 export default function ProfilePage() {
@@ -33,12 +39,10 @@ export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false)
   const [fullName, setFullName] = useState(user?.fullName ?? '')
   const [saveError, setSaveError] = useState<string | null>(null)
-  const [saveSuccess, setSaveSuccess] = useState(false)
 
   const handleEdit = () => {
     setFullName(user?.fullName ?? '')
     setSaveError(null)
-    setSaveSuccess(false)
     setIsEditing(true)
   }
 
@@ -50,13 +54,11 @@ export default function ProfilePage() {
   const handleSave = (e: React.SyntheticEvent) => {
     e.preventDefault()
     setSaveError(null)
-    setSaveSuccess(false)
 
     updateMe({ fullName }, (data) => {
       if (data?.data) setAuthenticated(data.data)
-      setSaveSuccess(true)
+      toast.success(m.profile_update_success())
       setIsEditing(false)
-      setTimeout(() => setSaveSuccess(false), 3000)
     })
   }
 
@@ -200,15 +202,6 @@ export default function ProfilePage() {
             </div>
           )}
         </form>
-
-        {/* Success toast inside card */}
-        {saveSuccess && (
-          <div className="border-t border-emerald-100 bg-emerald-50 px-6 py-3">
-            <p className="text-sm text-emerald-700 font-medium">
-              {m.profile_update_success()}
-            </p>
-          </div>
-        )}
       </section>
 
       {/* Change password */}
@@ -267,6 +260,13 @@ export default function ProfilePage() {
                 onClick={() => setLocale(loc)}
                 aria-pressed={loc === locale}
               >
+                {LOCALE_COUNTRY_CODES[loc] && (
+                  <ReactCountryFlag
+                    countryCode={LOCALE_COUNTRY_CODES[loc]}
+                    svg
+                    style={{ width: '1.5em', height: '1.5em' }}
+                  />
+                )}
                 {LOCALE_NAMES[loc] ?? loc}
               </Button>
             ))}

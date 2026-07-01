@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react'
 import { FileText } from 'lucide-react'
-import { Button } from '@/presentation/components/ui/button'
 import ScoreCard from './ScoreCard'
 import ScoreCircle from './ScoreCircle'
 import ScoreModalBase from './ScoreModalBase'
@@ -20,7 +19,7 @@ export default function EvaluationScoreModal({
   const score = cv.quality_score ?? cv.scores.offline_score
   const reason = cv.quality_reasons ?? cv.reasons?.offline_reason
 
-  const handleSubmit = () => {
+  const _handleSubmit = () => {
     onRescoreSubmit?.(request)
     onClose()
     setRequest('')
@@ -47,7 +46,7 @@ export default function EvaluationScoreModal({
             </h3>
             <p className="leading-6">{reason || FALLBACK_REASON}</p>
           </div>
-
+          {/*  yêu cầu chấm lại
           <div className="flex min-h-45 flex-1 flex-col overflow-hidden rounded-sm border border-slate-200">
             <div className="bg-slate-100 px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-500">
               {m.score_modal_rescore_label()}
@@ -75,7 +74,7 @@ export default function EvaluationScoreModal({
             >
               {m.score_modal_btn_submit()}
             </Button>
-          </div>
+          </div> */}
         </section>
 
         <section className="min-h-0 overflow-y-auto p-4">

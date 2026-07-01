@@ -34,7 +34,10 @@ export default function LoginPage() {
       return
     }
 
-    await router.invalidate()
+    // Chờ React flush state update từ setAuthenticated() trước khi navigate.
+    // Nếu navigate ngay lập tức, beforeLoad của /_app có thể đọc context cũ
+    // (isAuthenticated=false) và redirect ngược về login.
+    await new Promise((resolve) => setTimeout(resolve, 0))
 
     if (search.redirectTo) {
       router.history.push(search.redirectTo)

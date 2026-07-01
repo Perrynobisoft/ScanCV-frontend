@@ -13,6 +13,7 @@ import {
   hasStoredAccessToken,
   getStoredUser,
   clearStoredUser,
+  persistUser,
 } from '@/shared/auth-storage'
 import { handleLogout as clearStoredAuth } from '@/shared/helpers'
 import { useMe } from '@/presentation/hooks/auth/useMe'
@@ -42,14 +43,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Bước 3: Chỉ gọi /auth/me khi đã có token nhưng chưa có user trong localStorage.
   // Nếu đã lấy được user từ localStorage thì skip luôn.
+  // Dùng state `user` (reactive) thay vì `cachedUser` (snapshot lúc mount).
   const meQuery = useMe({
-    enabled: isAuthenticated && !cachedUser,
+    enabled: isAuthenticated && !user,
     retry: false,
   })
 
   const setAuthenticated = useCallback((nextUser: User | null = null) => {
     setIsAuthenticated(true)
     setUser(nextUser)
+    // Sync localStorage để lần reload sau không cần gọi /auth/me
+    if (nextUser) persistUser(nextUser)
   }, [])
 
   const clearAuth = useCallback(() => {
