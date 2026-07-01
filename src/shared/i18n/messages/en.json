@@ -237,5 +237,21 @@
   "error_maintenance_description": "The site is not available at the moment. We will be back online shortly.",
   "error_go_back": "Go back",
   "error_back_home": "Back to home",
-  "error_learn_more": "Learn more"
+  "error_learn_more": "Learn more",
+  "admin_eyebrow": "Admin area",
+  "admin_title": "Admin page",
+  "admin_description": "This page is restricted to admin users only.",
+  "admin_access_label": "Access level",
+  "admin_access_value": "Admin",
+  "admin_role_label": "Role",
+  "admin_scope_label": "Scope",
+  "admin_scope_value": "Full system",
+  "dashboard_overview": "Overview",
+  "dashboard_welcome": "Welcome back{suffix}",
+  "dashboard_description": "Here's a summary of your account and activity.",
+  "dashboard_signed_in_as": "Signed in as",
+  "dashboard_no_email": "No email",
+  "dashboard_status": "Status",
+  "dashboard_authenticated": "Authenticated",
+  "dashboard_role_label": "Role"
 }

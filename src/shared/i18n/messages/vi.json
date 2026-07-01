@@ -237,5 +237,21 @@
   "error_maintenance_description": "Trang web hiện không khả dụng. Chúng tôi sẽ quay lại sớm.",
   "error_go_back": "Quay lại",
   "error_back_home": "Về trang chủ",
-  "error_learn_more": "Tìm hiểu thêm"
+  "error_learn_more": "Tìm hiểu thêm",
+  "admin_eyebrow": "Khu vực admin",
+  "admin_title": "Trang admin",
+  "admin_description": "Trang này chỉ dành cho admin.",
+  "admin_access_label": "Cấp độ truy cập",
+  "admin_access_value": "Admin",
+  "admin_role_label": "Vai trò",
+  "admin_scope_label": "Phạm vi",
+  "admin_scope_value": "Toàn hệ thống",
+  "dashboard_overview": "Tổng quan",
+  "dashboard_welcome": "Chào mừng trở lại{suffix}",
+  "dashboard_description": "Đây là tóm tắt tài khoản và hoạt động của bạn.",
+  "dashboard_signed_in_as": "Đang đăng nhập",
+  "dashboard_no_email": "Không có email",
+  "dashboard_status": "Trạng thái",
+  "dashboard_authenticated": "Đã xác thực",
+  "dashboard_role_label": "Vai trò"
 }
