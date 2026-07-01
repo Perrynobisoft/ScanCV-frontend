@@ -70,7 +70,15 @@ export default function CvTable({
         toast.error(m.cv_table_no_pdf())
         return
       }
-      const response = await fetch(pdfUrl)
+      // Rewrite absolute URL to relative path to proxy through Vite/nginx
+      const proxiedUrl = (() => {
+        try {
+          return new URL(pdfUrl).pathname
+        } catch {
+          return pdfUrl
+        }
+      })()
+      const response = await fetch(proxiedUrl)
       const blob = await response.blob()
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
