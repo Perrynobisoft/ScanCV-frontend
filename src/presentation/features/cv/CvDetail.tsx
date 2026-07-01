@@ -294,15 +294,15 @@ export default function CvDetail({
               }}
               disabled={isUpdating}
             >
-              <SelectTrigger className="h-8 min-w-[120px] justify-center text-xs font-semibold border-slate-200 [&>span]:flex [&>span]:items-center [&>span]:gap-2">
+              <SelectTrigger className="h-8 min-w-[135px] justify-center text-xs font-semibold border-slate-200 [&>span]:flex [&>span]:items-center [&>span]:gap-2">
                 <SelectValue>
                   <span className="flex items-center gap-2">
                     <span
-                      className={`inline-block h-2 w-2 rounded-full bg-${
+                      className={`inline-block h-2 w-2 rounded-full ${
                         CV_STATUS_LABELS[
                           (formState.tag ||
                             'new') as keyof typeof CV_STATUS_LABELS
-                        ]?.color || 'slate-400'
+                        ]?.color || 'bg-slate-400'
                       }`}
                     />
                     {CV_STATUS_LABELS[
@@ -311,12 +311,12 @@ export default function CvDetail({
                   </span>
                 </SelectValue>
               </SelectTrigger>
-              <SelectContent className="min-w-[130px]">
+              <SelectContent className="min-w-[120px]">
                 {Object.entries(CV_STATUS_LABELS).map(([key, config]) => (
                   <SelectItem key={key} value={key}>
                     <span className="flex items-center gap-2">
                       <span
-                        className={`inline-block h-2 w-2 rounded-full bg-${config.color}`}
+                        className={`inline-block h-2 w-2 rounded-full ${config.color}`}
                       />
                       {config.label}
                     </span>

@@ -3,7 +3,7 @@ import { useAuth } from '@/presentation/provider/auth/auth-provider'
 import { useNavigate } from '@tanstack/react-router'
 import { useLogout } from '@/presentation/hooks/auth/useLogout'
 import { Button } from './ui/button'
-import { Upload, Bell, ChevronDown, User, LogOut } from 'lucide-react'
+import { Upload, ChevronDown, User, LogOut } from 'lucide-react'
 import BulkUploadModal from './BulkUploadModal'
 import Modal from './ui/Modal'
 import useModal from '@/presentation/hooks/useModal'
@@ -65,10 +65,10 @@ export default function Header() {
           </Modal>
 
           {/* Notification bell */}
-          <button className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-transparent bg-white text-slate-600">
+          {/* <button className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-transparent bg-white text-slate-600">
             <Bell className="h-4 w-4" />
             <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-red-500" />
-          </button>
+          </button> */}
 
           {/* User menu */}
           <div className="relative" ref={dropdownRef}>
