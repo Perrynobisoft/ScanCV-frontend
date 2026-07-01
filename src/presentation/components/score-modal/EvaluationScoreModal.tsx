@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { FileText } from 'lucide-react'
 import ScoreCard from './ScoreCard'
 import ScoreCircle from './ScoreCircle'
@@ -12,18 +12,10 @@ export default function EvaluationScoreModal({
   isOpen,
   onClose,
   cv,
-  onRescoreSubmit,
 }: EvaluationScoreModalProps) {
-  const [request, setRequest] = useState('')
   const details = useMemo(() => qualityDetails(cv), [cv])
   const score = cv.quality_score ?? cv.scores.offline_score
   const reason = cv.quality_reasons ?? cv.reasons?.offline_reason
-
-  const _handleSubmit = () => {
-    onRescoreSubmit?.(request)
-    onClose()
-    setRequest('')
-  }
 
   return (
     <ScoreModalBase
