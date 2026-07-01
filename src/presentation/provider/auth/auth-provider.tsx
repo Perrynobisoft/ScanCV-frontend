@@ -9,7 +9,11 @@ import {
 } from 'react'
 import type { User } from '@/domain/models/Auth'
 import { useQueryClient } from '@tanstack/react-query'
-import { hasStoredAccessToken } from '@/shared/auth-storage'
+import {
+  hasStoredAccessToken,
+  getStoredUser,
+  clearStoredUser,
+} from '@/shared/auth-storage'
 import { handleLogout as clearStoredAuth } from '@/shared/helpers'
 import { useMe } from '@/presentation/hooks/auth/useMe'
 
@@ -25,10 +29,21 @@ const AuthContext = createContext<AuthContext | null>(null)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient()
-  const [isAuthenticated, setIsAuthenticated] = useState(hasStoredAccessToken())
-  const [user, setUser] = useState<User | null>(null)
+
+  // Bước 1: Kiểm tra xem có accessToken trong cookie không.
+  // Nếu không → chưa login, không cần làm gì thêm.
+  const hasToken = hasStoredAccessToken()
+
+  // Bước 2: Nếu có token, thử lấy user từ localStorage trước (nhanh, không cần network).
+  const cachedUser = hasToken ? getStoredUser() : null
+
+  const [isAuthenticated, setIsAuthenticated] = useState(hasToken)
+  const [user, setUser] = useState<User | null>(cachedUser)
+
+  // Bước 3: Chỉ gọi /auth/me khi đã có token nhưng chưa có user trong localStorage.
+  // Nếu đã lấy được user từ localStorage thì skip luôn.
   const meQuery = useMe({
-    enabled: isAuthenticated,
+    enabled: isAuthenticated && !cachedUser,
     retry: false,
   })
 
@@ -39,16 +54,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const clearAuth = useCallback(() => {
     clearStoredAuth(queryClient)
+    clearStoredUser()
     setIsAuthenticated(false)
     setUser(null)
   }, [queryClient])
 
+  // Nếu /auth/me trả lỗi (token hết hạn / invalid) → logout
   useEffect(() => {
     if (meQuery.isError && isAuthenticated) {
       clearAuth()
     }
   }, [clearAuth, isAuthenticated, meQuery.isError])
 
+  // Khi /auth/me trả về user → cập nhật state
   useEffect(() => {
     if (meQuery.result) {
       setUser(meQuery.result)
@@ -59,6 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     () => ({
       isAuthenticated,
       user,
+      // isLoading = true chỉ khi đang fetch /auth/me (không có cache localStorage)
       isLoading: isAuthenticated && !user && meQuery.isFetching,
       setAuthenticated,
       clearAuth,

@@ -120,6 +120,15 @@ class HttpClient {
       return this.handleLogout()
     }
 
+    // Nếu là login request trả 401 → sai credentials, không cần refresh
+    if (originalRequest.url === Endpoints.Auth.LOGIN) {
+      throw this.formatError({
+        payload: error.response?.data,
+        status: 401,
+        path: originalRequest.url,
+      })
+    }
+
     // Nếu request này đã được retry sau khi refresh rồi mà vẫn 401
     // → token mới vẫn bị reject bởi backend, không thể làm gì thêm → logout
     if (originalRequest._retry) {

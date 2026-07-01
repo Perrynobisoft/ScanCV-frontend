@@ -179,15 +179,18 @@ interface SimpleSelectProps {
 }
 
 const SimpleSelect = React.forwardRef<HTMLButtonElement, SimpleSelectProps>(
-  ({
-    options,
-    value = '',
-    onChange,
-    disabled,
-    placeholder,
-    className,
-    size = 'default',
-  }) => {
+  (
+    {
+      options,
+      value = '',
+      onChange,
+      disabled,
+      placeholder,
+      className,
+      size = 'default',
+    },
+    ref,
+  ) => {
     // Map '' → EMPTY_SENTINEL for Radix; reverse on change
     const radixValue = value === '' ? EMPTY_SENTINEL : value
 
@@ -204,7 +207,7 @@ const SimpleSelect = React.forwardRef<HTMLButtonElement, SimpleSelectProps>(
         onValueChange={handleValueChange}
         disabled={disabled}
       >
-        <SelectTrigger className={className} size={size}>
+        <SelectTrigger ref={ref} className={className} size={size}>
           <SelectValue placeholder={currentLabel}>{currentLabel}</SelectValue>
         </SelectTrigger>
         <SelectContent>

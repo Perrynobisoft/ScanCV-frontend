@@ -26,7 +26,9 @@ function RouteComponent() {
     if (!isLoading && !isAuthenticated) {
       navigate({
         to: '/auth/login',
-        search: { redirectTo: window.location.href },
+        search: {
+          redirectTo: window.location.pathname + window.location.search,
+        },
         replace: true,
       })
     }

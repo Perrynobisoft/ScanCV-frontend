@@ -46,7 +46,7 @@ export const AuthRepositoryImpl = (): AuthRepository => ({
   me: (options?: QueryOptions<ResponseCommon<User>>) =>
     useGetApi<ResponseCommon<User>>({
       endpoint: Endpoints.Auth.ME,
-      ...options,
+      options,
     }),
 
   updateMe: () =>
