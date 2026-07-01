@@ -40,6 +40,7 @@
   "login_submit": "Sign In",
   "login_submit_loading": "Signing in...",
   "login_error_generic": "Invalid email or password. Please try again.",
+  "login_success": "Signed in successfully",
   "header_upload_cvs": "Upload CVs",
   "header_view_profile": "View Profile",
   "header_logout": "Log Out",

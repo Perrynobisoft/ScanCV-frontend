@@ -8,6 +8,7 @@ export async function sleep(ms: number) {
 export const handleLogout = (queryClient: QueryClient) => {
   // clear cache react query
   queryClient.clear()
+  // xóa accessToken (cookie) và user (localStorage)
   clearAuthStorage()
 }
 

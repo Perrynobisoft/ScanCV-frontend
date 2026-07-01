@@ -2,7 +2,7 @@ import { useRepository } from '@/di/RepositoriesProvider'
 import type { ResponseCommon } from '@/application/dto/response/ResponseCommon'
 import { getFormattedErrorMessage } from '@/application/dto/response/ErrorResponse'
 import { type LoginRequest, type LoginResponse } from '@/domain/models/Auth'
-import { persistAuthTokens } from '@/shared/auth-storage'
+import { persistAuthTokens, persistUser } from '@/shared/auth-storage'
 import { useAuth } from '@/presentation/provider/auth/auth-provider'
 import { m } from '@/paraglide/messages'
 import { toast } from 'sonner'
@@ -27,6 +27,9 @@ export const useLogin = () => {
 
         // Lưu accessToken vào cookie. refreshToken do backend set qua HttpOnly cookie.
         persistAuthTokens(result)
+
+        // Lưu thông tin user vào localStorage để tránh gọi /auth/me khi reload.
+        persistUser(result.user)
 
         // Set auth state từ login response — không cần gọi /auth/me thêm
         auth.setAuthenticated(result.user)

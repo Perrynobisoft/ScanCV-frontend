@@ -40,6 +40,7 @@
   "login_submit": "Đăng nhập",
   "login_submit_loading": "Đang đăng nhập...",
   "login_error_generic": "Email hoặc mật khẩu không đúng. Vui lòng thử lại.",
+  "login_success": "Đăng nhập thành công",
   "header_upload_cvs": "Tải lên CV",
   "header_view_profile": "Xem hồ sơ",
   "header_logout": "Đăng xuất",

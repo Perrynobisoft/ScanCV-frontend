@@ -1,4 +1,8 @@
-import type { LoginResponse, RefreshTokenResponse } from '@/domain/models/Auth'
+import type {
+  LoginResponse,
+  RefreshTokenResponse,
+  User,
+} from '@/domain/models/Auth'
 import { Constants } from './constants'
 
 // accessToken lưu vào JS-accessible cookie (không thể HttpOnly vì JS set).
@@ -47,6 +51,7 @@ export const persistAuthTokens = (payload: AccessTokenPayload) => {
 
 export const clearAuthStorage = () => {
   removeCookie(Constants.API_TOKEN_STORAGE)
+  clearStoredUser()
   // refreshToken (HttpOnly) được xóa bởi backend khi gọi /auth/logout
 }
 
@@ -74,4 +79,45 @@ export const getUserIdFromToken = (): number | null => {
   } catch {
     return null
   }
+}
+
+// ─── User persistence (localStorage) ─────────────────────────────────────────
+
+/**
+ * Lưu thông tin user vào localStorage sau khi login thành công.
+ * Không chứa token — token được quản lý riêng qua cookie.
+ */
+export const persistUser = (user: User): void => {
+  if (typeof localStorage === 'undefined') return
+  try {
+    localStorage.setItem(Constants.API_USER_STORAGE, JSON.stringify(user))
+  } catch {
+    // quota exceeded hoặc private browsing — bỏ qua
+  }
+}
+
+/**
+ * Lấy thông tin user từ localStorage.
+ * Trả về null nếu chưa lưu hoặc dữ liệu bị corrupt.
+ *
+ * LƯU Ý: Chỉ gọi hàm này khi đã xác nhận accessToken tồn tại trong cookie.
+ * Nếu không có token → user chưa login → không nên tin dữ liệu này.
+ */
+export const getStoredUser = (): User | null => {
+  if (typeof localStorage === 'undefined') return null
+  try {
+    const raw = localStorage.getItem(Constants.API_USER_STORAGE)
+    if (!raw) return null
+    return JSON.parse(raw) as User
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Xóa thông tin user khỏi localStorage khi logout.
+ */
+export const clearStoredUser = (): void => {
+  if (typeof localStorage === 'undefined') return
+  localStorage.removeItem(Constants.API_USER_STORAGE)
 }
